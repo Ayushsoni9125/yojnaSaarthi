@@ -65,3 +65,21 @@ export async function getSchemeBySlug(slug: string) {
 
   return scheme;
 }
+
+export async function updateScheme(
+  slug: string,
+  data: Partial<SchemeInput>
+) {
+  return await Scheme.findOneAndUpdate(
+    { slug },
+    data,
+    {
+      new: true,
+      runValidators: true,
+    }
+  ).lean();
+}
+
+export async function deleteScheme(slug: string) {
+  return await Scheme.findOneAndDelete({ slug }).lean();
+}
