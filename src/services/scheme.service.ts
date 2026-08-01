@@ -1,23 +1,67 @@
 import Scheme from "@/models/Scheme";
 import { SchemeInput } from "@/validations/scheme";
+import { SchemeQuery } from "@/validations/query";
+import { buildSchemeQuery } from "@/utils/buildSchemeQuery";
 
 export async function createScheme(data: SchemeInput) {
   const scheme = await Scheme.create(data);
   return scheme;
 }
 
-export async function getAllSchemes() {
-  return await Scheme.find().sort({
-    createdAt: -1,
-  });
+export async function getSchemes(query: SchemeQuery) {
+  const page = Number(query.page ?? 1);
+  const limit = Number(query.limit ?? 10);
+
+  const skip = (page - 1) * limit;
+
+  const filter = buildSchemeQuery(query);
+
+  let sort = {};
+
+  switch (query.sort) {
+    case "latest":
+      sort = { createdAt: -1 };
+      break;
+
+    case "oldest":
+      sort = { createdAt: 1 };
+      break;
+
+    case "az":
+      sort = { title: 1 };
+      break;
+
+    case "za":
+      sort = { title: -1 };
+      break;
+
+    default:
+      sort = { createdAt: -1 };
+  }
+
+  const [schemes, total] = await Promise.all([
+    Scheme.find(filter)
+      .sort(sort)
+      .skip(skip)
+      .limit(limit)
+      .lean(),
+
+    Scheme.countDocuments(filter),
+  ]);
+
+  return {
+    schemes,
+    pagination: {
+      page,
+      limit,
+      total,
+      totalPages: Math.ceil(total / limit),
+    },
+  };
 }
 
 export async function getSchemeBySlug(slug: string) {
-  return await Scheme.findOne({
-    slug,
-  });
-}
+  const scheme = await Scheme.findOne({ slug }).lean();
 
-export async function deleteScheme(id: string) {
-  return await Scheme.findByIdAndDelete(id);
+  return scheme;
 }
