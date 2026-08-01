@@ -1,24 +1,24 @@
 import { NextRequest } from "next/server";
-
+import { AuthError, requireAdmin } from "@/lib/auth/requireAdmin";
 import { connectDB } from "@/lib/db/mongoose";
 
 import {
-  successResponse,
-  errorResponse,
-  validationErrorResponse,
+    successResponse,
+    errorResponse,
+    validationErrorResponse,
 } from "@/lib/api/response";
 
 import {
-  SchemeValidationSchema,
+    SchemeValidationSchema,
 } from "@/validations/scheme";
 
 import {
-  SchemeQuerySchema,
+    SchemeQuerySchema,
 } from "@/validations/query";
 
 import {
-  createScheme,
-  getSchemes,
+    createScheme,
+    getSchemes,
 } from "@/services/scheme.service";
 
 // =======================
@@ -26,36 +26,41 @@ import {
 // =======================
 
 export async function POST(request: NextRequest) {
-  try {
-    await connectDB();
+    try {
+        await requireAdmin();
+        await connectDB();
 
-    const body = await request.json();
+        const body = await request.json();
 
-    const validationResult =
-      SchemeValidationSchema.safeParse(body);
+        const validationResult =
+            SchemeValidationSchema.safeParse(body);
 
-    if (!validationResult.success) {
-      return validationErrorResponse(
-        validationResult.error.flatten()
-      );
+        if (!validationResult.success) {
+            return validationErrorResponse(
+                validationResult.error.flatten()
+            );
+        }
+
+        const scheme = await createScheme(
+            validationResult.data
+        );
+
+        return successResponse(
+            scheme,
+            "Scheme created successfully.",
+            201
+        );
+    } catch (error) {
+        console.error(error);
+
+        if (error instanceof AuthError) {
+            return errorResponse(error.message, error.status);
+        }
+
+        console.error(error);
+
+        return errorResponse("Internal Server Error");
     }
-
-    const scheme = await createScheme(
-      validationResult.data
-    );
-
-    return successResponse(
-      scheme,
-      "Scheme created successfully.",
-      201
-    );
-  } catch (error) {
-    console.error(error);
-
-    return errorResponse(
-      "Internal Server Error"
-    );
-  }
 }
 
 // =======================
@@ -63,40 +68,40 @@ export async function POST(request: NextRequest) {
 // =======================
 
 export async function GET(request: NextRequest) {
-  try {
-    await connectDB();
+    try {
+        await connectDB();
 
-    const searchParams = request.nextUrl.searchParams;
+        const searchParams = request.nextUrl.searchParams;
 
-    const queryResult = SchemeQuerySchema.safeParse({
-      page: searchParams.get("page") ?? "1",
-      limit: searchParams.get("limit") ?? "10",
-      search: searchParams.get("search") ?? undefined,
-      category: searchParams.get("category") ?? undefined,
-      status: searchParams.get("status") ?? undefined,
-      state: searchParams.get("state") ?? undefined,
-      sort: searchParams.get("sort") ?? "latest",
-    });
+        const queryResult = SchemeQuerySchema.safeParse({
+            page: searchParams.get("page") ?? "1",
+            limit: searchParams.get("limit") ?? "10",
+            search: searchParams.get("search") ?? undefined,
+            category: searchParams.get("category") ?? undefined,
+            status: searchParams.get("status") ?? undefined,
+            state: searchParams.get("state") ?? undefined,
+            sort: searchParams.get("sort") ?? "latest",
+        });
 
-    if (!queryResult.success) {
-      return validationErrorResponse(
-        queryResult.error.flatten()
-      );
+        if (!queryResult.success) {
+            return validationErrorResponse(
+                queryResult.error.flatten()
+            );
+        }
+
+        const result = await getSchemes(
+            queryResult.data
+        );
+
+        return successResponse(
+            result,
+            "Schemes fetched successfully."
+        );
+    } catch (error) {
+        console.error(error);
+
+        return errorResponse(
+            "Internal Server Error"
+        );
     }
-
-    const result = await getSchemes(
-      queryResult.data
-    );
-
-    return successResponse(
-      result,
-      "Schemes fetched successfully."
-    );
-  } catch (error) {
-    console.error(error);
-
-    return errorResponse(
-      "Internal Server Error"
-    );
-  }
 }
