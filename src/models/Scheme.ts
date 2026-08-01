@@ -1,4 +1,8 @@
 import mongoose, { Schema, Document, models, model } from "mongoose";
+import {
+  SCHEME_CATEGORIES,
+  SCHEME_STATUS,
+} from "@/constants/scheme";
 
 export interface IScheme extends Document {
   title: string;
@@ -47,10 +51,11 @@ const SchemeSchema = new Schema<IScheme>(
     },
 
     category: {
-      type: String,
-      required: true,
-      index: true,
-    },
+  type: String,
+  enum: SCHEME_CATEGORIES,
+  required: true,
+  index: true,
+},
 
     ministry: {
       type: String,
@@ -64,11 +69,11 @@ const SchemeSchema = new Schema<IScheme>(
     },
 
     status: {
-      type: String,
-      enum: ["Active", "Upcoming", "Expired"],
-      default: "Active",
-      index: true,
-    },
+  type: String,
+  enum: SCHEME_STATUS,
+  default: "Active",
+  index: true,
+},
   },
   {
     timestamps: true,

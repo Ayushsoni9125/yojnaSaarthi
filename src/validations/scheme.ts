@@ -1,4 +1,8 @@
 import { z } from "zod";
+import {
+  SCHEME_CATEGORIES,
+  SCHEME_STATUS,
+} from "@/constants/scheme";
 
 export const SchemeValidationSchema = z.object({
   title: z
@@ -24,10 +28,7 @@ export const SchemeValidationSchema = z.object({
     .trim()
     .min(50),
 
-  category: z
-    .string()
-    .trim()
-    .min(3),
+ category: z.enum(SCHEME_CATEGORIES),
 
   ministry: z
     .string()
@@ -38,11 +39,7 @@ export const SchemeValidationSchema = z.object({
     .string()
     .url("Please enter a valid official URL."),
 
-  status: z.enum([
-    "Active",
-    "Upcoming",
-    "Expired",
-  ]),
+ status: z.enum(SCHEME_STATUS),
 });
 
 export type SchemeInput = z.infer<
