@@ -1,5 +1,5 @@
 import { NextRequest } from "next/server";
-import bcrypt from "bcryptjs";
+import  bcrypt from "bcryptjs";
 
 import { connectDB } from "@/lib/db/mongoose";
 import {
