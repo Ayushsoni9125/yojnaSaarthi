@@ -1,45 +1,51 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { connectDB } from "@/lib/db/mongoose";
-import Scheme from "@/models/Scheme";
+import { SchemeValidationSchema } from "@/validations/scheme";
+import { createScheme } from "@/services/scheme.service";
 
-export async function GET() {
-  return NextResponse.json({
-    message: "Schemes API is working 🚀",
-  });
-}
-
-export async function POST() {
+export async function POST(request: NextRequest) {
   try {
     await connectDB();
 
-    const scheme = await Scheme.create({
-      title: "Pradhan Mantri Kisan Samman Nidhi",
-      slug: "pm-kisan-samman-nidhi",
-      shortDescription: "Income support scheme for eligible farmers.",
-      description:
-        "Provides financial assistance of ₹6000 per year in three installments.",
-      category: "Agriculture",
-      ministry: "Ministry of Agriculture",
-      officialUrl: "https://pmkisan.gov.in",
-      status: "Active",
-    });
+    const body = await request.json();
+
+    const validatedData = SchemeValidationSchema.parse(body);
+
+    const scheme = await createScheme(validatedData);
 
     return NextResponse.json(
       {
         success: true,
+        message: "Scheme created successfully.",
         data: scheme,
       },
-      { status: 201 }
+      {
+        status: 201,
+      }
     );
-  } catch (error) {
+  } catch (error: any) {
+    if (error.name === "ZodError") {
+      return NextResponse.json(
+        {
+          success: false,
+          errors: error.errors,
+        },
+        {
+          status: 400,
+        }
+      );
+    }
+
     console.error(error);
 
     return NextResponse.json(
       {
         success: false,
-        error: "Failed to create scheme",
+        message: "Internal Server Error",
       },
-      { status: 500 }
+      {
+        status: 500,
+      }
     );
   }
 }
