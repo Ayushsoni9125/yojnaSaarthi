@@ -4,6 +4,7 @@ import {
     SCHEME_STATUS,
 } from "@/constants/scheme";
 
+
 export const SchemeValidationSchema = z.object({
     title: z
         .string()
@@ -50,6 +51,6 @@ export const SchemeValidationSchema = z.object({
     status: z.enum(SCHEME_STATUS),
 });
 
-export type SchemeInput = z.infer<
-    typeof SchemeValidationSchema
->;
+export type SchemeInput = z.input<typeof SchemeValidationSchema>;
+
+export type SchemeOutput = z.output<typeof SchemeValidationSchema>;
