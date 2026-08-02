@@ -1,32 +1,72 @@
 import { connectDB } from "@/lib/db/mongoose";
 import { getSchemes } from "@/services/scheme.service";
+import Pagination from "@/components/admin/Schemes/Pagination";
 import SchemeTable from "@/components/admin/Schemes/SchemeTable";
 import SchemeToolbar from "@/components/admin/Schemes/SchemeToolbar";
 
-export default async function SchemesPage() {
-    await connectDB();
+type Props = {
+  searchParams: Promise<{
+    page?: string;
+    limit?: string;
+    search?: string;
+    category?: string;
+    status?: string;
+    state?: string;
+    sort?: string;
+  }>;
+};
 
-    const { schemes } = await getSchemes({
-        page: 1,
-        limit: 10,
-        sort: "latest",
-    });
+export default async function SchemesPage({
+  searchParams,
+}: Props) {
+  await connectDB();
 
-    return (
-        <div className="space-y-6 p-8">
-            <div>
-                <h1 className="text-3xl font-bold text-slate-900">
-                    Schemes
-                </h1>
+  const params = await searchParams;
 
-                <p className="mt-2 text-slate-500">
-                    Manage all government schemes from one place.
-                </p>
-            </div>
+  const { schemes, pagination } = await getSchemes({
+    page: Number(params.page ?? 1),
+    limit: Number(params.limit ?? 10),
+    search: params.search,
+    category: params.category as any,
+    status: params.status as any,
+    state: params.state,
+    sort: (params.sort as any) ?? "latest",
+  });
 
-            <SchemeToolbar />
+  return (
+    <div className="space-y-6 p-8">
+      <div>
+        <h1 className="text-3xl font-bold text-slate-900">
+          Schemes
+        </h1>
 
-            <SchemeTable schemes={schemes} />
-        </div>
-    );
+        <p className="mt-2 text-slate-500">
+          Manage all government schemes from one place.
+        </p>
+      </div>
+
+      <SchemeToolbar />
+
+      <SchemeTable schemes={schemes} />
+
+      <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+  <p className="text-sm text-slate-600">
+    Showing{" "}
+    <span className="font-semibold">
+      {schemes.length}
+    </span>{" "}
+    of{" "}
+    <span className="font-semibold">
+      {pagination.total}
+    </span>{" "}
+    schemes
+  </p>
+
+  <Pagination
+    currentPage={pagination.page}
+    totalPages={pagination.totalPages}
+  />
+</div>
+    </div>
+  );
 }
