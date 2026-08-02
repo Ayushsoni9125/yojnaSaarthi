@@ -1,12 +1,57 @@
+"use client";
 import { Eye, Pencil, Trash2 } from "lucide-react";
 import Link from "next/link";
 interface Props {
     schemes: any[];
 }
 
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { toast } from "react-toastify";
+
+import DeleteSchemeModal from "./DeleteSchemeModal";
 export default function SchemeTable({
     schemes,
 }: Props) {
+    const router = useRouter();
+
+    const [open, setOpen] = useState(false);
+    const [loading, setLoading] = useState(false);
+
+    const [selectedScheme, setSelectedScheme] =
+        useState<any>(null);
+    const handleDelete = async () => {
+        if (!selectedScheme) return;
+
+        try {
+            setLoading(true);
+
+            const res = await fetch(
+                `/api/schemes/${selectedScheme.slug}`,
+                {
+                    method: "DELETE",
+                }
+            );
+
+            const result = await res.json();
+
+            if (!res.ok) {
+                toast.error(result.message || "Delete failed");
+                return;
+            }
+
+            toast.success("Scheme deleted successfully!");
+
+            setOpen(false);
+
+            router.refresh();
+        } catch (error) {
+            console.error(error);
+            toast.error("Something went wrong.");
+        } finally {
+            setLoading(false);
+        }
+    };
     return (
         <div className="overflow-hidden rounded-xl border bg-white shadow-sm">
             <table className="min-w-full">
@@ -69,7 +114,13 @@ export default function SchemeTable({
                                         <Pencil size={16} />
                                     </Link>
 
-                                    <button className="rounded bg-red-600 p-2 text-white hover:bg-red-700">
+                                    <button
+                                        onClick={() => {
+                                            setSelectedScheme(scheme);
+                                            setOpen(true);
+                                        }}
+                                        className="rounded bg-red-600 p-2 text-white hover:bg-red-700"
+                                    >
                                         <Trash2 size={16} />
                                     </button>
                                 </div>
@@ -78,6 +129,13 @@ export default function SchemeTable({
                     ))}
                 </tbody>
             </table>
+            <DeleteSchemeModal
+                open={open}
+                loading={loading}
+                schemeTitle={selectedScheme?.title}
+                onClose={() => setOpen(false)}
+                onConfirm={handleDelete}
+            />
         </div>
     );
 }
