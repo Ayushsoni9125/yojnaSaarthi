@@ -1,131 +1,168 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Plus, Search } from "lucide-react";
 import {
-  SCHEME_CATEGORIES,
-  SCHEME_STATUS,
+    SCHEME_CATEGORIES,
+    SCHEME_STATUS,
 } from "@/constants/scheme";
 import {
-  useRouter,
-  useSearchParams,
+    useRouter,
+    useSearchParams,
 } from "next/navigation";
 
 export default function SchemeToolbar() {
-  const router = useRouter();
-  const searchParams = useSearchParams();
+    const router = useRouter();
+    const searchParams = useSearchParams();
 
-  const updateParam = (
-    key: string,
-    value: string
-  ) => {
-    const params = new URLSearchParams(
-      searchParams.toString()
+    const [search, setSearch] = useState(
+        searchParams.get("search") ?? ""
     );
 
-    if (value) {
-      params.set(key, value);
-    } else {
-      params.delete(key);
-    }
+    // Debounced search
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            const params = new URLSearchParams(
+                searchParams.toString()
+            );
 
-    params.set("page", "1");
-
-    router.push(`/admin/schemes?${params.toString()}`);
-  };
-
-  return (
-    <div className="rounded-xl border bg-white p-5 shadow-sm">
-      <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
-        {/* Left */}
-        <div className="flex flex-1 flex-col gap-4 md:flex-row">
-          {/* Search */}
-          <div className="relative flex-1">
-            <Search
-              size={18}
-              className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"
-            />
-
-            <input
-              type="text"
-              defaultValue={
-                searchParams.get("search") ?? ""
-              }
-              placeholder="Search schemes..."
-              onChange={(e) =>
-                updateParam(
-                  "search",
-                  e.target.value
-                )
-              }
-              className="w-full rounded-lg border border-slate-300 py-2.5 pl-10 pr-4 outline-none transition focus:border-green-600"
-            />
-          </div>
-
-          {/* Category */}
-          <select
-            defaultValue={
-              searchParams.get("category") ?? ""
+            if (search.trim()) {
+                params.set("search", search.trim());
+            } else {
+                params.delete("search");
             }
-            onChange={(e) =>
-              updateParam(
-                "category",
-                e.target.value
-              )
-            }
-            className="rounded-lg border border-slate-300 px-3 py-2.5"
-          >
-            <option value="">
-              All Categories
-            </option>
 
-            {SCHEME_CATEGORIES.map((category) => (
-              <option
-                key={category}
-                value={category}
-              >
-                {category}
-              </option>
-            ))}
-          </select>
+            params.set("page", "1");
 
-          {/* Status */}
-          <select
-            defaultValue={
-              searchParams.get("status") ?? ""
-            }
-            onChange={(e) =>
-              updateParam(
-                "status",
-                e.target.value
-              )
-            }
-            className="rounded-lg border border-slate-300 px-3 py-2.5"
-          >
-            <option value="">
-              All Status
-            </option>
+            router.push(`/admin/schemes?${params.toString()}`);
+        }, 500);
 
-            {SCHEME_STATUS.map((status) => (
-              <option
-                key={status}
-                value={status}
-              >
-                {status}
-              </option>
-            ))}
-          </select>
+        return () => clearTimeout(timer);
+    }, [search, router, searchParams]);
+
+    const updateParam = (
+        key: string,
+        value: string
+    ) => {
+        const params = new URLSearchParams(
+            searchParams.toString()
+        );
+
+        if (value) {
+            params.set(key, value);
+        } else {
+            params.delete(key);
+        }
+
+        params.set("page", "1");
+
+        router.push(`/admin/schemes?${params.toString()}`);
+    };
+
+    return (
+        <div className="rounded-xl border bg-white p-5 shadow-sm">
+            <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+
+                {/* Left */}
+                <div className="flex flex-1 flex-col gap-4 md:flex-row">
+
+                    {/* Search */}
+                    <div className="relative flex-1">
+                        <Search
+                            size={18}
+                            className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"
+                        />
+
+                        <input
+                            type="text"
+                            value={search}
+                            onChange={(e) =>
+                                setSearch(e.target.value)
+                            }
+                            placeholder="Search schemes..."
+                            className="w-full rounded-lg border border-slate-300 py-2.5 pl-10 pr-4 outline-none transition focus:border-green-600"
+                        />
+                    </div>
+
+                    {/* Category */}
+                    <select
+                        defaultValue={
+                            searchParams.get("category") ?? ""
+                        }
+                        onChange={(e) =>
+                            updateParam(
+                                "category",
+                                e.target.value
+                            )
+                        }
+                        className="rounded-lg border border-slate-300 px-3 py-2.5"
+                    >
+                        <option value="">
+                            All Categories
+                        </option>
+
+                        {SCHEME_CATEGORIES.map((category) => (
+                            <option
+                                key={category}
+                                value={category}
+                            >
+                                {category}
+                            </option>
+                        ))}
+                    </select>
+
+                    {/* Status */}
+                    <select
+                        defaultValue={
+                            searchParams.get("status") ?? ""
+                        }
+                        onChange={(e) =>
+                            updateParam(
+                                "status",
+                                e.target.value
+                            )
+                        }
+                        className="rounded-lg border border-slate-300 px-3 py-2.5"
+                    >
+                        <option value="">
+                            All Status
+                        </option>
+
+                        {SCHEME_STATUS.map((status) => (
+                            <option
+                                key={status}
+                                value={status}
+                            >
+                                {status}
+                            </option>
+                        ))}
+                    </select>
+                </div>
+
+                {/* Sort */}
+                <select
+                    defaultValue={searchParams.get("sort") ?? "latest"}
+                    onChange={(e) =>
+                        updateParam("sort", e.target.value)
+                    }
+                    className="rounded-lg border border-slate-300 px-3 py-2.5"
+                >
+                    <option value="latest">Latest First</option>
+                    <option value="oldest">Oldest First</option>
+                    <option value="az">Title (A-Z)</option>
+                    <option value="za">Title (Z-A)</option>
+                </select>
+
+                {/* Right */}
+                <Link
+                    href="/admin/schemes/new"
+                    className="inline-flex items-center justify-center gap-2 rounded-lg bg-green-600 px-5 py-2.5 font-medium text-white transition hover:bg-green-700"
+                >
+                    <Plus size={18} />
+                    Add Scheme
+                </Link>
+            </div>
         </div>
-
-        {/* Right */}
-        <Link
-          href="/admin/schemes/new"
-          className="inline-flex items-center justify-center gap-2 rounded-lg bg-green-600 px-5 py-2.5 font-medium text-white transition hover:bg-green-700"
-        >
-          <Plus size={18} />
-          Add Scheme
-        </Link>
-      </div>
-    </div>
-  );
+    );
 }

@@ -1,6 +1,7 @@
 import { NextRequest } from "next/server";
 import { AuthError, requireAdmin } from "@/lib/auth/requireAdmin";
 import { connectDB } from "@/lib/db/mongoose";
+import { logActivity } from "@/services/activity.service";
 
 import {
     successResponse,
@@ -80,6 +81,14 @@ export async function PUT(
             return errorResponse("Scheme not found", 404);
         }
 
+        // Log activity
+        await logActivity({
+            action: "UPDATE",
+            resource: "Scheme",
+            resourceId: updatedScheme.slug,
+            description: `Updated scheme "${updatedScheme.title}"`,
+        });
+
         return successResponse(
             updatedScheme,
             "Scheme updated successfully."
@@ -91,11 +100,13 @@ export async function PUT(
             return errorResponse(error.message, error.status);
         }
 
-        console.error(error);
-
         return errorResponse("Internal Server Error");
     }
 }
+
+// =========================
+// DELETE /api/schemes/:slug
+// =========================
 
 export async function DELETE(
     request: NextRequest,
@@ -113,6 +124,14 @@ export async function DELETE(
             return errorResponse("Scheme not found", 404);
         }
 
+        // Log activity
+        await logActivity({
+            action: "DELETE",
+            resource: "Scheme",
+            resourceId: deletedScheme.slug,
+            description: `Deleted scheme "${deletedScheme.title}"`,
+        });
+
         return successResponse(
             null,
             "Scheme deleted successfully."
@@ -123,8 +142,6 @@ export async function DELETE(
         if (error instanceof AuthError) {
             return errorResponse(error.message, error.status);
         }
-
-        console.error(error);
 
         return errorResponse("Internal Server Error");
     }

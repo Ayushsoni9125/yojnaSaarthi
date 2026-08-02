@@ -1,6 +1,7 @@
 import { NextRequest } from "next/server";
 import { AuthError, requireAdmin } from "@/lib/auth/requireAdmin";
 import { connectDB } from "@/lib/db/mongoose";
+import { logActivity } from "@/services/activity.service";
 
 import {
     successResponse,
@@ -45,6 +46,14 @@ export async function POST(request: NextRequest) {
             validationResult.data
         );
 
+        // Log activity
+        await logActivity({
+            action: "CREATE",
+            resource: "Scheme",
+            resourceId: scheme.slug,
+            description: `Created scheme "${scheme.title}"`,
+        });
+
         return successResponse(
             scheme,
             "Scheme created successfully.",
@@ -56,8 +65,6 @@ export async function POST(request: NextRequest) {
         if (error instanceof AuthError) {
             return errorResponse(error.message, error.status);
         }
-
-        console.error(error);
 
         return errorResponse("Internal Server Error");
     }
