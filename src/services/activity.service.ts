@@ -8,6 +8,13 @@ type LogActivityParams = {
   performedBy?: string;
 };
 
+type GetActivitiesParams = {
+  page?: number;
+  limit?: number;
+  search?: string;
+  action?: "CREATE" | "UPDATE" | "DELETE";
+};
+
 export async function logActivity({
   action,
   resource,
@@ -22,4 +29,56 @@ export async function logActivity({
     description,
     performedBy,
   });
+}
+
+export async function getActivities({
+  page = 1,
+  limit = 10,
+  search,
+  action,
+}: GetActivitiesParams) {
+  const skip = (page - 1) * limit;
+
+  const filter: any = {};
+
+  if (action) {
+    filter.action = action;
+  }
+
+  if (search) {
+    filter.$or = [
+      {
+        description: {
+          $regex: search,
+          $options: "i",
+        },
+      },
+      {
+        performedBy: {
+          $regex: search,
+          $options: "i",
+        },
+      },
+    ];
+  }
+
+  const [activities, total] = await Promise.all([
+    Activity.find(filter)
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(limit)
+      .lean(),
+
+    Activity.countDocuments(filter),
+  ]);
+
+  return {
+    activities,
+    pagination: {
+      page,
+      limit,
+      total,
+      totalPages: Math.ceil(total / limit),
+    },
+  };
 }

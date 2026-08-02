@@ -63,9 +63,10 @@ export default async function SchemesPage({
   </p>
 
   <Pagination
-    currentPage={pagination.page}
-    totalPages={pagination.totalPages}
-  />
+  currentPage={pagination.page}
+  totalPages={pagination.totalPages}
+  basePath="/admin/schemes"
+/>
 </div>
     </div>
   );

@@ -1,25 +1,32 @@
 "use client";
 
-import { useRouter, useSearchParams } from "next/navigation";
+import {
+  useRouter,
+  useSearchParams,
+} from "next/navigation";
 
 type Props = {
   currentPage: number;
   totalPages: number;
+  basePath: string;
 };
 
 export default function Pagination({
   currentPage,
   totalPages,
+  basePath,
 }: Props) {
   const router = useRouter();
   const searchParams = useSearchParams();
 
   const goToPage = (page: number) => {
-    const params = new URLSearchParams(searchParams.toString());
+    const params = new URLSearchParams(
+      searchParams.toString()
+    );
 
     params.set("page", page.toString());
 
-    router.push(`/admin/schemes?${params.toString()}`);
+    router.push(`${basePath}?${params.toString()}`);
   };
 
   return (
@@ -27,7 +34,7 @@ export default function Pagination({
       <button
         disabled={currentPage === 1}
         onClick={() => goToPage(currentPage - 1)}
-        className="rounded-lg border px-4 py-2 disabled:cursor-not-allowed disabled:opacity-50 hover:bg-slate-100"
+        className="rounded-lg border px-4 py-2 transition hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-50"
       >
         Previous
       </button>
@@ -39,7 +46,7 @@ export default function Pagination({
       <button
         disabled={currentPage === totalPages}
         onClick={() => goToPage(currentPage + 1)}
-        className="rounded-lg border px-4 py-2 disabled:cursor-not-allowed disabled:opacity-50 hover:bg-slate-100"
+        className="rounded-lg border px-4 py-2 transition hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-50"
       >
         Next
       </button>

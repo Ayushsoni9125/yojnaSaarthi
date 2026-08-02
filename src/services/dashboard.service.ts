@@ -1,5 +1,6 @@
 import Scheme from "@/models/Scheme";
 import User from "@/models/User";
+import Activity from "@/models/Activity";
 
 export async function getDashboardStats() {
   const [
@@ -7,6 +8,7 @@ export async function getDashboardStats() {
     activeSchemes,
     totalUsers,
     pendingUpdates,
+    recentActivities,
   ] = await Promise.all([
     Scheme.countDocuments(),
 
@@ -19,6 +21,11 @@ export async function getDashboardStats() {
     Scheme.countDocuments({
       status: "Upcoming",
     }),
+
+    Activity.find()
+      .sort({ createdAt: -1 })
+      .limit(5)
+      .lean(),
   ]);
 
   return {
@@ -26,5 +33,9 @@ export async function getDashboardStats() {
     activeSchemes,
     totalUsers,
     pendingUpdates,
+    recentActivities: recentActivities.map((activity) => ({
+      ...activity,
+      _id: activity._id.toString(),
+    })),
   };
 }
