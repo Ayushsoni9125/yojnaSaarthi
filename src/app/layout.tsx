@@ -3,7 +3,12 @@ import "./globals.css";
 import { Geist } from "next/font/google";
 import { cn } from "@/lib/utils";
 
-const geist = Geist({subsets:['latin'],variable:'--font-sans'});
+import ToastProvider from "@/components/providers/ToastProvider";
+
+const geist = Geist({
+  subsets: ["latin"],
+  variable: "--font-sans",
+});
 
 export const metadata: Metadata = {
   title: "YojanaSaarthi",
@@ -16,8 +21,15 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={cn("font-sans", geist.variable)}>
-      <body>{children}</body>
+    <html
+      lang="en"
+      className={cn("font-sans", geist.variable)}
+    >
+      <body>
+        {children}
+
+        <ToastProvider />
+      </body>
     </html>
   );
 }
