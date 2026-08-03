@@ -26,12 +26,12 @@ export default async function ActivityPage({
     return (
         <div className="space-y-6 p-8">
             <div>
-                <h1 className="text-3xl font-bold">
-                    Recent Activity
+                <h1 className="text-3xl font-bold text-slate-900">
+                    Activity Logs
                 </h1>
 
                 <p className="mt-2 text-slate-500">
-                    Track every admin action performed in the system.
+                    View and monitor all administrative actions across the platform.
                 </p>
             </div>
             <ActivityToolbar />
@@ -59,58 +59,76 @@ export default async function ActivityPage({
                     </thead>
 
                     <tbody>
-                        {activities.map((activity: any) => (
-                            <tr
-                                key={activity._id.toString()}
-                                className="border-t"
-                            >
-                                <td className="px-6 py-4">
-                                    <span
-                                        className={`rounded-full px-3 py-1 text-xs font-semibold ${activity.action === "CREATE"
-                                            ? "bg-green-100 text-green-700"
-                                            : activity.action === "UPDATE"
-                                                ? "bg-yellow-100 text-yellow-700"
-                                                : "bg-red-100 text-red-700"
-                                            }`}
-                                    >
-                                        {activity.action}
-                                    </span>
-                                </td>
-                                <td className="px-6 py-4">
-                                    {activity.description}
-                                </td>
+                        {activities.length > 0 ? (
+                            activities.map((activity: any) => (
+                                <tr
+                                    key={activity._id.toString()}
+                                    className="border-t"
+                                >
+                                    <td className="px-6 py-4">
+                                        <span
+                                            className={`rounded-full px-3 py-1 text-xs font-semibold ${activity.action === "CREATE"
+                                                ? "bg-green-100 text-green-700"
+                                                : activity.action === "UPDATE"
+                                                    ? "bg-yellow-100 text-yellow-700"
+                                                    : "bg-red-100 text-red-700"
+                                                }`}
+                                        >
+                                            {activity.action}
+                                        </span>
+                                    </td>
 
-                                <td className="px-6 py-4">
-                                    <div className="flex items-center gap-3">
-                                        <div className="flex h-9 w-9 items-center justify-center rounded-full bg-green-100 font-semibold text-green-700">
-                                            {activity.performedBy?.charAt(0)}
+                                    <td className="px-6 py-4">
+                                        {activity.description}
+                                    </td>
+
+                                    <td className="px-6 py-4">
+                                        <div className="flex items-center gap-3">
+                                            <div className="flex h-9 w-9 items-center justify-center rounded-full bg-green-100 font-semibold text-green-700">
+                                                {activity.performedBy?.charAt(0)}
+                                            </div>
+
+                                            <div>
+                                                <p className="font-medium text-slate-900">
+                                                    {activity.performedBy}
+                                                </p>
+
+                                                <p className="text-xs text-slate-500">
+                                                    Administrator
+                                                </p>
+                                            </div>
                                         </div>
+                                    </td>
 
+                                    <td className="px-6 py-4">
                                         <div>
                                             <p className="font-medium text-slate-900">
-                                                {activity.performedBy}
+                                                {new Date(activity.createdAt).toLocaleDateString()}
                                             </p>
 
                                             <p className="text-xs text-slate-500">
-                                                Administrator
+                                                {new Date(activity.createdAt).toLocaleTimeString()}
                                             </p>
                                         </div>
-                                    </div>
-                                </td>
+                                    </td>
+                                </tr>
+                            ))
+                        ) : (
+                            <tr>
+                                <td
+                                    colSpan={4}
+                                    className="px-6 py-16 text-center"
+                                >
+                                    <h3 className="text-lg font-semibold text-slate-700">
+                                        No activities found
+                                    </h3>
 
-                                <td className="px-6 py-4">
-                                    <div>
-                                        <p className="font-medium text-slate-900">
-                                            {new Date(activity.createdAt).toLocaleDateString()}
-                                        </p>
-
-                                        <p className="text-xs text-slate-500">
-                                            {new Date(activity.createdAt).toLocaleTimeString()}
-                                        </p>
-                                    </div>
+                                    <p className="mt-2 text-sm text-slate-500">
+                                        Try changing your search or filter.
+                                    </p>
                                 </td>
                             </tr>
-                        ))}
+                        )}
                     </tbody>
                 </table>
             </div>
