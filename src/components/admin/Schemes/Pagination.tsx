@@ -30,7 +30,7 @@ export default function Pagination({
   };
 
   return (
-    <div className="flex items-center justify-between rounded-xl border bg-white p-4 shadow-sm">
+    <div className="flex flex-col items-center gap-3 rounded-xl border bg-white p-4 shadow-sm sm:flex-row sm:justify-between">
       <button
         disabled={currentPage === 1}
         onClick={() => goToPage(currentPage - 1)}

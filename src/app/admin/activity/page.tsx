@@ -24,9 +24,9 @@ export default async function ActivityPage({
     });
 
     return (
-        <div className="space-y-6 p-8">
+        <div className="space-y-6 p-4 sm:p-6 lg:p-8">
             <div>
-                <h1 className="text-3xl font-bold text-slate-900">
+                <h1 className="text-2xl sm:text-3xl font-bold text-slate-900">
                     Activity Logs
                 </h1>
 
@@ -36,7 +36,7 @@ export default async function ActivityPage({
             </div>
             <ActivityToolbar />
 
-            <div className="rounded-xl border bg-white shadow-sm">
+            <div className="overflow-x-auto rounded-xl border border-slate-200 bg-white shadow-sm">
                 <table className="min-w-full">
                     <thead className="bg-slate-100">
                         <tr>
@@ -132,7 +132,7 @@ export default async function ActivityPage({
                     </tbody>
                 </table>
             </div>
-            <div className="flex items-center justify-between rounded-lg border bg-white p-4">
+            <div className="flex flex-col gap-3 items-start rounded-lg border bg-white p-4 sm:flex-row sm:items-center sm:justify-between">
                 <p className="text-sm text-slate-600">
                     Showing{" "}
                     <span className="font-semibold">

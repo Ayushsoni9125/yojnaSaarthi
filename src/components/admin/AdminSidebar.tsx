@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useState } from "react";
 import {
   LayoutDashboard,
   ScrollText,
@@ -11,6 +12,8 @@ import {
   ChevronRight,
   Sparkles,
   Leaf,
+  Menu,
+  X,
 } from "lucide-react";
 
 const navItems = [
@@ -42,7 +45,7 @@ const navItems = [
   },
 ];
 
-export default function AdminSidebar() {
+function SidebarContent({ onClose }: { onClose?: () => void }) {
   const pathname = usePathname();
 
   const isActive = (href: string, exact?: boolean) => {
@@ -51,14 +54,7 @@ export default function AdminSidebar() {
   };
 
   return (
-    <aside
-      className="relative flex min-h-screen w-64 flex-col"
-      style={{
-        background:
-          "linear-gradient(160deg, #052e16 0%, #14532d 55%, #052e16 100%)",
-        borderRight: "1px solid rgba(134,239,172,0.15)",
-      }}
-    >
+    <div className="relative flex h-full flex-col">
       {/* Glow orb */}
       <div
         className="pointer-events-none absolute left-0 top-0 h-64 w-full"
@@ -70,30 +66,41 @@ export default function AdminSidebar() {
 
       {/* Logo */}
       <div className="relative px-6 pb-6 pt-8">
-        <div className="flex items-center gap-3">
-          <div
-            className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-xl"
-            style={{
-              background:
-                "linear-gradient(135deg, #16a34a, #15803d)",
-              boxShadow: "0 0 16px rgba(22,163,74,0.5)",
-            }}
-          >
-            <Leaf className="h-5 w-5 text-white" />
-          </div>
-
-          <div>
-            <h2 className="text-base font-bold leading-tight tracking-tight text-white">
-              YojanaSaarthi
-            </h2>
-
-            <p
-              className="text-xs font-medium"
-              style={{ color: "#86efac" }}
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div
+              className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-xl"
+              style={{
+                background: "linear-gradient(135deg, #16a34a, #15803d)",
+                boxShadow: "0 0 16px rgba(22,163,74,0.5)",
+              }}
             >
-              Admin Panel
-            </p>
+              <Leaf className="h-5 w-5 text-white" />
+            </div>
+
+            <div>
+              <h2 className="text-base font-bold leading-tight tracking-tight text-white">
+                YojanaSaarthi
+              </h2>
+
+              <p
+                className="text-xs font-medium"
+                style={{ color: "#86efac" }}
+              >
+                Admin Panel
+              </p>
+            </div>
           </div>
+
+          {/* Close button on mobile */}
+          {onClose && (
+            <button
+              onClick={onClose}
+              className="rounded-lg p-1.5 text-green-300 hover:bg-white/10 lg:hidden"
+            >
+              <X className="h-5 w-5" />
+            </button>
+          )}
         </div>
 
         {/* Divider */}
@@ -125,6 +132,7 @@ export default function AdminSidebar() {
             <Link
               key={href}
               href={href}
+              onClick={onClose}
               className="group relative flex items-center gap-3 rounded-xl px-3 py-2.5 transition-all duration-200"
               style={{
                 background: active
@@ -140,8 +148,7 @@ export default function AdminSidebar() {
                 <span
                   className="absolute left-0 top-1/2 h-6 w-1 -translate-y-1/2 rounded-r-full"
                   style={{
-                    background:
-                      "linear-gradient(180deg, #22c55e, #16a34a)",
+                    background: "linear-gradient(180deg, #22c55e, #16a34a)",
                   }}
                 />
               )}
@@ -200,15 +207,13 @@ export default function AdminSidebar() {
           className="flex items-center gap-2.5 rounded-xl px-3 py-2.5"
           style={{
             background: "rgba(255,255,255,0.04)",
-            border:
-              "1px solid rgba(134,239,172,0.15)",
+            border: "1px solid rgba(134,239,172,0.15)",
           }}
         >
           <div
             className="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-lg"
             style={{
-              background:
-                "linear-gradient(135deg, #16a34a, #15803d)",
+              background: "linear-gradient(135deg, #16a34a, #15803d)",
             }}
           >
             <Sparkles className="h-3.5 w-3.5 text-white" />
@@ -228,6 +233,79 @@ export default function AdminSidebar() {
           </div>
         </div>
       </div>
-    </aside>
+    </div>
+  );
+}
+
+export default function AdminSidebar() {
+  const [mobileOpen, setMobileOpen] = useState(false);
+
+  return (
+    <>
+      {/* ── Mobile top bar ───────────────────────────────── */}
+      <div
+        className="fixed left-0 right-0 top-0 z-40 flex h-14 items-center gap-3 px-4 lg:hidden"
+        style={{
+          background: "linear-gradient(160deg, #052e16 0%, #14532d 100%)",
+          borderBottom: "1px solid rgba(134,239,172,0.15)",
+        }}
+      >
+        <button
+          onClick={() => setMobileOpen(true)}
+          className="rounded-lg p-1.5 text-green-300 hover:bg-white/10"
+        >
+          <Menu className="h-5 w-5" />
+        </button>
+
+        <div className="flex items-center gap-2">
+          <div
+            className="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-lg"
+            style={{
+              background: "linear-gradient(135deg, #16a34a, #15803d)",
+              boxShadow: "0 0 10px rgba(22,163,74,0.4)",
+            }}
+          >
+            <Leaf className="h-4 w-4 text-white" />
+          </div>
+          <span className="text-sm font-bold tracking-tight text-white">
+            YojanaSaarthi
+          </span>
+        </div>
+      </div>
+
+      {/* ── Mobile overlay backdrop ──────────────────────── */}
+      {mobileOpen && (
+        <div
+          className="fixed inset-0 z-40 bg-black/60 lg:hidden"
+          onClick={() => setMobileOpen(false)}
+        />
+      )}
+
+      {/* ── Mobile drawer ───────────────────────────────── */}
+      <aside
+        className={`fixed inset-y-0 left-0 z-50 w-64 transform transition-transform duration-300 lg:hidden ${
+          mobileOpen ? "translate-x-0" : "-translate-x-full"
+        }`}
+        style={{
+          background:
+            "linear-gradient(160deg, #052e16 0%, #14532d 55%, #052e16 100%)",
+          borderRight: "1px solid rgba(134,239,172,0.15)",
+        }}
+      >
+        <SidebarContent onClose={() => setMobileOpen(false)} />
+      </aside>
+
+      {/* ── Desktop sidebar ─────────────────────────────── */}
+      <aside
+        className="relative hidden min-h-screen w-64 flex-col lg:flex"
+        style={{
+          background:
+            "linear-gradient(160deg, #052e16 0%, #14532d 55%, #052e16 100%)",
+          borderRight: "1px solid rgba(134,239,172,0.15)",
+        }}
+      >
+        <SidebarContent />
+      </aside>
+    </>
   );
 }

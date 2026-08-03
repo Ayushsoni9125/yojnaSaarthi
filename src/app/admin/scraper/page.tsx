@@ -8,9 +8,9 @@ export default async function ScraperPage() {
     const stats = await getLatestScraperStats();
 
     return (
-        <div className="space-y-6 p-8">
+        <div className="space-y-6 p-4 sm:p-6 lg:p-8">
             <div>
-                <h1 className="text-3xl font-bold text-slate-900">
+                <h1 className="text-2xl sm:text-3xl font-bold text-slate-900">
                     Scraper Management
                 </h1>
 
@@ -19,7 +19,7 @@ export default async function ScraperPage() {
                 </p>
             </div>
 
-            <div className="grid gap-6 lg:grid-cols-2 xl:grid-cols-4">
+            <div className="grid gap-4 grid-cols-2 md:grid-cols-3 xl:grid-cols-4">
                 <div className="rounded-xl border bg-white p-6 shadow-sm">
                     <p className="text-sm text-slate-500">Status</p>
 

@@ -53,7 +53,7 @@ export default function SchemeTable({
         }
     };
     return (
-        <div className="overflow-hidden rounded-xl border bg-white shadow-sm">
+        <div className="overflow-hidden bg-white shadow-sm">
             <table className="min-w-full">
                 <thead className="bg-slate-100">
                     <tr>

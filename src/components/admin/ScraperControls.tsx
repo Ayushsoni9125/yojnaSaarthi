@@ -47,7 +47,7 @@ export default function ScraperControls() {
                 Manually control the government scheme scraper.
             </p>
 
-            <div className="mt-6 flex gap-4">
+            <div className="mt-6 flex flex-wrap gap-3">
                 <button
                     onClick={runScraper}
                     disabled={loading}

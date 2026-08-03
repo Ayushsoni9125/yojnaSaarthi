@@ -61,7 +61,7 @@ export default async function AdminPage() {
 
     return (
         <div
-            className="min-h-screen p-8"
+            className="min-h-screen p-4 sm:p-6 lg:p-8"
             style={{
                 background:
                     "linear-gradient(135deg, #f8fffe 0%, #f0fdf4 50%, #ffffff 100%)",
@@ -84,7 +84,7 @@ export default async function AdminPage() {
                 </div>
 
                 <h1
-                    className="text-4xl font-bold tracking-tight mt-2"
+                    className="text-2xl sm:text-4xl font-bold tracking-tight mt-2"
                     style={{ color: "#052e16" }}
                 >
                     Admin Dashboard
@@ -179,7 +179,7 @@ export default async function AdminPage() {
                         "0 4px 24px rgba(22,163,74,0.08), 0 1px 4px rgba(0,0,0,0.04)",
                 }}
             >
-                <div className="flex items-center justify-between mb-6">
+                <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between mb-6">
                     <div className="flex items-center gap-3">
                         <div
                             className="w-9 h-9 rounded-lg flex items-center justify-center"
@@ -261,7 +261,7 @@ export default async function AdminPage() {
                         {dashboard.recentActivities.map((activity: any) => (
                             <div
                                 key={activity._id}
-                                className="flex items-center justify-between rounded-xl border border-slate-200 p-4 hover:bg-slate-50 transition"
+                                className="flex flex-col gap-2 rounded-xl border border-slate-200 p-4 hover:bg-slate-50 transition sm:flex-row sm:items-center sm:justify-between"
                             >
                                 <div>
                                     <p className="font-semibold text-slate-800">

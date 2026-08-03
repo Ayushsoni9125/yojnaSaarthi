@@ -25,9 +25,9 @@ export default async function UsersPage({
     });
 
     return (
-        <div className="space-y-6 p-8">
+        <div className="space-y-6 p-4 sm:p-6 lg:p-8">
             <div>
-                <h1 className="text-3xl font-bold text-slate-900">
+                <h1 className="text-2xl sm:text-3xl font-bold text-slate-900">
                     Users
                 </h1>
 
@@ -36,7 +36,7 @@ export default async function UsersPage({
                 </p>
             </div>
             <UserToolbar />
-            <div className="overflow-hidden rounded-xl border bg-white shadow-sm">
+            <div className="overflow-x-auto rounded-xl border border-slate-200 bg-white shadow-sm">
                 <table className="min-w-full">
                     <thead className="bg-slate-100">
                         <tr>

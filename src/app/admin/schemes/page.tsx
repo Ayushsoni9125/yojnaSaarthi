@@ -34,9 +34,9 @@ export default async function SchemesPage({
   });
 
   return (
-    <div className="space-y-6 p-8">
+    <div className="space-y-6 p-4 sm:p-6 lg:p-8">
       <div>
-        <h1 className="text-3xl font-bold text-slate-900">
+        <h1 className="text-2xl sm:text-3xl font-bold text-slate-900">
           Schemes
         </h1>
 
@@ -47,7 +47,9 @@ export default async function SchemesPage({
 
       <SchemeToolbar />
 
-      <SchemeTable schemes={schemes} />
+      <div className="overflow-x-auto rounded-lg border border-slate-200">
+        <SchemeTable schemes={schemes} />
+      </div>
 
       <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
   <p className="text-sm text-slate-600">

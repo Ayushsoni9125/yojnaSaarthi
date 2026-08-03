@@ -54,6 +54,12 @@ export async function getSchemes(query: SchemeQuery) {
         _id: scheme._id.toString(),
         createdAt: scheme.createdAt?.toISOString(),
         updatedAt: scheme.updatedAt?.toISOString(),
+        lastScrapedAt: scheme.lastScrapedAt?.toISOString() ?? null,
+        sources: (scheme.sources ?? []).map((s: any) => ({
+            ...s,
+            _id: s._id?.toString() ?? null,
+            scrapedAt: s.scrapedAt?.toISOString() ?? null,
+        })),
     }));
     return {
         schemes,
@@ -76,6 +82,12 @@ export async function getSchemeBySlug(slug: string) {
         _id: scheme._id.toString(),
         createdAt: scheme.createdAt?.toISOString(),
         updatedAt: scheme.updatedAt?.toISOString(),
+        lastScrapedAt: scheme.lastScrapedAt?.toISOString() ?? null,
+        sources: ((scheme as any).sources ?? []).map((s: any) => ({
+            ...s,
+            _id: s._id?.toString() ?? null,
+            scrapedAt: s.scrapedAt?.toISOString() ?? null,
+        })),
     };
 }
 
@@ -99,6 +111,12 @@ export async function updateScheme(
         _id: scheme._id.toString(),
         createdAt: scheme.createdAt?.toISOString(),
         updatedAt: scheme.updatedAt?.toISOString(),
+        lastScrapedAt: scheme.lastScrapedAt?.toISOString() ?? null,
+        sources: ((scheme as any).sources ?? []).map((s: any) => ({
+            ...s,
+            _id: s._id?.toString() ?? null,
+            scrapedAt: s.scrapedAt?.toISOString() ?? null,
+        })),
     };
 }
 
