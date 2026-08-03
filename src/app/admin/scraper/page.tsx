@@ -1,12 +1,14 @@
 import { connectDB } from "@/lib/db/mongoose";
-import RunScraperButton from "@/components/admin/Scraper/RunScraperButton";
+import { getLatestScraperStats } from "@/services/scraperDashboard.service";
+import ScraperControls from "@/components/admin/ScraperControls";
 
 export default async function ScraperPage() {
     await connectDB();
 
+    const stats = await getLatestScraperStats();
+
     return (
         <div className="space-y-6 p-8">
-            {/* Header */}
             <div>
                 <h1 className="text-3xl font-bold text-slate-900">
                     Scraper Management
@@ -17,68 +19,77 @@ export default async function ScraperPage() {
                 </p>
             </div>
 
-            {/* Status Cards */}
-            <div className="grid gap-6 lg:grid-cols-4">
+            <div className="grid gap-6 lg:grid-cols-2 xl:grid-cols-4">
                 <div className="rounded-xl border bg-white p-6 shadow-sm">
-                    <p className="text-sm text-slate-500">
-                        Status
-                    </p>
+                    <p className="text-sm text-slate-500">Status</p>
 
-                    <p className="mt-2 text-2xl font-bold text-yellow-600">
-                        Idle
+                    <p
+                        className={`mt-2 text-2xl font-bold ${
+                            stats.status === "Completed"
+                                ? "text-green-600"
+                                : stats.status === "Running"
+                                ? "text-yellow-600"
+                                : stats.status === "Failed"
+                                ? "text-red-600"
+                                : "text-slate-600"
+                        }`}
+                    >
+                        {stats.status}
                     </p>
                 </div>
 
                 <div className="rounded-xl border bg-white p-6 shadow-sm">
-                    <p className="text-sm text-slate-500">
-                        Last Run
-                    </p>
+                    <p className="text-sm text-slate-500">Last Run</p>
 
                     <p className="mt-2 text-lg font-semibold">
-                        Never
+                        {stats.lastRun
+                            ? new Date(stats.lastRun).toLocaleString()
+                            : "Never"}
                     </p>
                 </div>
 
                 <div className="rounded-xl border bg-white p-6 shadow-sm">
                     <p className="text-sm text-slate-500">
-                        Schemes Scraped
+                        Imported Schemes
                     </p>
 
                     <p className="mt-2 text-2xl font-bold">
-                        0
+                        {stats.importedSchemes}
                     </p>
                 </div>
 
                 <div className="rounded-xl border bg-white p-6 shadow-sm">
                     <p className="text-sm text-slate-500">
-                        Next Schedule
+                        Failed Schemes
                     </p>
 
-                    <p className="mt-2 text-lg font-semibold">
-                        Manual
+                    <p className="mt-2 text-2xl font-bold text-red-600">
+                        {stats.failedSchemes}
                     </p>
                 </div>
-            </div>
 
-            {/* Scraper Controls */}
-            <div className="rounded-xl border bg-white p-6 shadow-sm">
-                <h2 className="text-lg font-semibold">
-                    Scraper Controls
-                </h2>
+                <div className="rounded-xl border bg-white p-6 shadow-sm">
+                    <p className="text-sm text-slate-500">
+                        Total Schemes
+                    </p>
 
-                <p className="mt-2 text-sm text-slate-500">
-                    Manually control the government scheme scraper.
-                </p>
+                    <p className="mt-2 text-2xl font-bold">
+                        {stats.totalSchemes}
+                    </p>
+                </div>
 
-                <div className="mt-6 flex flex-wrap gap-4">
-                    <RunScraperButton />
-                    <button className="rounded-lg bg-red-600 px-5 py-2.5 font-medium text-white transition hover:bg-red-700">
-                        Stop Scraper
-                    </button>
+                <div className="rounded-xl border bg-white p-6 shadow-sm">
+                    <p className="text-sm text-slate-500">
+                        Current Offset
+                    </p>
 
-                    <button className="rounded-lg border px-5 py-2.5 font-medium transition hover:bg-slate-100">
-                        View Logs
-                    </button>
+                    <p className="mt-2 text-2xl font-bold">
+                        {stats.currentOffset}
+                    </p>
+                </div>
+
+                <div className="lg:col-span-2 xl:col-span-2">
+                    <ScraperControls />
                 </div>
             </div>
         </div>

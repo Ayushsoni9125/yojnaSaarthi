@@ -153,3 +153,46 @@ export async function upsertScheme(data: ScrapedScheme) {
         }
     );
 }
+export async function bulkUpsertSchemes(
+  schemes: ScrapedScheme[]
+) {
+  if (!schemes.length) return;
+
+  const operations = schemes.map((scheme) => ({
+    updateOne: {
+      filter: {
+        slug: scheme.slug,
+      },
+      update: {
+        $set: {
+          title: scheme.title,
+          slug: scheme.slug,
+          shortDescription: scheme.shortDescription,
+          description: scheme.description,
+          category: scheme.category,
+          ministry: scheme.ministry,
+          benefits: scheme.benefits,
+          documents: scheme.documents,
+          tags: scheme.tags,
+          states: scheme.states,
+          officialUrl: scheme.officialUrl,
+
+          sources: [
+            {
+              name: scheme.source,
+              url: scheme.sourceUrl,
+              scrapedAt: new Date(),
+            },
+          ],
+
+          sourceCount: 1,
+          lastScrapedAt: new Date(),
+          status: "Active",
+        },
+      },
+      upsert: true,
+    },
+  }));
+
+  return await Scheme.bulkWrite(operations);
+}
