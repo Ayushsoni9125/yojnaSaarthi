@@ -2,7 +2,7 @@ import Scheme from "@/models/Scheme";
 import { SchemeInput } from "@/validations/scheme";
 import { SchemeQuery } from "@/validations/query";
 import { buildSchemeQuery } from "@/utils/buildSchemeQuery";
-
+import { ScrapedScheme } from "@/types/scraper";
 export async function createScheme(data: SchemeInput) {
     const scheme = await Scheme.create(data);
     return scheme;
@@ -111,4 +111,45 @@ export async function deleteScheme(slug: string) {
         ...scheme,
         _id: scheme._id.toString(),
     };
+}
+
+
+export async function upsertScheme(data: ScrapedScheme) {
+    return await Scheme.findOneAndUpdate(
+        {
+            slug: data.slug,
+        },
+        {
+            title: data.title,
+            slug: data.slug,
+            shortDescription: data.shortDescription,
+            description: data.description,
+            category: data.category,
+            ministry: data.ministry,
+            benefits: data.benefits,
+            documents: data.documents,
+            tags: data.tags,
+            states: data.states,
+            officialUrl: data.officialUrl,
+
+            sources: [
+                {
+                    name: data.source,
+                    url: data.sourceUrl,
+                    scrapedAt: new Date(),
+                },
+            ],
+
+            sourceCount: 1,
+            lastScrapedAt: new Date(),
+
+            status: "Active",
+        },
+        {
+            returnDocument: "after",
+            upsert: true,
+            runValidators: true,
+            setDefaultsOnInsert: true,
+        }
+    );
 }
