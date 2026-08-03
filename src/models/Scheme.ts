@@ -4,6 +4,12 @@ import {
     SCHEME_STATUS,
 } from "@/constants/scheme";
 
+interface ISchemeSource {
+    name: string;
+    url: string;
+    scrapedAt: Date;
+}
+
 export interface IScheme extends Document {
     title: string;
     slug: string;
@@ -18,6 +24,12 @@ export interface IScheme extends Document {
     ministry: string;
 
     officialUrl: string;
+
+    sources: ISchemeSource[];
+
+    lastScrapedAt: Date;
+
+    sourceCount: number;
 
     status: "Active" | "Upcoming" | "Expired";
 
@@ -70,6 +82,38 @@ const SchemeSchema = new Schema<IScheme>(
         officialUrl: {
             type: String,
             required: true,
+        },
+
+
+        sources: {
+            type: [
+                {
+                    name: {
+                        type: String,
+                        required: true,
+                    },
+                    url: {
+                        type: String,
+                        required: true,
+                    },
+                    scrapedAt: {
+                        type: Date,
+                        default: Date.now,
+                    },
+                },
+            ],
+            default: [],
+        },
+
+        lastScrapedAt: {
+            type: Date,
+            default: Date.now,
+            index: true,
+        },
+
+        sourceCount: {
+            type: Number,
+            default: 1,
         },
 
         status: {
