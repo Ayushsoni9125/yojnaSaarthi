@@ -33,3 +33,19 @@ export async function fetchSchemes({
 
   return response.data;
 }
+
+export async function fetchSchemeBySlug(slug: string) {
+  const response = await scraperHttp.get(BASE_URL, {
+    params: {
+      lang: "en",
+      slug,
+    },
+    headers: {
+      "x-api-key": API_KEY,
+      Origin: "https://www.myscheme.gov.in",
+      Referer: "https://www.myscheme.gov.in/",
+    },
+  });
+
+  return response.data;
+}

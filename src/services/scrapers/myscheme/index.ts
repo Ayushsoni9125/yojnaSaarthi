@@ -1,109 +1,76 @@
-import { fetchSchemes } from "./client";
+import { fetchSchemes, fetchSchemeBySlug } from "./client";
 import { mapMyScheme } from "./mapper";
 import { bulkUpsertSchemes } from "@/services/scheme.service";
 import {
-    createScraperJob,
-    updateScraperJob,
-    getLatestScraperJob,
+  createScraperJob,
+  updateScraperJob,
 } from "@/services/scraperJob.service";
-import { retry } from "@/utils/retry";
 
 const PAGE_SIZE = 100;
 
 export async function scrapeMyScheme() {
-    console.log("🚀 Starting MyScheme scraper...");
+  console.log("🚀 Starting MyScheme scraper...");
 
-    const previousJob = await getLatestScraperJob("MyScheme");
+  // TEMP TEST
+  const test = await fetchSchemeBySlug("nssfp");
 
-    const job = await createScraperJob("MyScheme");
+  console.log(
+    "========== DETAIL RESPONSE =========="
+  );
+  console.log(JSON.stringify(test, null, 2));
+  console.log(
+    "====================================="
+  );
 
-    try {
-        let from =
-            previousJob?.status === "Failed"
-                ? previousJob.currentOffset
-                : 0;
+  return [];
 
-        let total = 0;
-        let imported = 0;
+  // Existing code below (temporarily disabled)
+  const job = await createScraperJob("MyScheme");
 
-        const savedSchemes = [];
+  let from = 0;
+  let total = 0;
+  let imported = 0;
 
-        while (true) {
-            const response = await retry(() =>
-                fetchSchemes({
-                    from,
-                    size: PAGE_SIZE,
-                })
-            );
+  const savedSchemes = [];
 
-            const items = response.data.hits.items;
-            const page = response.data.hits.page;
+  while (true) {
+    const response = await fetchSchemes({
+      from,
+      size: PAGE_SIZE,
+    });
 
-            if (total === 0) {
-                total = page.total;
-                console.log(`📦 Total schemes to import: ${total}`);
-            }
+    const items = response.data.hits.items;
+    const page = response.data.hits.page;
 
-            if (!items.length) {
-                break;
-            }
-
-            const schemes = items.map(mapMyScheme);
-
-            try {
-                await bulkUpsertSchemes(schemes);
-
-                imported += schemes.length;
-
-                savedSchemes.push(...schemes);
-            } catch (error) {
-                console.error(
-                    `❌ Bulk import failed at offset ${from}:`,
-                    error
-                );
-
-                await updateScraperJob(job._id.toString(), {
-                    failedSchemes: schemes.length,
-                });
-            }
-
-            console.log(`✅ Imported ${imported}/${total}`);
-
-            await updateScraperJob(job._id.toString(), {
-                importedSchemes: imported,
-                totalSchemes: total,
-                currentOffset: from + PAGE_SIZE,
-            });
-
-            from += PAGE_SIZE;
-
-            if (from >= total) {
-                break;
-            }
-        }
-
-        console.log("🎉 MyScheme import completed!");
-        console.log(`✅ Total imported: ${imported}`);
-
-        await updateScraperJob(job._id.toString(), {
-            status: "Completed",
-            finishedAt: new Date(),
-            currentOffset: 0,
-        });
-
-        return savedSchemes;
-    } catch (error) {
-        console.error("❌ Scraper failed:", error);
-
-        await updateScraperJob(job._id.toString(), {
-            status: "Failed",
-            finishedAt: new Date(),
-            error:
-                error instanceof Error
-                    ? error.message
-                    : "Unknown Error",
-        });
-
-        throw error;
+    if (total === 0) {
+      total = page.total;
     }
+
+    if (!items.length) break;
+
+    const schemes = items.map(mapMyScheme);
+
+    await bulkUpsertSchemes(schemes);
+
+    imported += schemes.length;
+
+    savedSchemes.push(...schemes);
+
+    await updateScraperJob(job._id.toString(), {
+      importedSchemes: imported,
+      totalSchemes: total,
+      currentOffset: from,
+    });
+
+    from += PAGE_SIZE;
+
+    if (from >= total) break;
+  }
+
+  await updateScraperJob(job._id.toString(), {
+    status: "Completed",
+    finishedAt: new Date(),
+  });
+
+  return savedSchemes;
 }
