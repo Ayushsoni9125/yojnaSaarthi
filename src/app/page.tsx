@@ -1,11 +1,21 @@
 import { connectDB } from "@/lib/db/mongoose";
 import { getLatestSchemes } from "@/services/schemeQuery.service";
-import SchemeCard from "@/components/schemes/SchemeCard";
 import HomeClient from "@/components/home/HomeClient";
+
 export default async function HomePage() {
   await connectDB();
 
   const schemes = await getLatestSchemes();
+
+  const serializedSchemes = schemes.map((scheme: any) => ({
+    _id: scheme._id.toString(),
+    slug: scheme.slug,
+    title: scheme.title,
+    shortDescription: scheme.shortDescription,
+    category: scheme.category,
+    ministry: scheme.ministry,
+    status: scheme.status,
+  }));
 
   return (
     <main className="mx-auto max-w-7xl px-6 py-10">
@@ -16,8 +26,8 @@ export default async function HomePage() {
         </h1>
 
         <p className="mx-auto mt-4 max-w-2xl text-slate-600">
-          Discover central and state government schemes tailored for
-          students, farmers, women, senior citizens, entrepreneurs and more.
+          Discover central and state government schemes tailored for students,
+          farmers, women, senior citizens, entrepreneurs and more.
         </p>
       </section>
 
@@ -27,7 +37,7 @@ export default async function HomePage() {
           Latest Schemes
         </h2>
 
-        <HomeClient initialSchemes={schemes} />
+        <HomeClient initialSchemes={serializedSchemes} />
       </section>
     </main>
   );
