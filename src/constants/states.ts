@@ -1,4 +1,5 @@
 export const INDIAN_STATES = [
+  "All",
   "Andhra Pradesh",
   "Arunachal Pradesh",
   "Assam",
@@ -35,5 +36,4 @@ export const INDIAN_STATES = [
   "Ladakh",
   "Lakshadweep",
   "Puducherry",
-  "All",
 ] as const;
