@@ -5,7 +5,8 @@ export async function getUserByEmail(email: string) {
 }
 
 export async function createUser(data: Partial<IUser>) {
-  return await User.create(data);
+  const role = data.email === process.env.ADMIN_EMAIL ? "admin" : "user";
+  return await User.create({ ...data, role });
 }
 
 type GetUsersParams = {

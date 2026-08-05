@@ -119,13 +119,21 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
                     email: user.email,
                 });
 
-                if (!existingUser) {
+                if (existingUser) {
+                    if (existingUser.email === process.env.ADMIN_EMAIL && existingUser.role !== "admin") {
+                        existingUser.role = "admin";
+                        await existingUser.save();
+                    }
+                } else {
                     await User.create({
                         name: user.name,
                         email: user.email,
                         image: user.image,
                         provider: "google",
-                        role: "user",
+                        role:
+                            user.email === process.env.ADMIN_EMAIL
+                                ? "admin"
+                                : "user",
                     });
                 }
             }
@@ -133,22 +141,26 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             return true;
         },
         async jwt({ token, user, trigger, session }) {
-          await connectDB();
+            await connectDB();
 
-          const email = user?.email ?? token.email;
+            const email = user?.email ?? token.email;
 
-          if (email) {
-            const dbUser = await User.findOne({ email });
+            if (email) {
+                const dbUser = await User.findOne({ email });
 
-            if (dbUser) {
-              token.role = dbUser.role;
-              token.name = dbUser.name;
-              // Do not store base64 string in cookie to prevent Request Header Fields Too Large (431)
-              token.picture = dbUser.image?.startsWith("data:image/") ? "" : dbUser.image;
+                if (dbUser) {
+                    if (email === process.env.ADMIN_EMAIL && dbUser.role !== "admin") {
+                        dbUser.role = "admin";
+                        await dbUser.save();
+                    }
+                    token.role = dbUser.role;
+                    token.name = dbUser.name;
+                    // Do not store base64 string in cookie to prevent Request Header Fields Too Large (431)
+                    token.picture = dbUser.image?.startsWith("data:image/") ? "" : dbUser.image;
+                }
             }
-          }
 
-          return token;
+            return token;
         },
 
         async session({ session, token }) {

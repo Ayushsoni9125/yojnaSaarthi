@@ -61,10 +61,14 @@ export default function DashboardPage() {
     const [loadingRecommendations, setLoadingRecommendations] = useState(true);
     const [notificationCount, setNotificationCount] = useState(0);
 
-    // Redirect to login if not authenticated
+    // Redirect to login if not authenticated, or to admin panel if user is admin
     useEffect(() => {
-        if (status === "unauthenticated") router.push("/login");
-    }, [status, router]);
+        if (status === "unauthenticated") {
+            router.push("/login");
+        } else if (status === "authenticated" && (session?.user as any)?.role === "admin") {
+            router.push("/admin");
+        }
+    }, [status, session, router]);
 
     // Fetch bookmarks, profile details, recently viewed & notifications
     useEffect(() => {

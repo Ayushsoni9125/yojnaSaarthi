@@ -62,16 +62,18 @@ export default function Header() {
           ) : session ? (
             <div className="flex items-center gap-3">
               <Link
-                href="/dashboard"
+                href={(session.user as any).role === "admin" ? "/admin" : "/dashboard"}
                 className="hidden sm:flex flex-col items-end"
               >
                 <p className="text-sm font-semibold text-slate-800 hover:text-emerald-700 transition-colors">
                   {session.user?.name}
                 </p>
-                <p className="text-xs text-slate-400">Dashboard</p>
+                <p className="text-xs text-slate-400">
+                  {(session.user as any).role === "admin" ? "Admin Panel" : "Dashboard"}
+                </p>
               </Link>
               <Link
-                href="/dashboard"
+                href={(session.user as any).role === "admin" ? "/admin" : "/dashboard"}
                 className="w-9 h-9 rounded-full flex items-center justify-center text-white text-sm font-bold flex-shrink-0 border-2 border-slate-100 hover:border-emerald-500 transition-colors"
                 style={{
                   background: "linear-gradient(135deg, #064e3b, #059669)",
