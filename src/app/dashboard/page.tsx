@@ -41,11 +41,7 @@ const statusBg: Record<string, string> = {
     Expired: "#fef2f2",
 };
 
-const quickLinks = [
-    { label: "Find Schemes", href: "/", icon: "🔍", desc: "Browse all government schemes" },
-    { label: "AI Assistant", href: "/assistant", icon: "🤖", desc: "Get personalized recommendations" },
-    { label: "My Bookmarks", href: "#bookmarks", icon: "📌", desc: "View your saved schemes" },
-];
+
 
 export default function DashboardPage() {
     const { data: session, status } = useSession();
@@ -348,9 +344,9 @@ export default function DashboardPage() {
                     ))}
                 </section>
 
-                <div className="grid lg:grid-cols-3 gap-8">
+                <div className="space-y-8">
                     {/* ── Bookmarks ── */}
-                    <section id="bookmarks" className="lg:col-span-2 space-y-4">
+                    <section id="bookmarks" className="space-y-4">
                         <div className="flex items-center justify-between">
                             <h2 className="text-xl font-bold text-slate-800">📌 Saved Schemes</h2>
                             <Link href="/" className="text-sm text-emerald-600 hover:text-emerald-700 font-medium transition-colors">
@@ -513,88 +509,6 @@ export default function DashboardPage() {
                             </div>
                         )}
                     </section>
-
-                    {/* ── Right sidebar ── */}
-                    <aside className="space-y-6">
-
-                        {/* Profile card */}
-                        <Link
-                            href="/profile"
-                            className="block rounded-2xl p-6 text-center bg-white border border-slate-200 shadow-sm hover:border-emerald-200 hover:shadow-md transition-all group"
-                        >
-                            <div
-                                className="w-16 h-16 rounded-full mx-auto flex items-center justify-center text-white text-2xl font-bold mb-4 border-2 border-slate-100 group-hover:border-emerald-500 transition-colors"
-                                style={{ background: "linear-gradient(135deg, #064e3b, #059669)" }}
-                            >
-                                {userImage || user?.image ? (
-                                    <img src={userImage || user?.image || ""} alt="" className="w-16 h-16 rounded-full object-cover" />
-                                ) : (
-                                    initials
-                                )}
-                            </div>
-                            <h3 className="font-bold text-slate-800 group-hover:text-emerald-700 transition-colors">{user?.name}</h3>
-                            <p className="text-xs text-slate-400 mt-1">{user?.email}</p>
-                            <div
-                                className="mt-3 inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold"
-                                style={{ background: "#f0fdf4", color: "#15803d", border: "1px solid #bbf7d0" }}
-                            >
-                                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 inline-block" />
-                                Active
-                            </div>
-                        </Link>
-
-                        {/* Quick links */}
-                        <div
-                            className="rounded-2xl p-5"
-                            style={{ background: "#fff", border: "1px solid #e2e8f0", boxShadow: "0 2px 12px rgba(0,0,0,0.04)" }}
-                        >
-                            <h3 className="font-bold text-slate-800 mb-4 text-sm">Quick Links</h3>
-                            <div className="space-y-2">
-                                {quickLinks.map((link) => (
-                                    <Link
-                                        key={link.href}
-                                        href={link.href}
-                                        className="flex items-center gap-3 rounded-xl p-3 hover:bg-emerald-50 transition-colors group"
-                                    >
-                                        <span className="text-xl">{link.icon}</span>
-                                        <div>
-                                            <p className="text-sm font-semibold text-slate-700 group-hover:text-emerald-700 transition-colors">{link.label}</p>
-                                            <p className="text-xs text-slate-400">{link.desc}</p>
-                                        </div>
-                                    </Link>
-                                ))}
-                            </div>
-                        </div>
-
-                        {/* Categories in bookmarks */}
-                        {!loadingBookmarks && bookmarks.length > 0 && (
-                            <div
-                                className="rounded-2xl p-5"
-                                style={{ background: "#fff", border: "1px solid #e2e8f0", boxShadow: "0 2px 12px rgba(0,0,0,0.04)" }}
-                            >
-                                <h3 className="font-bold text-slate-800 mb-4 text-sm">Categories You Follow</h3>
-                                <div className="flex flex-wrap gap-2">
-                                    {[...new Set(bookmarks.map((b) => b.schemeId?.category).filter(Boolean))].map((cat) => (
-                                        <span
-                                            key={cat}
-                                            className="text-xs px-2.5 py-1.5 rounded-lg font-medium"
-                                            style={{ background: "#f0fdf4", color: "#15803d", border: "1px solid #bbf7d0" }}
-                                        >
-                                            {categoryEmoji[cat] ?? "📋"} {cat}
-                                        </span>
-                                    ))}
-                                </div>
-                            </div>
-                        )}
-
-                        {/* Sign out */}
-                        <button
-                            onClick={() => signOut({ callbackUrl: "/login" })}
-                            className="w-full rounded-2xl py-3 text-sm font-semibold text-red-500 border border-red-100 hover:bg-red-50 transition-colors"
-                        >
-                            Sign out
-                        </button>
-                    </aside>
                 </div>
             </main>
         </div>
