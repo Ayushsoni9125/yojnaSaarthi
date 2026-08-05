@@ -66,8 +66,8 @@ export default function Header() {
           {status === "loading" ? (
             <div className="w-8 h-8 rounded-full bg-slate-100 animate-pulse" />
           ) : session ? (
-            <div className="flex items-center gap-4">
-              <Link href="/profile" className="flex items-center gap-2.5 group">
+            <div className="flex items-center gap-3">
+              <Link href={dashboardLink} className="flex items-center gap-2.5 group">
                 <div
                   className="w-9 h-9 rounded-full flex items-center justify-center text-white text-sm font-bold flex-shrink-0 border-2 border-slate-100 group-hover:border-emerald-500 transition-colors"
                   style={{
@@ -88,15 +88,8 @@ export default function Header() {
                   <p className="text-sm font-semibold text-slate-800 group-hover:text-emerald-700 transition-colors">
                     {session.user?.name}
                   </p>
-                  <p className="text-xs text-slate-400">Profile</p>
+                  <p className="text-xs text-slate-400">{dashboardText}</p>
                 </div>
-              </Link>
-
-              <Link
-                href={dashboardLink}
-                className="rounded-xl border border-slate-200 bg-white px-3.5 py-1.5 text-xs font-bold text-slate-700 hover:bg-slate-50 hover:border-slate-300 transition-colors shadow-sm"
-              >
-                {dashboardText}
               </Link>
             </div>
           ) : (
@@ -190,7 +183,7 @@ export default function Header() {
             ) : session ? (
               <div className="flex items-center justify-between">
                 <Link
-                  href="/profile"
+                  href={dashboardLink}
                   onClick={() => setMobileOpen(false)}
                   className="flex items-center gap-3 group cursor-pointer"
                 >
@@ -214,15 +207,8 @@ export default function Header() {
                     <p className="text-sm font-bold text-slate-800 group-hover:text-emerald-700 transition-colors">
                       {session.user?.name}
                     </p>
-                    <p className="text-xs text-slate-400">View Profile 👤</p>
+                    <p className="text-xs text-slate-400">{dashboardText}</p>
                   </div>
-                </Link>
-                <Link
-                  href={dashboardLink}
-                  onClick={() => setMobileOpen(false)}
-                  className="rounded-lg bg-emerald-50 border border-emerald-200 px-3 py-1.5 text-xs font-bold text-emerald-700 hover:bg-emerald-100 transition-colors"
-                >
-                  View
                 </Link>
               </div>
             ) : (
