@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
+import { signOut } from "next-auth/react";
 import {
   LayoutDashboard,
   ScrollText,
@@ -14,6 +15,7 @@ import {
   Leaf,
   Menu,
   X,
+  LogOut,
 } from "lucide-react";
 
 const navItems = [
@@ -232,6 +234,14 @@ function SidebarContent({ onClose }: { onClose?: () => void }) {
             </p>
           </div>
         </div>
+
+        <button
+          onClick={() => signOut({ callbackUrl: "/login" })}
+          className="mt-3 flex w-full items-center gap-3 rounded-xl border border-red-500/20 bg-red-950/10 hover:bg-red-950/30 px-3 py-2.5 text-xs font-semibold text-red-400 hover:text-red-300 transition-colors duration-150"
+        >
+          <LogOut className="h-4 w-4" />
+          <span>Log Out</span>
+        </button>
       </div>
     </div>
   );
