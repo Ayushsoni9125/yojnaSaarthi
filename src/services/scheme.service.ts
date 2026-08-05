@@ -3,8 +3,31 @@ import { SchemeInput } from "@/validations/scheme";
 import { SchemeQuery } from "@/validations/query";
 import { buildSchemeQuery } from "@/utils/buildSchemeQuery";
 import { ScrapedScheme } from "@/types/scraper";
+import Notification from "@/models/Notification";
+import User from "@/models/User";
+
+async function createNotificationsForScheme(schemeId: any, title: string) {
+  try {
+    const users = await User.find({}, "_id").lean();
+    if (users.length > 0) {
+      await Notification.insertMany(
+        users.map((user: any) => ({
+          userId: user._id,
+          title: "New Scheme Added",
+          message: `${title} has been added.`,
+          type: "new_scheme",
+          schemeId,
+        }))
+      );
+    }
+  } catch (error) {
+    console.error("Failed to create notifications for scheme:", error);
+  }
+}
+
 export async function createScheme(data: SchemeInput) {
     const scheme = await Scheme.create(data);
+    await createNotificationsForScheme(scheme._id, scheme.title);
     return scheme;
 }
 
@@ -133,7 +156,9 @@ export async function deleteScheme(slug: string) {
 
 
 export async function upsertScheme(data: ScrapedScheme) {
-    return await Scheme.findOneAndUpdate(
+    const existing = await Scheme.findOne({ slug: data.slug }, "_id").lean();
+
+    const scheme = await Scheme.findOneAndUpdate(
         {
             slug: data.slug,
         },
@@ -170,11 +195,24 @@ export async function upsertScheme(data: ScrapedScheme) {
             setDefaultsOnInsert: true,
         }
     );
+
+    if (!existing && scheme) {
+        await createNotificationsForScheme(scheme._id, scheme.title);
+    }
+
+    return scheme;
 }
+
 export async function bulkUpsertSchemes(
   schemes: ScrapedScheme[]
 ) {
   if (!schemes.length) return;
+
+  const slugs = schemes.map((s) => s.slug);
+  const existingSchemes = await Scheme.find({ slug: { $in: slugs } }, "slug").lean();
+  const existingSlugs = new Set(existingSchemes.map((s) => s.slug));
+
+  const newSchemes = schemes.filter((s) => !existingSlugs.has(s.slug));
 
   const operations = schemes.map((scheme) => ({
     updateOne: {
@@ -212,5 +250,37 @@ export async function bulkUpsertSchemes(
     },
   }));
 
-  return await Scheme.bulkWrite(operations);
+  const result = await Scheme.bulkWrite(operations);
+
+  if (newSchemes.length > 0) {
+    try {
+      const inserted = await Scheme.find(
+        { slug: { $in: newSchemes.map((s) => s.slug) } },
+        "_id title"
+      ).lean();
+      const users = await User.find({}, "_id").lean();
+
+      if (users.length > 0 && inserted.length > 0) {
+        const notifications: any[] = [];
+        for (const scheme of inserted) {
+          for (const user of users) {
+            notifications.push({
+              userId: user._id,
+              title: "New Scheme Added",
+              message: `${scheme.title} has been added.`,
+              type: "new_scheme",
+              schemeId: scheme._id,
+            });
+          }
+        }
+        if (notifications.length > 0) {
+          await Notification.insertMany(notifications);
+        }
+      }
+    } catch (err) {
+      console.error("Failed to create notifications in bulkUpsertSchemes:", err);
+    }
+  }
+
+  return result;
 }
