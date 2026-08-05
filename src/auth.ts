@@ -83,25 +83,29 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 
             return true;
         },
-        async jwt({ token, user }) {
-  await connectDB();
+        async jwt({ token, user, trigger, session }) {
+          await connectDB();
 
-  const email = user?.email ?? token.email;
+          const email = user?.email ?? token.email;
 
-  if (email) {
-    const dbUser = await User.findOne({ email });
+          if (email) {
+            const dbUser = await User.findOne({ email });
 
-    if (dbUser) {
-      token.role = dbUser.role;
-    }
-  }
+            if (dbUser) {
+              token.role = dbUser.role;
+              token.name = dbUser.name;
+              token.picture = dbUser.image;
+            }
+          }
 
-  return token;
-},
+          return token;
+        },
 
         async session({ session, token }) {
             if (session.user) {
                 (session.user as any).role = token.role;
+                session.user.name = token.name;
+                session.user.image = token.picture as string;
             }
 
             return session;
