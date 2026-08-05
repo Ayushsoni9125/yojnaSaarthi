@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
+import { useRouter } from "next/navigation";
 
 type SchemeCardProps = {
   scheme: {
@@ -19,6 +20,7 @@ type SchemeCardProps = {
 export default function SchemeCard({
   scheme,
 }: SchemeCardProps) {
+  const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [isCompared, setIsCompared] = useState(false);
 
@@ -92,6 +94,18 @@ export default function SchemeCard({
       });
 
       const data = await res.json();
+
+      if (res.status === 401) {
+        toast.warning("Please log in to bookmark schemes.");
+        router.push("/login");
+        return;
+      }
+
+      if (!res.ok) {
+        toast.error(data.message || "Failed to bookmark scheme.");
+        return;
+      }
+
       toast.success(data.message);
     } catch (error) {
       console.error(error);

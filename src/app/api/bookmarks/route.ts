@@ -52,6 +52,16 @@ export async function POST(req: NextRequest) {
       message: "Scheme bookmarked successfully.",
     });
   } catch (error: any) {
+    if (error instanceof AuthError) {
+      return Response.json(
+        {
+          success: false,
+          message: error.message,
+        },
+        { status: error.status }
+      );
+    }
+
     // Duplicate bookmark
     if (error.code === 11000) {
       return Response.json(
