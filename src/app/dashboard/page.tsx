@@ -198,6 +198,7 @@ export default function DashboardPage() {
                     <nav className="hidden md:flex items-center gap-6 text-sm text-slate-600">
                         <Link href="/" className="hover:text-emerald-700 transition-colors font-medium">Schemes</Link>
                         <Link href="/assistant" className="hover:text-emerald-700 transition-colors font-medium">AI Assistant</Link>
+                        <Link href="/compare" className="hover:text-emerald-700 transition-colors font-medium">Compare</Link>
                     </nav>
 
 

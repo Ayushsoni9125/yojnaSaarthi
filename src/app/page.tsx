@@ -1,6 +1,7 @@
 import { connectDB } from "@/lib/db/mongoose";
 import { getLatestSchemes } from "@/services/schemeQuery.service";
 import HomeClient from "@/components/home/HomeClient";
+import Header from "@/components/layout/Header";
 
 export default async function HomePage() {
   await connectDB();
@@ -18,7 +19,9 @@ export default async function HomePage() {
   }));
 
   return (
-    <main className="mx-auto max-w-7xl px-6 py-10">
+    <div className="min-h-screen bg-slate-50">
+      <Header />
+      <main className="mx-auto max-w-7xl px-6 py-10">
       {/* Hero */}
       <section className="mb-12 text-center">
         <h1 className="text-5xl font-bold text-slate-900">
@@ -40,5 +43,6 @@ export default async function HomePage() {
         <HomeClient initialSchemes={serializedSchemes} />
       </section>
     </main>
+    </div>
   );
 }

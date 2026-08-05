@@ -5,6 +5,7 @@ import { cn } from "@/lib/utils";
 import { SessionProvider } from "next-auth/react";
 
 import ToastProvider from "@/components/providers/ToastProvider";
+import CompareBar from "@/components/schemes/CompareBar";
 
 const geist = Geist({
   subsets: ["latin"],
@@ -30,6 +31,7 @@ export default function RootLayout({
         <SessionProvider>
           {children}
           <ToastProvider />
+          <CompareBar />
         </SessionProvider>
       </body>
     </html>
