@@ -2,6 +2,27 @@ import { NextRequest } from "next/server";
 import { connectDB } from "@/lib/db/mongoose";
 import Bookmark from "@/models/Bookmark";
 import { requireUser } from "@/lib/auth/requireUser";
+import { AuthError } from "@/lib/auth/requireAdmin";
+
+export async function GET() {
+  try {
+    await connectDB();
+    const user = await requireUser();
+
+    const bookmarks = await Bookmark.find({ userId: user._id })
+      .populate("schemeId", "title slug shortDescription category ministry status")
+      .sort({ createdAt: -1 })
+      .lean();
+
+    return Response.json({ success: true, data: bookmarks });
+  } catch (error: any) {
+    if (error instanceof AuthError) {
+      return Response.json({ success: false, message: error.message }, { status: error.status });
+    }
+    return Response.json({ success: false, message: "Internal Server Error" }, { status: 500 });
+  }
+}
+
 export async function POST(req: NextRequest) {
   try {
     await connectDB();

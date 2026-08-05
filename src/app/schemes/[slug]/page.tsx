@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import { connectDB } from "@/lib/db/mongoose";
 import { getSchemeBySlug } from "@/services/schemeQuery.service";
-
+import RecentlyViewed from "@/components/schemes/RecentlyViewed";
 type Props = {
     params: Promise<{
         slug: string;
@@ -20,7 +20,19 @@ export default async function SchemeDetailsPage({ params }: Props) {
     }
 
     return (
+
         <div className="mx-auto max-w-5xl px-6 py-10">
+            <RecentlyViewed
+                scheme={{
+                    _id: scheme._id.toString(),
+                    slug: scheme.slug,
+                    title: scheme.title,
+                    shortDescription: scheme.shortDescription,
+                    category: scheme.category,
+                    ministry: scheme.ministry,
+                    status: scheme.status,
+                }}
+            />
             <div className="mb-6">
                 <span className="rounded-full bg-blue-100 px-3 py-1 text-sm font-medium text-blue-700">
                     {scheme.category}
