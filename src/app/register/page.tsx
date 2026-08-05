@@ -126,7 +126,7 @@ export default function RegisterPage() {
 
         {/* Logo */}
         <div className="relative z-10">
-          <div className="flex items-center gap-3">
+          <Link href="/" className="inline-flex items-center gap-3 hover:opacity-90 transition-opacity">
             <div
               className="w-10 h-10 rounded-xl flex items-center justify-center text-lg font-bold"
               style={{ background: "rgba(255,255,255,0.15)", backdropFilter: "blur(8px)", color: "#fff" }}
@@ -134,7 +134,7 @@ export default function RegisterPage() {
               य
             </div>
             <span className="text-white text-xl font-bold tracking-wide">YojanaSaarthi</span>
-          </div>
+          </Link>
         </div>
 
         {/* Center copy */}
@@ -185,7 +185,7 @@ export default function RegisterPage() {
       <div className="flex-1 flex items-center justify-center px-6 py-12 bg-slate-50">
         <div className="w-full max-w-md">
           {/* Mobile logo */}
-          <div className="lg:hidden flex items-center gap-2 mb-8">
+          <Link href="/" className="lg:hidden flex items-center gap-2 mb-8 hover:opacity-90 transition-opacity w-fit">
             <div
               className="w-8 h-8 rounded-lg flex items-center justify-center text-white text-sm font-bold"
               style={{ background: "linear-gradient(135deg, #064e3b, #059669)" }}
@@ -193,7 +193,7 @@ export default function RegisterPage() {
               य
             </div>
             <span className="font-bold text-slate-800">YojanaSaarthi</span>
-          </div>
+          </Link>
 
           {/* Heading */}
           <div className="mb-8">
