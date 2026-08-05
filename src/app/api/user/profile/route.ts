@@ -7,7 +7,7 @@ import { z } from "zod";
 
 const ProfileUpdateSchema = z.object({
   name: z.string().trim().min(3, "Name must be at least 3 characters").max(50, "Name cannot exceed 50 characters"),
-  image: z.string().url("Profile picture must be a valid URL").or(z.string().length(0)).optional(),
+  image: z.string().url("Profile picture must be a valid URL").or(z.string().startsWith("data:image/", { message: "Must be a valid image data URL" })).or(z.string().length(0)).optional(),
 });
 
 export async function PUT(req: NextRequest) {

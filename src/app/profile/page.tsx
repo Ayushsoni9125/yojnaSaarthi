@@ -22,6 +22,23 @@ export default function ProfilePage() {
   const [loading, setLoading] = useState(false);
   const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
 
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (file.size > 1024 * 1024) {
+      toast.error("Profile picture must be under 1MB");
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setImage(reader.result as string);
+      setFieldErrors((prev) => ({ ...prev, image: undefined }));
+    };
+    reader.readAsDataURL(file);
+  };
+
   useEffect(() => {
     if (status === "unauthenticated") {
       router.push("/login");
@@ -213,27 +230,55 @@ export default function ProfilePage() {
                   )}
                 </div>
 
-                {/* Profile Picture URL */}
-                <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-1.5">
-                    Profile Picture URL (Optional)
-                  </label>
-                  <input
-                    type="url"
-                    value={image}
-                    onChange={(e) => {
-                      setImage(e.target.value);
-                      setFieldErrors((prev) => ({ ...prev, image: undefined }));
-                    }}
-                    placeholder="https://example.com/avatar.jpg"
-                    disabled={loading}
-                    className={`w-full rounded-xl border px-4 py-3 text-sm bg-white text-slate-900 outline-none transition-all
-                      focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500
-                      disabled:bg-slate-50 disabled:text-slate-400
-                      ${fieldErrors.image ? "border-red-400 focus:ring-red-400 focus:border-red-400 bg-red-50" : "border-slate-200"}`}
-                  />
+                {/* Profile Picture Upload */}
+                <div className="flex flex-col items-center gap-4 bg-slate-50 p-4 rounded-xl border border-slate-100">
+                  <span className="block text-sm font-medium text-slate-700 w-full text-left">
+                    Profile Picture
+                  </span>
+                  
+                  <div className="flex items-center gap-4 w-full">
+                    {/* Avatar Preview */}
+                    <div className="w-16 h-16 rounded-full flex-shrink-0 flex items-center justify-center text-white text-xl font-bold bg-gradient-to-br from-emerald-600 to-teal-500 shadow-inner overflow-hidden border-2 border-white">
+                      {image ? (
+                        <img src={image} alt="Preview" className="w-full h-full object-cover" />
+                      ) : (
+                        initials
+                      )}
+                    </div>
+
+                    <div className="flex flex-col gap-1.5">
+                      <div className="flex items-center gap-2">
+                        <label
+                          htmlFor="avatar-upload"
+                          className="cursor-pointer rounded-lg bg-emerald-50 px-3 py-2 text-xs font-semibold text-emerald-700 hover:bg-emerald-100 transition-colors border border-emerald-100"
+                        >
+                          Upload Photo
+                        </label>
+                        <input
+                          id="avatar-upload"
+                          type="file"
+                          accept="image/png, image/jpeg, image/webp"
+                          disabled={loading}
+                          onChange={handleFileChange}
+                          className="hidden"
+                        />
+                        {image && (
+                          <button
+                            type="button"
+                            onClick={() => setImage("")}
+                            className="rounded-lg bg-red-50 px-3 py-2 text-xs font-semibold text-red-700 hover:bg-red-100 transition-colors border border-red-100"
+                          >
+                            Remove
+                          </button>
+                        )}
+                      </div>
+                      <p className="text-[10px] text-slate-400">
+                        Supports PNG, JPG or WEBP (Max 1MB)
+                      </p>
+                    </div>
+                  </div>
                   {fieldErrors.image && (
-                    <p className="mt-1 text-xs text-red-500">{fieldErrors.image[0]}</p>
+                    <p className="w-full text-xs text-red-500 text-left">{fieldErrors.image[0]}</p>
                   )}
                 </div>
 
