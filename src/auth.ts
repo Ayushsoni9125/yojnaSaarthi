@@ -61,6 +61,55 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         strategy: "jwt",
     },
 
+    cookies: {
+        sessionToken: {
+            name: `yojana-saarthi.session-token`,
+            options: {
+                httpOnly: true,
+                sameSite: "lax",
+                path: "/",
+                secure: false,
+            },
+        },
+        callbackUrl: {
+            name: `yojana-saarthi.callback-url`,
+            options: {
+                sameSite: "lax",
+                path: "/",
+                secure: false,
+            },
+        },
+        csrfToken: {
+            name: `yojana-saarthi.csrf-token`,
+            options: {
+                httpOnly: true,
+                sameSite: "lax",
+                path: "/",
+                secure: false,
+            },
+        },
+        state: {
+            name: `yojana-saarthi.state`,
+            options: {
+                httpOnly: true,
+                sameSite: "lax",
+                path: "/",
+                secure: false,
+                maxAge: 900,
+            },
+        },
+        pkceCodeVerifier: {
+            name: `yojana-saarthi.pkce.code_verifier`,
+            options: {
+                httpOnly: true,
+                sameSite: "lax",
+                path: "/",
+                secure: false,
+                maxAge: 900,
+            },
+        },
+    },
+
     callbacks: {
         async signIn({ user, account }) {
             if (account?.provider === "google") {

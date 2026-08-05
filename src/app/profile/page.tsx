@@ -56,7 +56,12 @@ export default function ProfilePage() {
     const fetchBookmarks = async () => {
       try {
         const res = await fetch("/api/bookmarks");
-        const data = await res.json();
+        if (!res.ok) return;
+        
+        const text = await res.text();
+        if (!text) return;
+        
+        const data = JSON.parse(text);
 
         if (data.success) {
           setBookmarkCount(data.data.length);
