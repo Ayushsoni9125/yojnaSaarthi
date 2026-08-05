@@ -189,9 +189,13 @@ export default function Header() {
               <div className="h-9 w-full rounded bg-slate-100 animate-pulse" />
             ) : session ? (
               <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
+                <Link
+                  href="/profile"
+                  onClick={() => setMobileOpen(false)}
+                  className="flex items-center gap-3 group cursor-pointer"
+                >
                   <div
-                    className="w-9 h-9 rounded-full flex items-center justify-center text-white text-sm font-bold border"
+                    className="w-9 h-9 rounded-full flex items-center justify-center text-white text-sm font-bold border group-hover:border-emerald-500 transition-colors"
                     style={{
                       background: "linear-gradient(135deg, #064e3b, #059669)",
                     }}
@@ -207,12 +211,12 @@ export default function Header() {
                     )}
                   </div>
                   <div>
-                    <p className="text-sm font-bold text-slate-800">
+                    <p className="text-sm font-bold text-slate-800 group-hover:text-emerald-700 transition-colors">
                       {session.user?.name}
                     </p>
-                    <p className="text-xs text-slate-400">{dashboardText}</p>
+                    <p className="text-xs text-slate-400">View Profile 👤</p>
                   </div>
-                </div>
+                </Link>
                 <Link
                   href={dashboardLink}
                   onClick={() => setMobileOpen(false)}

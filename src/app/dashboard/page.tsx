@@ -216,20 +216,22 @@ export default function DashboardPage() {
                                 </span>
                             )}
                         </Link>
-                        <div className="hidden sm:flex flex-col items-end">
-                            <p className="text-sm font-semibold text-slate-800">{user?.name}</p>
-                            <p className="text-xs text-slate-400">{user?.email}</p>
-                        </div>
-                        <div
-                            className="w-9 h-9 rounded-full flex items-center justify-center text-white text-sm font-bold flex-shrink-0"
-                            style={{ background: "linear-gradient(135deg, #064e3b, #059669)" }}
-                        >
-                            {userImage || user?.image ? (
-                                <img src={userImage || user?.image || ""} alt={user?.name ?? ""} className="w-9 h-9 rounded-full object-cover" />
-                            ) : (
-                                initials
-                            )}
-                        </div>
+                        <Link href="/profile" className="flex items-center gap-3 group cursor-pointer hover:opacity-90 transition-opacity">
+                            <div className="hidden sm:flex flex-col items-end">
+                                <p className="text-sm font-semibold text-slate-800 group-hover:text-emerald-700 transition-colors">{user?.name}</p>
+                                <p className="text-xs text-slate-400">View Profile 👤</p>
+                            </div>
+                            <div
+                                className="w-9 h-9 rounded-full flex items-center justify-center text-white text-sm font-bold flex-shrink-0 border-2 border-transparent group-hover:border-emerald-500 transition-colors"
+                                style={{ background: "linear-gradient(135deg, #064e3b, #059669)" }}
+                            >
+                                {userImage || user?.image ? (
+                                    <img src={userImage || user?.image || ""} alt={user?.name ?? ""} className="w-9 h-9 rounded-full object-cover" />
+                                ) : (
+                                    initials
+                                )}
+                            </div>
+                        </Link>
                         <button
                             onClick={() => signOut({ callbackUrl: "/login" })}
                             className="text-xs text-slate-500 hover:text-red-500 transition-colors font-medium border border-slate-200 rounded-lg px-3 py-1.5 hover:border-red-200 hover:bg-red-50"
