@@ -99,6 +99,9 @@ export default function ProfilePage() {
                     setProfileData(data.data);
                     setName(data.data.name);
                     setImage(data.data.image);
+                    if (typeof window !== "undefined" && window.location.search.includes("edit=true")) {
+                        setIsEditing(true);
+                    }
                 }
             } catch (error) {
                 console.error(error);

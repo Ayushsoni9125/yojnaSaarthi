@@ -66,29 +66,37 @@ export default function Header() {
           {status === "loading" ? (
             <div className="w-8 h-8 rounded-full bg-slate-100 animate-pulse" />
           ) : session ? (
-            <div className="flex items-center gap-3">
-              <Link href={dashboardLink} className="flex flex-col items-end">
-                <p className="text-sm font-semibold text-slate-800 hover:text-emerald-700 transition-colors">
-                  {session.user?.name}
-                </p>
-                <p className="text-xs text-slate-400">{dashboardText}</p>
+            <div className="flex items-center gap-4">
+              <Link href="/profile" className="flex items-center gap-2.5 group">
+                <div
+                  className="w-9 h-9 rounded-full flex items-center justify-center text-white text-sm font-bold flex-shrink-0 border-2 border-slate-100 group-hover:border-emerald-500 transition-colors"
+                  style={{
+                    background: "linear-gradient(135deg, #064e3b, #059669)",
+                  }}
+                >
+                  {session.user?.image ? (
+                    <img
+                      src={session.user.image}
+                      alt=""
+                      className="w-full h-full rounded-full object-cover"
+                    />
+                  ) : (
+                    initials
+                  )}
+                </div>
+                <div className="hidden sm:flex flex-col items-start">
+                  <p className="text-sm font-semibold text-slate-800 group-hover:text-emerald-700 transition-colors">
+                    {session.user?.name}
+                  </p>
+                  <p className="text-xs text-slate-400">Edit Profile ✏️</p>
+                </div>
               </Link>
+
               <Link
                 href={dashboardLink}
-                className="w-9 h-9 rounded-full flex items-center justify-center text-white text-sm font-bold flex-shrink-0 border-2 border-slate-100 hover:border-emerald-500 transition-colors"
-                style={{
-                  background: "linear-gradient(135deg, #064e3b, #059669)",
-                }}
+                className="rounded-xl border border-slate-200 bg-white px-3.5 py-1.5 text-xs font-bold text-slate-700 hover:bg-slate-50 hover:border-slate-300 transition-colors shadow-sm"
               >
-                {session.user?.image ? (
-                  <img
-                    src={session.user.image}
-                    alt=""
-                    className="w-full h-full rounded-full object-cover"
-                  />
-                ) : (
-                  initials
-                )}
+                {dashboardText}
               </Link>
             </div>
           ) : (
