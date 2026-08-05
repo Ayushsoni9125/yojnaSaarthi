@@ -45,7 +45,6 @@ const quickLinks = [
     { label: "Find Schemes", href: "/", icon: "🔍", desc: "Browse all government schemes" },
     { label: "AI Assistant", href: "/assistant", icon: "🤖", desc: "Get personalized recommendations" },
     { label: "My Bookmarks", href: "#bookmarks", icon: "📌", desc: "View your saved schemes" },
-    { label: "Edit Profile", href: "/profile?edit=true", icon: "👤", desc: "Update your name & photo" },
 ];
 
 export default function DashboardPage() {
@@ -519,12 +518,12 @@ export default function DashboardPage() {
                     <aside className="space-y-6">
 
                         {/* Profile card */}
-                        <div
-                            className="rounded-2xl p-6 text-center"
-                            style={{ background: "#fff", border: "1px solid #e2e8f0", boxShadow: "0 2px 12px rgba(0,0,0,0.04)" }}
+                        <Link
+                            href="/profile"
+                            className="block rounded-2xl p-6 text-center bg-white border border-slate-200 shadow-sm hover:border-emerald-200 hover:shadow-md transition-all group"
                         >
                             <div
-                                className="w-16 h-16 rounded-full mx-auto flex items-center justify-center text-white text-2xl font-bold mb-4"
+                                className="w-16 h-16 rounded-full mx-auto flex items-center justify-center text-white text-2xl font-bold mb-4 border-2 border-slate-100 group-hover:border-emerald-500 transition-colors"
                                 style={{ background: "linear-gradient(135deg, #064e3b, #059669)" }}
                             >
                                 {userImage || user?.image ? (
@@ -533,7 +532,7 @@ export default function DashboardPage() {
                                     initials
                                 )}
                             </div>
-                            <h3 className="font-bold text-slate-800">{user?.name}</h3>
+                            <h3 className="font-bold text-slate-800 group-hover:text-emerald-700 transition-colors">{user?.name}</h3>
                             <p className="text-xs text-slate-400 mt-1">{user?.email}</p>
                             <div
                                 className="mt-3 inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold"
@@ -542,16 +541,7 @@ export default function DashboardPage() {
                                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 inline-block" />
                                 Active
                             </div>
-
-                            <div className="mt-4 pt-3 border-t border-slate-100">
-                                <Link
-                                    href="/profile?edit=true"
-                                    className="inline-flex items-center justify-center gap-1.5 rounded-xl border border-slate-200 bg-white px-4 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-50 hover:border-slate-300 transition-colors shadow-sm w-full"
-                                >
-                                    ✏️ Edit Profile
-                                </Link>
-                            </div>
-                        </div>
+                        </Link>
 
                         {/* Quick links */}
                         <div

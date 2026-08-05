@@ -88,7 +88,7 @@ export default function Header() {
                   <p className="text-sm font-semibold text-slate-800 group-hover:text-emerald-700 transition-colors">
                     {session.user?.name}
                   </p>
-                  <p className="text-xs text-slate-400">Edit Profile ✏️</p>
+                  <p className="text-xs text-slate-400">Profile</p>
                 </div>
               </Link>
 
