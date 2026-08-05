@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import SchemeCard from "@/components/schemes/SchemeCard";
+import SchemeSkeleton from "@/components/schemes/SchemeSkeleton";
 import { SCHEME_CATEGORIES, SCHEME_STATUS } from "@/constants/scheme";
 import { INDIAN_STATES } from "@/constants/states";
 
@@ -147,22 +148,22 @@ export default function HomeClient({
         </select>
       </div>
 
-      {/* Loading */}
-      {loading && (
-        <div className="py-10 text-center text-slate-500">
-          Loading schemes...
+      {/* Cards & Loading state */}
+      {loading ? (
+        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 animate-fade-in">
+          {Array.from({ length: 8 }).map((_, idx) => (
+            <SchemeSkeleton key={idx} />
+          ))}
         </div>
-      )}
-
-      {/* Empty State */}
-      {!loading && schemes.length === 0 && (
-        <div className="py-16 text-center text-slate-500">
-          No schemes found.
+      ) : schemes.length === 0 ? (
+        <div className="py-16 text-center text-slate-500 bg-white border border-slate-200 rounded-2xl p-8 max-w-md mx-auto shadow-sm animate-fade-in">
+          <span className="text-4xl">🔍</span>
+          <h3 className="text-lg font-bold text-slate-800 mt-4">No schemes found</h3>
+          <p className="text-sm text-slate-400 mt-1">
+            We couldn&apos;t find any government schemes matching your search queries or filters. Try adjusting your parameters.
+          </p>
         </div>
-      )}
-
-      {/* Cards */}
-      {!loading && schemes.length > 0 && (
+      ) : (
         <>
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             {schemes.map((scheme) => (
