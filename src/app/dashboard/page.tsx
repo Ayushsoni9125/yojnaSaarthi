@@ -62,19 +62,13 @@ export default function DashboardPage() {
     if (status === "unauthenticated") router.push("/login");
   }, [status, router]);
 
-  // Fetch bookmarks & profile details
+  // Fetch bookmarks, profile details & recently viewed
   useEffect(() => {
     if (status !== "authenticated") return;
     fetchBookmarks();
     fetchUserProfile();
+    fetchRecentSchemes();
   }, [status]);
-  useEffect(() => {
-  const data = localStorage.getItem("recentlyViewed");
-
-  if (data) {
-    setRecentSchemes(JSON.parse(data));
-  }
-}, []);
   const fetchBookmarks = async () => {
     try {
       setLoadingBookmarks(true);
@@ -94,6 +88,18 @@ export default function DashboardPage() {
       const data = await res.json();
       if (data.success && data.data.image) {
         setUserImage(data.data.image);
+      }
+    } catch {
+      // silently fail
+    }
+  };
+
+  const fetchRecentSchemes = async () => {
+    try {
+      const res = await fetch("/api/recently-viewed");
+      const data = await res.json();
+      if (data.success) {
+        setRecentSchemes(data.data);
       }
     } catch {
       // silently fail

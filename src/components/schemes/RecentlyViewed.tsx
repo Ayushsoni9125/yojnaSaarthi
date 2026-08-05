@@ -5,32 +5,29 @@ import { useEffect } from "react";
 type Props = {
   scheme: {
     _id: string;
-    slug: string;
-    title: string;
-    shortDescription: string;
-    category: string;
-    ministry: string;
-    status: string;
   };
 };
 
 export default function RecentlyViewed({ scheme }: Props) {
   useEffect(() => {
-    const existing = JSON.parse(
-      localStorage.getItem("recentlyViewed") || "[]"
-    );
+    const saveRecentlyViewed = async () => {
+      try {
+        await fetch("/api/recently-viewed", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            schemeId: scheme._id,
+          }),
+        });
+      } catch (error) {
+        console.error("Failed to save recently viewed:", error);
+      }
+    };
 
-    const filtered = existing.filter(
-      (item: any) => item._id !== scheme._id
-    );
-
-    filtered.unshift(scheme);
-
-    localStorage.setItem(
-      "recentlyViewed",
-      JSON.stringify(filtered.slice(0, 10))
-    );
-  }, [scheme]);
+    saveRecentlyViewed();
+  }, [scheme._id]);
 
   return null;
 }
