@@ -215,9 +215,9 @@ export default function ProfilePage() {
                                     setImage(profileData.image);
                                     setIsEditing(true);
                                 }}
-                                className="rounded-xl border border-slate-200 bg-white px-5 py-2.5 text-sm font-semibold text-slate-700 hover:bg-slate-50 transition-colors shadow-sm hover:border-slate-300"
+                                className="rounded-xl bg-emerald-600 px-5 py-2.5 text-sm font-bold text-white shadow-md hover:bg-emerald-700 transition-all flex items-center gap-2"
                             >
-                                Edit Profile
+                                ✏️ Edit Profile
                             </button>
                         </div>
                     </div>
