@@ -54,16 +54,19 @@ export default function DashboardPage() {
   const [bookmarks, setBookmarks] = useState<BookmarkedScheme[]>([]);
   const [loadingBookmarks, setLoadingBookmarks] = useState(true);
   const [removingId, setRemovingId] = useState<string | null>(null);
-    const [recentSchemes, setRecentSchemes] = useState<any[]>([]);
+  const [recentSchemes, setRecentSchemes] = useState<any[]>([]);
+  const [userImage, setUserImage] = useState("");
+
   // Redirect to login if not authenticated
   useEffect(() => {
     if (status === "unauthenticated") router.push("/login");
   }, [status, router]);
 
-  // Fetch bookmarks
+  // Fetch bookmarks & profile details
   useEffect(() => {
     if (status !== "authenticated") return;
     fetchBookmarks();
+    fetchUserProfile();
   }, [status]);
   useEffect(() => {
   const data = localStorage.getItem("recentlyViewed");
@@ -82,6 +85,18 @@ export default function DashboardPage() {
       // silently fail
     } finally {
       setLoadingBookmarks(false);
+    }
+  };
+
+  const fetchUserProfile = async () => {
+    try {
+      const res = await fetch("/api/user/profile");
+      const data = await res.json();
+      if (data.success && data.data.image) {
+        setUserImage(data.data.image);
+      }
+    } catch {
+      // silently fail
     }
   };
 
@@ -154,8 +169,8 @@ export default function DashboardPage() {
               className="w-9 h-9 rounded-full flex items-center justify-center text-white text-sm font-bold flex-shrink-0"
               style={{ background: "linear-gradient(135deg, #064e3b, #059669)" }}
             >
-              {user?.image ? (
-                <img src={user.image} alt={user.name ?? ""} className="w-9 h-9 rounded-full object-cover" />
+              {userImage || user?.image ? (
+                <img src={userImage || user?.image || ""} alt={user?.name ?? ""} className="w-9 h-9 rounded-full object-cover" />
               ) : (
                 initials
               )}
@@ -451,8 +466,8 @@ export default function DashboardPage() {
                 className="w-16 h-16 rounded-full mx-auto flex items-center justify-center text-white text-2xl font-bold mb-4"
                 style={{ background: "linear-gradient(135deg, #064e3b, #059669)" }}
               >
-                {user?.image ? (
-                  <img src={user.image} alt="" className="w-16 h-16 rounded-full object-cover" />
+                {userImage || user?.image ? (
+                  <img src={userImage || user?.image || ""} alt="" className="w-16 h-16 rounded-full object-cover" />
                 ) : (
                   initials
                 )}

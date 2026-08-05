@@ -143,7 +143,8 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             if (dbUser) {
               token.role = dbUser.role;
               token.name = dbUser.name;
-              token.picture = dbUser.image;
+              // Do not store base64 string in cookie to prevent Request Header Fields Too Large (431)
+              token.picture = dbUser.image?.startsWith("data:image/") ? "" : dbUser.image;
             }
           }
 

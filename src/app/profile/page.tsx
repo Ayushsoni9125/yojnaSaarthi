@@ -8,12 +8,24 @@ import { toast } from "react-toastify";
 
 type FieldErrors = Partial<Record<"name" | "image", string[]>>;
 
+type ProfileData = {
+  name: string;
+  email: string;
+  image: string;
+  role: string;
+  provider: string;
+};
+
 export default function ProfilePage() {
   const { data: session, status, update } = useSession();
   const router = useRouter();
 
   const [bookmarkCount, setBookmarkCount] = useState(0);
   const [recentCount, setRecentCount] = useState(0);
+
+  // Profile data from database
+  const [profileData, setProfileData] = useState<ProfileData | null>(null);
+  const [fetchingProfile, setFetchingProfile] = useState(true);
 
   // Editing state
   const [isEditing, setIsEditing] = useState(false);
@@ -45,13 +57,7 @@ export default function ProfilePage() {
     }
   }, [status, router]);
 
-  useEffect(() => {
-    if (session?.user) {
-      setName(session.user.name || "");
-      setImage(session.user.image || "");
-    }
-  }, [session]);
-
+  // Fetch bookmarks & profile details from DB
   useEffect(() => {
     const fetchBookmarks = async () => {
       try {
@@ -62,7 +68,6 @@ export default function ProfilePage() {
         if (!text) return;
         
         const data = JSON.parse(text);
-
         if (data.success) {
           setBookmarkCount(data.data.length);
         }
@@ -71,8 +76,26 @@ export default function ProfilePage() {
       }
     };
 
+    const fetchProfile = async () => {
+      try {
+        setFetchingProfile(true);
+        const res = await fetch("/api/user/profile");
+        const data = await res.json();
+        if (data.success) {
+          setProfileData(data.data);
+          setName(data.data.name);
+          setImage(data.data.image);
+        }
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setFetchingProfile(false);
+      }
+    };
+
     if (status === "authenticated") {
       fetchBookmarks();
+      fetchProfile();
 
       const recent = localStorage.getItem("recentlyViewed");
       if (recent) {
@@ -104,8 +127,11 @@ export default function ProfilePage() {
         return;
       }
 
-      // Refresh session
-      await update({ name, image });
+      // Update local profile state
+      setProfileData((prev) => prev ? { ...prev, name, image } : null);
+
+      // Refresh session (NextAuth will call jwt callback to sync user name)
+      await update({ name });
       
       toast.success("Profile updated successfully!");
       setIsEditing(false);
@@ -116,7 +142,7 @@ export default function ProfilePage() {
     }
   };
 
-  if (status === "loading") {
+  if (status === "loading" || (status === "authenticated" && fetchingProfile)) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-slate-50">
         <div className="flex flex-col items-center gap-3">
@@ -127,10 +153,10 @@ export default function ProfilePage() {
     );
   }
 
-  if (!session) return null;
+  if (!session || !profileData) return null;
 
-  const initials = session.user?.name
-    ? session.user.name.split(" ").map((n) => n[0]).join("").toUpperCase().slice(0, 2)
+  const initials = profileData.name
+    ? profileData.name.split(" ").map((n) => n[0]).join("").toUpperCase().slice(0, 2)
     : "U";
 
   return (
@@ -152,8 +178,8 @@ export default function ProfilePage() {
           <div className="flex flex-col sm:flex-row items-center gap-6 mt-2">
             {/* Avatar */}
             <div className="w-24 h-24 rounded-full flex-shrink-0 flex items-center justify-center text-white text-3xl font-bold bg-gradient-to-br from-emerald-600 to-teal-500 shadow-inner overflow-hidden border-2 border-slate-100">
-              {session.user?.image ? (
-                <img src={session.user.image} alt="" className="w-full h-full object-cover" />
+              {profileData.image ? (
+                <img src={profileData.image} alt="" className="w-full h-full object-cover" />
               ) : (
                 initials
               )}
@@ -161,9 +187,9 @@ export default function ProfilePage() {
 
             <div className="text-center sm:text-left flex-1">
               <h1 className="text-3xl font-bold text-slate-800">
-                {session.user?.name}
+                {profileData.name}
               </h1>
-              <p className="text-slate-500 mt-1">{session.user?.email}</p>
+              <p className="text-slate-500 mt-1">{profileData.email}</p>
               
               <div className="mt-3 inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-100">
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 inline-block" />
@@ -173,7 +199,11 @@ export default function ProfilePage() {
 
             <div className="flex-shrink-0">
               <button
-                onClick={() => setIsEditing(true)}
+                onClick={() => {
+                  setName(profileData.name);
+                  setImage(profileData.image);
+                  setIsEditing(true);
+                }}
                 className="rounded-xl border border-slate-200 bg-white px-5 py-2.5 text-sm font-semibold text-slate-700 hover:bg-slate-50 transition-colors shadow-sm hover:border-slate-300"
               >
                 Edit Profile
@@ -186,11 +216,11 @@ export default function ProfilePage() {
         <div className="grid gap-6 sm:grid-cols-2">
           {[
             { label: "Account Status", value: "Active", sub: "Verified profile", color: "text-emerald-600", bg: "bg-emerald-50/50" },
-            { label: "Login Method", value: session.user?.image?.includes("google") ? "Google OAuth" : "Credentials", sub: "Authentication source", color: "text-slate-800", bg: "bg-slate-50/50" },
+            { label: "Login Method", value: profileData.provider === "google" ? "Google OAuth" : "Credentials", sub: "Authentication source", color: "text-slate-800", bg: "bg-slate-50/50" },
             { label: "Saved Schemes", value: bookmarkCount, sub: "Bookmarked for later", color: "text-emerald-700", bg: "bg-emerald-50/50" },
             { label: "Recently Viewed", value: recentCount, sub: "Schemes viewed recently", color: "text-blue-600", bg: "bg-blue-50/50" },
           ].map((item) => (
-            <div key={item.label} className={`rounded-2xl border border-slate-100 p-6 bg-white shadow-sm flex flex-col justify-between`}>
+            <div key={item.label} className="rounded-2xl border border-slate-100 p-6 bg-white shadow-sm flex flex-col justify-between">
               <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider">{item.label}</p>
               <div className="mt-4">
                 <p className={`text-2xl font-bold ${item.color}`}>{item.value}</p>

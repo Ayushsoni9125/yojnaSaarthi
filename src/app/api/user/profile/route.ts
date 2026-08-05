@@ -10,6 +10,35 @@ const ProfileUpdateSchema = z.object({
   image: z.string().url("Profile picture must be a valid URL").or(z.string().startsWith("data:image/", { message: "Must be a valid image data URL" })).or(z.string().length(0)).optional(),
 });
 
+export async function GET(req: NextRequest) {
+  try {
+    await connectDB();
+    const user = await requireUser();
+
+    return NextResponse.json({
+      success: true,
+      data: {
+        name: user.name,
+        email: user.email,
+        image: user.image || "",
+        role: user.role,
+        provider: user.provider,
+      },
+    });
+  } catch (error: any) {
+    if (error instanceof AuthError) {
+      return NextResponse.json(
+        { success: false, message: error.message },
+        { status: error.status }
+      );
+    }
+    return NextResponse.json(
+      { success: false, message: "Internal Server Error" },
+      { status: 500 }
+    );
+  }
+}
+
 export async function PUT(req: NextRequest) {
   try {
     await connectDB();
