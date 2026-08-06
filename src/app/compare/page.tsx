@@ -38,7 +38,9 @@ export default function ComparePage() {
   // Auth Guard - Redirect unauthenticated users
   useEffect(() => {
     if (sessionStatus === "unauthenticated") {
-      toast.warning("Please sign in to access the scheme comparison tool.");
+      toast.warning("Please sign in to access the scheme comparison tool.", {
+        toastId: "compare-auth-warning",
+      });
       router.push("/login");
     }
   }, [sessionStatus, router]);

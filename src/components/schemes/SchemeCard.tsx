@@ -48,7 +48,9 @@ export default function SchemeCard({
     e.stopPropagation();
 
     if (sessionStatus === "unauthenticated") {
-      toast.warning("Please log in to compare schemes.");
+      toast.warning("Please log in to compare schemes.", {
+        toastId: "compare-auth-warning",
+      });
       router.push("/login");
       return;
     }
