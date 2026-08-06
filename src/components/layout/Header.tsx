@@ -48,7 +48,7 @@ export default function Header() {
         {/* Desktop Navigation Links */}
         <nav className="hidden md:flex items-center gap-6 text-sm text-slate-600">
           <Link
-            href="/"
+            href="/schemes"
             className="hover:text-emerald-700 transition-colors font-semibold"
           >
             Schemes
@@ -161,7 +161,7 @@ export default function Header() {
         <div className="border-t border-slate-100 bg-white px-6 py-4 space-y-4 md:hidden animate-slide-down shadow-inner">
           <nav className="flex flex-col gap-3">
             <Link
-              href="/"
+              href="/schemes"
               onClick={() => setMobileOpen(false)}
               className="text-sm font-semibold text-slate-600 hover:text-emerald-700 transition-colors py-1.5"
             >

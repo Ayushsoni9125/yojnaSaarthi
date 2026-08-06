@@ -1,20 +1,8 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import SchemeCard from "@/components/schemes/SchemeCard";
-import SchemeSkeleton from "@/components/schemes/SchemeSkeleton";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { SCHEME_CATEGORIES } from "@/constants/scheme";
-
-type Scheme = {
-  _id: string;
-  slug: string;
-  title: string;
-  shortDescription: string;
-  category: string;
-  ministry: string;
-  status: string;
-};
 
 const FEATURED_CATEGORIES = [
   { name: "Agriculture", icon: "🌾", desc: "Kisan subsidies, crop insurance & credit" },
@@ -27,63 +15,23 @@ const FEATURED_CATEGORIES = [
   { name: "Social Welfare", icon: "🤝", desc: "Direct benefit transfer & food security" },
 ];
 
-export default function HomeClient({
-  initialSchemes,
-}: {
-  initialSchemes: Scheme[];
-}) {
-  const [schemes, setSchemes] = useState<Scheme[]>(initialSchemes);
+export default function HomeClient() {
+  const router = useRouter();
   const [search, setSearch] = useState("");
-  const [category, setCategory] = useState("");
-  const [showAll, setShowAll] = useState(false);
-  const [loading, setLoading] = useState(false);
 
-  // Debounced search & filter fetch
-  useEffect(() => {
-    if (!search && !category) {
-      setSchemes(initialSchemes);
-      return;
-    }
-
-    const timeout = setTimeout(async () => {
-      try {
-        setLoading(true);
-        const params = new URLSearchParams();
-        params.append("limit", showAll ? "24" : "8");
-
-        if (search.trim()) params.append("search", search.trim());
-        if (category) params.append("category", category);
-
-        const res = await fetch(`/api/schemes?${params.toString()}`);
-        const data = await res.json();
-
-        if (res.ok && data.success) {
-          setSchemes(data.data.schemes);
-        }
-      } catch (err) {
-        console.error(err);
-      } finally {
-        setLoading(false);
-      }
-    }, 350);
-
-    return () => clearTimeout(timeout);
-  }, [search, category, showAll, initialSchemes]);
-
-  const handleCategoryClick = (catName: string) => {
-    if (category === catName) {
-      setCategory(""); // Toggle off if selected again
+  const handleSearchSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (search.trim()) {
+      router.push(`/schemes?search=${encodeURIComponent(search.trim())}`);
     } else {
-      setCategory(catName);
+      router.push("/schemes");
     }
   };
-
-  const displayedSchemes = showAll ? schemes : schemes.slice(0, 4);
 
   return (
     <div className="space-y-16">
       {/* 1. Hero & Search Section */}
-      <section className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-emerald-900 via-emerald-800 to-slate-900 p-8 sm:p-12 text-white shadow-xl">
+      <section className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-emerald-900 via-emerald-800 to-slate-900 p-8 sm:p-14 text-white shadow-xl">
         <div className="relative z-10 mx-auto max-w-3xl text-center space-y-6">
           <div className="inline-flex items-center gap-2 rounded-full bg-emerald-500/20 px-3.5 py-1 text-xs font-semibold text-emerald-300 border border-emerald-500/30 backdrop-blur-md">
             <span>✨</span>
@@ -98,8 +46,8 @@ export default function HomeClient({
             Discover central and state welfare benefits tailored for farmers, students, women, senior citizens, and entrepreneurs.
           </p>
 
-          {/* Prominent Search Bar */}
-          <div className="relative max-w-2xl mx-auto mt-4">
+          {/* Search Form */}
+          <form onSubmit={handleSearchSubmit} className="relative max-w-2xl mx-auto mt-4">
             <div className="flex items-center rounded-2xl bg-white p-2 shadow-2xl">
               <span className="pl-3 text-slate-400 text-lg">🔍</span>
               <input
@@ -109,33 +57,38 @@ export default function HomeClient({
                 onChange={(e) => setSearch(e.target.value)}
                 className="w-full bg-transparent px-3 py-2 text-sm text-slate-800 placeholder-slate-400 outline-none font-medium"
               />
-              {search && (
-                <button
-                  onClick={() => setSearch("")}
-                  className="px-2 text-slate-400 hover:text-slate-600 text-xs font-bold"
-                >
-                  ✕
-                </button>
-              )}
+              <button
+                type="submit"
+                className="rounded-xl bg-emerald-600 px-5 py-2.5 text-xs font-bold text-white shadow-md hover:bg-emerald-700 transition-colors flex-shrink-0"
+              >
+                Search Schemes
+              </button>
             </div>
 
-            {/* Quick Pills */}
+            {/* Quick Tag Pills */}
             <div className="mt-3 flex flex-wrap items-center justify-center gap-2 text-xs">
-              <span className="text-emerald-200/70 font-medium">Popular:</span>
+              <span className="text-emerald-200/70 font-medium">Quick Tags:</span>
               {["Agriculture", "Education", "Housing", "Women Empowerment"].map((tag) => (
-                <button
+                <Link
                   key={tag}
-                  onClick={() => setCategory(category === tag ? "" : tag)}
-                  className={`rounded-full px-3 py-1 font-medium transition-all ${
-                    category === tag
-                      ? "bg-emerald-400 text-emerald-950 font-bold"
-                      : "bg-white/10 text-emerald-100 hover:bg-white/20 border border-white/10"
-                  }`}
+                  href={`/schemes?category=${encodeURIComponent(tag)}`}
+                  className="rounded-full px-3 py-1 font-medium bg-white/10 text-emerald-100 hover:bg-white/20 border border-white/10 transition-all"
                 >
                   #{tag}
-                </button>
+                </Link>
               ))}
             </div>
+          </form>
+
+          {/* Primary CTA Button */}
+          <div className="pt-4">
+            <Link
+              href="/schemes"
+              className="inline-flex items-center gap-2 rounded-2xl bg-emerald-500 px-8 py-3.5 text-base font-extrabold text-slate-950 shadow-lg hover:bg-emerald-400 transition-all hover:scale-105"
+            >
+              <span>Explore All Schemes</span>
+              <span className="text-lg">→</span>
+            </Link>
           </div>
         </div>
 
@@ -148,101 +101,60 @@ export default function HomeClient({
       <section className="space-y-6">
         <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-2">
           <div>
-            <h2 className="text-2xl font-bold text-slate-900">Explore by Category</h2>
+            <h2 className="text-2xl font-bold text-slate-900">Explore Schemes by Category</h2>
             <p className="text-xs sm:text-sm text-slate-500">
-              Select a category to filter schemes matching your interest
+              Select any category to view all relevant government welfare programs
             </p>
           </div>
-          {category && (
-            <button
-              onClick={() => setCategory("")}
-              className="text-xs font-semibold text-emerald-700 hover:underline self-start sm:self-auto"
-            >
-              Clear filter ({category})
-            </button>
-          )}
+
+          <Link
+            href="/schemes"
+            className="text-xs sm:text-sm font-bold text-emerald-700 hover:text-emerald-800 transition-colors flex items-center gap-1 self-start sm:self-auto"
+          >
+            <span>View All Categories</span>
+            <span>→</span>
+          </Link>
         </div>
 
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-          {FEATURED_CATEGORIES.map((cat) => {
-            const isActive = category === cat.name;
-            return (
-              <button
-                key={cat.name}
-                onClick={() => handleCategoryClick(cat.name)}
-                className={`group flex flex-col items-start p-4 rounded-2xl border text-left transition-all duration-200 ${
-                  isActive
-                    ? "border-emerald-600 bg-emerald-50/80 shadow-md ring-2 ring-emerald-500/20"
-                    : "border-slate-200/80 bg-white hover:border-emerald-300 hover:shadow-sm"
-                }`}
-              >
-                <span className="text-3xl mb-2 group-hover:scale-110 transition-transform duration-200">
-                  {cat.icon}
-                </span>
-                <h3 className={`text-sm font-bold ${isActive ? "text-emerald-900" : "text-slate-800"}`}>
-                  {cat.name}
-                </h3>
-                <p className="text-xs text-slate-500 mt-1 line-clamp-2 leading-relaxed">
-                  {cat.desc}
-                </p>
-              </button>
-            );
-          })}
+          {FEATURED_CATEGORIES.map((cat) => (
+            <Link
+              key={cat.name}
+              href={`/schemes?category=${encodeURIComponent(cat.name)}`}
+              className="group flex flex-col items-start p-5 rounded-2xl border border-slate-200/80 bg-white text-left transition-all duration-200 hover:border-emerald-300 hover:shadow-md"
+            >
+              <span className="text-3xl mb-3 group-hover:scale-110 transition-transform duration-200">
+                {cat.icon}
+              </span>
+              <h3 className="text-sm font-bold text-slate-800 group-hover:text-emerald-700 transition-colors">
+                {cat.name}
+              </h3>
+              <p className="text-xs text-slate-500 mt-1 line-clamp-2 leading-relaxed">
+                {cat.desc}
+              </p>
+            </Link>
+          ))}
         </div>
       </section>
 
-      {/* 3. Featured / Filtered Schemes */}
-      <section className="space-y-6">
-        <div className="flex items-center justify-between">
-          <div>
-            <h2 className="text-2xl font-bold text-slate-900">
-              {search || category ? "Matching Schemes" : "Featured Schemes"}
-            </h2>
-            <p className="text-xs sm:text-sm text-slate-500">
-              {search || category
-                ? `Showing results for ${search ? `"${search}"` : ""} ${category ? `in ${category}` : ""}`
-                : "Handpicked government schemes you can apply for today"}
-            </p>
-          </div>
-
-          <button
-            onClick={() => setShowAll(!showAll)}
-            className="text-xs sm:text-sm font-bold text-emerald-700 hover:text-emerald-800 transition-colors border border-emerald-200 rounded-xl px-4 py-2 bg-emerald-50/50 hover:bg-emerald-50"
-          >
-            {showAll ? "Show Less" : "View All Schemes →"}
-          </button>
+      {/* 3. Explore Banner CTA */}
+      <section className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-emerald-800 to-teal-900 p-8 sm:p-10 text-white flex flex-col sm:flex-row items-center justify-between gap-6 shadow-xl">
+        <div className="space-y-2 max-w-lg text-center sm:text-left">
+          <span className="text-xs font-bold uppercase tracking-wider text-emerald-300">
+            Complete Scheme Directory
+          </span>
+          <h2 className="text-2xl font-extrabold">Ready to browse all listed schemes?</h2>
+          <p className="text-xs sm:text-sm text-emerald-100/80">
+            Filter by state, category, or application status across hundreds of government schemes.
+          </p>
         </div>
 
-        {loading ? (
-          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-            {Array.from({ length: 4 }).map((_, idx) => (
-              <SchemeSkeleton key={idx} />
-            ))}
-          </div>
-        ) : displayedSchemes.length === 0 ? (
-          <div className="py-12 text-center text-slate-500 bg-white border border-slate-200 rounded-2xl p-8 max-w-md mx-auto shadow-sm">
-            <span className="text-4xl">🔍</span>
-            <h3 className="text-base font-bold text-slate-800 mt-3">No schemes found</h3>
-            <p className="text-xs text-slate-400 mt-1">
-              Try clearing your search query or selecting a different category.
-            </p>
-            <button
-              onClick={() => {
-                setSearch("");
-                setCategory("");
-              }}
-              className="mt-4 text-xs font-bold text-emerald-700 hover:underline"
-            >
-              Reset Filters
-            </button>
-          </div>
-        ) : (
-          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-            {displayedSchemes.map((scheme) => (
-              <SchemeCard key={scheme._id} scheme={scheme} />
-            ))}
-          </div>
-        )}
+        <Link
+          href="/schemes"
+          className="text-center rounded-2xl bg-white px-7 py-3.5 text-sm font-extrabold text-emerald-900 shadow-md hover:bg-emerald-50 transition-all flex-shrink-0"
+        >
+          🔍 Browse All Schemes →
+        </Link>
       </section>
 
       {/* 4. How YojanaSaarthi Helps You */}
