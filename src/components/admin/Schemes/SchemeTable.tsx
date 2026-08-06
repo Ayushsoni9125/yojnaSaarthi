@@ -1,6 +1,7 @@
 "use client";
 import { Eye, Pencil, Trash2 } from "lucide-react";
 import Link from "next/link";
+import { apiFetch, safeJsonParse } from "@/lib/apiClient";
 interface Props {
     schemes: any[];
 }
@@ -26,17 +27,19 @@ export default function SchemeTable({
         try {
             setLoading(true);
 
-            const res = await fetch(
+            const res = await apiFetch(
                 `/api/schemes/${selectedScheme.slug}`,
                 {
                     method: "DELETE",
                 }
             );
 
-            const result = await res.json();
+            const result = await safeJsonParse(res);
 
-            if (!res.ok) {
-                toast.error(result.message || "Delete failed");
+            if (!res.ok || !result.success) {
+                if (res.status !== 429) {
+                    toast.error(result.message || "Delete failed");
+                }
                 return;
             }
 

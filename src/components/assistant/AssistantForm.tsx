@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import { INDIAN_STATES } from "@/constants/state";
-import { apiFetch } from "@/lib/apiClient";
+import { apiFetch, safeJsonParse } from "@/lib/apiClient";
 
 type Question = {
   key: string;
@@ -122,7 +122,7 @@ export default function AssistantForm() {
         body: JSON.stringify(answers),
       });
 
-      const data = await res.json();
+      const data = await safeJsonParse(res);
 
       if (!res.ok || !data.success) {
         if (res.status !== 429) {

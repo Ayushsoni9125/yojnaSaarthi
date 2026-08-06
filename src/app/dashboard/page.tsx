@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { apiFetch } from "@/lib/apiClient";
+import { apiFetch, safeJsonParse } from "@/lib/apiClient";
 
 type BookmarkedScheme = {
     _id: string;
@@ -61,8 +61,8 @@ export default function DashboardPage() {
         try {
             setLoadingBookmarks(true);
             const res = await apiFetch("/api/bookmarks");
-            const data = await res.json();
-            if (data.success) setBookmarks(data.data);
+            const data = await safeJsonParse(res);
+            if (data.success && data.data) setBookmarks(data.data);
         } catch {
             // silently fail
         } finally {
@@ -73,8 +73,8 @@ export default function DashboardPage() {
     const fetchUserProfile = async () => {
         try {
             const res = await apiFetch("/api/user/profile");
-            const data = await res.json();
-            if (data.success && data.data.image) {
+            const data = await safeJsonParse(res);
+            if (data.success && data.data?.image) {
                 setUserImage(data.data.image);
             }
         } catch {
@@ -85,8 +85,8 @@ export default function DashboardPage() {
     const fetchRecentSchemes = async () => {
         try {
             const res = await apiFetch("/api/recently-viewed");
-            const data = await res.json();
-            if (data.success) {
+            const data = await safeJsonParse(res);
+            if (data.success && data.data) {
                 setRecentSchemes(data.data);
             }
         } catch {
@@ -97,8 +97,8 @@ export default function DashboardPage() {
     const fetchNotificationsCount = async () => {
         try {
             const res = await apiFetch("/api/notifications");
-            const data = await res.json();
-            if (data.success) {
+            const data = await safeJsonParse(res);
+            if (data.success && data.data) {
                 const unread = data.data.filter((n: any) => !n.isRead).length;
                 setNotificationCount(unread);
             }
@@ -112,9 +112,9 @@ export default function DashboardPage() {
             setLoadingRecommendations(true);
 
             const res = await apiFetch("/api/recommendations");
-            const data = await res.json();
+            const data = await safeJsonParse(res);
 
-            if (data.success) {
+            if (data.success && data.data) {
                 setRecommendedSchemes(data.data);
             }
         } catch {
