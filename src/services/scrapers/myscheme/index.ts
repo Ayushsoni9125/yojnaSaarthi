@@ -9,18 +9,7 @@ import {
 const PAGE_SIZE = 100;
 
 export async function scrapeMyScheme() {
-  console.log("🚀 Starting MyScheme scraper...");
-
-  // TEMP TEST
-  const test = await fetchSchemeBySlug("nssfp");
-
-  console.log(
-    "========== DETAIL RESPONSE =========="
-  );
-  console.log(JSON.stringify(test, null, 2));
-  console.log(
-    "====================================="
-  );
+  await fetchSchemeBySlug("nssfp");
 
   return [];
 

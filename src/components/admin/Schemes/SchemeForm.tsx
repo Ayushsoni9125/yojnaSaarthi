@@ -67,8 +67,6 @@ export default function SchemeForm({
                     ? "Scheme updated successfully!"
                     : "Scheme created successfully!"
             );
-
-            console.log(result);
         } catch (error) {
             console.error(error);
             toast.error("Failed to create scheme");

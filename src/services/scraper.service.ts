@@ -1,8 +1,6 @@
 import { scrapeAllSources } from "@/scrapers";
 
 export async function runScraper() {
-  console.log("Starting scraper...");
-
   const schemes = await scrapeAllSources();
 
   return {
