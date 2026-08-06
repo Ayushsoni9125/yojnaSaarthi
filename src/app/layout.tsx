@@ -6,9 +6,7 @@ import { SessionProvider } from "next-auth/react";
 
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
-import ToastProvider from "@/components/providers/ToastProvider";
-import CompareBar from "@/components/schemes/CompareBar";
-import ScrollToTop from "@/components/common/ScrollToTop";
+import LazyProviders from "@/components/providers/LazyProviders";
 
 const geist = Geist({
   subsets: ["latin"],
@@ -39,9 +37,7 @@ export default function RootLayout({
             </div>
             <Footer />
           </div>
-          <ToastProvider />
-          <CompareBar />
-          <ScrollToTop />
+          <LazyProviders />
         </SessionProvider>
       </body>
     </html>

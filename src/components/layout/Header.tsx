@@ -84,6 +84,8 @@ export default function Header() {
                     <img
                       src={session.user.image}
                       alt=""
+                      loading="lazy"
+                      decoding="async"
                       className="w-full h-full rounded-full object-cover"
                     />
                   ) : (
@@ -203,6 +205,8 @@ export default function Header() {
                       <img
                         src={session.user.image}
                         alt=""
+                        loading="lazy"
+                        decoding="async"
                         className="w-full h-full rounded-full object-cover"
                       />
                     ) : (

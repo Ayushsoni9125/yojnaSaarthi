@@ -197,7 +197,7 @@ export default function DashboardPage() {
                                 style={{ background: "linear-gradient(135deg, #064e3b, #059669)" }}
                             >
                                 {userImage || user?.image ? (
-                                    <img src={userImage || user?.image || ""} alt="" className="w-full h-full object-cover" />
+                                    <img src={userImage || user?.image || ""} alt="" loading="lazy" decoding="async" className="w-full h-full object-cover" />
                                 ) : (
                                     initials
                                 )}

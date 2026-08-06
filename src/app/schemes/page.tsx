@@ -1,6 +1,8 @@
+import { Suspense } from "react";
 import { connectDB } from "@/lib/db/mongoose";
 import Scheme from "@/models/Scheme";
 import SchemesListClient from "@/components/schemes/SchemesListClient";
+import SchemeSkeleton from "@/components/schemes/SchemeSkeleton";
 
 type Props = {
   searchParams: Promise<{
@@ -11,6 +13,20 @@ type Props = {
     page?: string;
   }>;
 };
+
+function SchemesLoadingFallback() {
+  return (
+    <main className="mx-auto max-w-7xl px-6 py-10 space-y-8">
+      <div className="h-10 bg-slate-200 rounded-xl w-1/3 animate-pulse" />
+      <div className="h-12 bg-slate-200 rounded-2xl w-full animate-pulse" />
+      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+        {Array.from({ length: 8 }).map((_, idx) => (
+          <SchemeSkeleton key={idx} />
+        ))}
+      </div>
+    </main>
+  );
+}
 
 export default async function SchemesPage({ searchParams }: Props) {
   await connectDB();
@@ -58,9 +74,11 @@ export default async function SchemesPage({ searchParams }: Props) {
   };
 
   return (
-    <SchemesListClient
-      initialSchemes={serializedSchemes}
-      initialPagination={initialPagination}
-    />
+    <Suspense fallback={<SchemesLoadingFallback />}>
+      <SchemesListClient
+        initialSchemes={serializedSchemes}
+        initialPagination={initialPagination}
+      />
+    </Suspense>
   );
 }
