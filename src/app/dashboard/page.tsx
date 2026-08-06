@@ -191,13 +191,30 @@ export default function DashboardPage() {
                         style={{ background: "radial-gradient(circle, #ffffff, transparent)" }} />
 
                     <div className="relative z-10 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6">
-                        <div>
-                            <p className="text-emerald-300 text-sm font-medium mb-1">{greeting} 👋</p>
-                            <h1 className="text-3xl font-bold text-white">{firstName}</h1>
-                            <p className="mt-2 text-emerald-200 text-sm max-w-md">
-                                Welcome to your personal scheme dashboard. Explore, bookmark, and get AI-powered scheme recommendations.
-                            </p>
-                        </div>
+                        <Link href="/profile" className="flex items-center gap-4 group cursor-pointer" title="Click to Edit Profile">
+                            <div
+                                className="w-14 h-14 rounded-full flex items-center justify-center text-white text-xl font-bold flex-shrink-0 border-2 border-emerald-300 group-hover:border-white transition-all overflow-hidden shadow-md"
+                                style={{ background: "linear-gradient(135deg, #064e3b, #059669)" }}
+                            >
+                                {userImage || user?.image ? (
+                                    <img src={userImage || user?.image || ""} alt="" className="w-full h-full object-cover" />
+                                ) : (
+                                    initials
+                                )}
+                            </div>
+                            <div>
+                                <p className="text-emerald-300 text-xs font-medium mb-0.5">{greeting} 👋</p>
+                                <h1 className="text-2xl sm:text-3xl font-bold text-white group-hover:text-emerald-200 transition-colors flex items-center gap-2">
+                                    <span>{user?.name || firstName}</span>
+                                    <span className="text-xs bg-white/20 hover:bg-white/30 backdrop-blur-md border border-white/30 text-white px-2.5 py-1 rounded-full font-semibold">
+                                        ✏️ Edit Profile
+                                    </span>
+                                </h1>
+                                <p className="mt-1 text-emerald-200 text-xs sm:text-sm max-w-md">
+                                    Welcome to your personal scheme dashboard. Manage your profile & saved schemes.
+                                </p>
+                            </div>
+                        </Link>
 
                         <div className="flex gap-3 flex-wrap">
                             <Link
