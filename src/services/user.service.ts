@@ -1,4 +1,5 @@
 import User, { IUser } from "@/models/User";
+import { escapeRegex } from "@/utils/escapeRegex";
 
 export async function getUserByEmail(email: string) {
   return await User.findOne({ email }).lean();
@@ -31,16 +32,17 @@ export async function getUsers({
   }
 
   if (search) {
+    const escaped = escapeRegex(search);
     filter.$or = [
       {
         name: {
-          $regex: search,
+          $regex: escaped,
           $options: "i",
         },
       },
       {
         email: {
-          $regex: search,
+          $regex: escaped,
           $options: "i",
         },
       },

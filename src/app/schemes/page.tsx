@@ -3,6 +3,7 @@ import { connectDB } from "@/lib/db/mongoose";
 import Scheme from "@/models/Scheme";
 import SchemesListClient from "@/components/schemes/SchemesListClient";
 import SchemeSkeleton from "@/components/schemes/SchemeSkeleton";
+import { escapeRegex } from "@/utils/escapeRegex";
 
 type Props = {
   searchParams: Promise<{
@@ -37,10 +38,11 @@ export default async function SchemesPage({ searchParams }: Props) {
 
   const query: any = {};
   if (params.search?.trim()) {
+    const escaped = escapeRegex(params.search.trim());
     query.$or = [
-      { title: { $regex: params.search.trim(), $options: "i" } },
-      { shortDescription: { $regex: params.search.trim(), $options: "i" } },
-      { ministry: { $regex: params.search.trim(), $options: "i" } },
+      { title: { $regex: escaped, $options: "i" } },
+      { shortDescription: { $regex: escaped, $options: "i" } },
+      { ministry: { $regex: escaped, $options: "i" } },
     ];
   }
   if (params.category) query.category = params.category;

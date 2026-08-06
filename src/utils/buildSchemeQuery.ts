@@ -1,5 +1,5 @@
 import { SchemeQuery } from "@/validations/query";
-
+import { escapeRegex } from "@/utils/escapeRegex";
 
 export function buildSchemeQuery(query: SchemeQuery) {
   const filter: Record<string, unknown> = {};
@@ -21,22 +21,23 @@ export function buildSchemeQuery(query: SchemeQuery) {
 
   // Search
   if (query.search) {
+    const escaped = escapeRegex(query.search);
     filter.$or = [
       {
         title: {
-          $regex: query.search,
+          $regex: escaped,
           $options: "i",
         },
       },
       {
         description: {
-          $regex: query.search,
+          $regex: escaped,
           $options: "i",
         },
       },
       {
         ministry: {
-          $regex: query.search,
+          $regex: escaped,
           $options: "i",
         },
       },

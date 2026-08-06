@@ -1,4 +1,5 @@
 import Activity from "@/models/Activity";
+import { escapeRegex } from "@/utils/escapeRegex";
 
 type LogActivityParams = {
   action: "CREATE" | "UPDATE" | "DELETE";
@@ -46,16 +47,17 @@ export async function getActivities({
   }
 
   if (search) {
+    const escaped = escapeRegex(search);
     filter.$or = [
       {
         description: {
-          $regex: search,
+          $regex: escaped,
           $options: "i",
         },
       },
       {
         performedBy: {
-          $regex: search,
+          $regex: escaped,
           $options: "i",
         },
       },
