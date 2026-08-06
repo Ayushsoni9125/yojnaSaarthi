@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
 
 type SchemeCardProps = {
   scheme: {
@@ -21,6 +22,7 @@ export default function SchemeCard({
   scheme,
 }: SchemeCardProps) {
   const router = useRouter();
+  const { status: sessionStatus } = useSession();
   const [loading, setLoading] = useState(false);
   const [isCompared, setIsCompared] = useState(false);
 
@@ -44,6 +46,12 @@ export default function SchemeCard({
   const handleCompareToggle = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
+
+    if (sessionStatus === "unauthenticated") {
+      toast.warning("Please log in to compare schemes.");
+      router.push("/login");
+      return;
+    }
 
     const stored = localStorage.getItem("compareList") || "[]";
     let list = [];

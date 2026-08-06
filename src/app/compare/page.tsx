@@ -1,6 +1,8 @@
 "use client";
 
 import { useEffect, useState, useRef } from "react";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import Link from "next/link";
 
@@ -26,9 +28,20 @@ type CompareItem = {
 };
 
 export default function ComparePage() {
+  const { status: sessionStatus } = useSession();
+  const router = useRouter();
+
   const [compareList, setCompareList] = useState<CompareItem[]>([]);
   const [schemes, setSchemes] = useState<Scheme[]>([]);
   const [loading, setLoading] = useState(false);
+
+  // Auth Guard - Redirect unauthenticated users
+  useEffect(() => {
+    if (sessionStatus === "unauthenticated") {
+      toast.warning("Please sign in to access the scheme comparison tool.");
+      router.push("/login");
+    }
+  }, [sessionStatus, router]);
 
   // Search autocomplete state for adding new schemes
   const [searchQuery, setSearchQuery] = useState("");
@@ -154,6 +167,18 @@ export default function ComparePage() {
     window.dispatchEvent(new Event("compare-list-updated"));
     toast.info("Removed from comparison.");
   };
+  if (sessionStatus === "loading") {
+    return (
+      <main className="flex min-h-[400px] flex-col items-center justify-center py-20 text-center">
+        <div className="h-10 w-10 animate-spin rounded-full border-4 border-emerald-500 border-t-transparent" />
+        <p className="mt-4 text-sm font-semibold text-slate-600">
+          Verifying authorization...
+        </p>
+      </main>
+    );
+  }
+
+  if (sessionStatus === "unauthenticated") return null;
 
   return (
     <main className="mx-auto max-w-7xl px-6 py-10 space-y-8 pb-16">

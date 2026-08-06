@@ -257,7 +257,7 @@ export default function SchemesListClient({
               <button
                 onClick={() => handlePageChange(page - 1)}
                 disabled={page <= 1}
-                className="rounded-xl border border-slate-200 bg-white px-4 py-2 text-xs font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-40"
+                className="rounded-xl border border-slate-200 bg-white px-4 py-2 text-xs font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50 cursor-pointer disabled:cursor-not-allowed disabled:opacity-40"
               >
                 ← Previous
               </button>
@@ -269,7 +269,7 @@ export default function SchemesListClient({
               <button
                 onClick={() => handlePageChange(page + 1)}
                 disabled={page >= pagination.totalPages}
-                className="rounded-xl border border-slate-200 bg-white px-4 py-2 text-xs font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-40"
+                className="rounded-xl border border-slate-200 bg-white px-4 py-2 text-xs font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50 cursor-pointer disabled:cursor-not-allowed disabled:opacity-40"
               >
                 Next →
               </button>
