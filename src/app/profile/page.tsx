@@ -171,8 +171,7 @@ export default function ProfilePage() {
         : "U";
 
     return (
-        <main className="min-h-screen bg-slate-50 py-12 px-6">
-            <div className="mx-auto max-w-3xl space-y-6">
+        <main className="mx-auto max-w-7xl px-6 py-10 space-y-6">
 
                 {/* Back Link */}
                 <div className="flex items-center justify-between">
@@ -356,8 +355,6 @@ export default function ProfilePage() {
                         </div>
                     </div>
                 )}
-
-            </div>
         </main>
     );
 }

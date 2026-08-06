@@ -1,8 +1,6 @@
 import { connectDB } from "@/lib/db/mongoose";
 import { getLatestSchemes } from "@/services/schemeQuery.service";
 import HomeClient from "@/components/home/HomeClient";
-import Header from "@/components/layout/Header";
-import Footer from "@/components/layout/Footer";
 
 export default async function HomePage() {
   await connectDB();
@@ -20,14 +18,8 @@ export default async function HomePage() {
   }));
 
   return (
-    <div className="min-h-screen bg-slate-50 flex flex-col justify-between">
-      <div>
-        <Header />
-        <main className="mx-auto max-w-7xl px-6 py-8">
-          <HomeClient initialSchemes={serializedSchemes} />
-        </main>
-      </div>
-      <Footer />
-    </div>
+    <main className="mx-auto max-w-7xl px-6 py-8">
+      <HomeClient initialSchemes={serializedSchemes} />
+    </main>
   );
 }

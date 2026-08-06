@@ -1,7 +1,6 @@
 import { notFound } from "next/navigation";
 import { connectDB } from "@/lib/db/mongoose";
 import { getSchemeBySlug } from "@/services/schemeQuery.service";
-import Header from "@/components/layout/Header";
 import SchemeDetailsClient from "@/components/schemes/SchemeDetailsClient";
 
 type Props = {
@@ -38,8 +37,7 @@ export default async function SchemeDetailsPage({ params }: Props) {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50">
-      <Header />
+    <div className="py-6">
       <SchemeDetailsClient scheme={serializedScheme} />
     </div>
   );

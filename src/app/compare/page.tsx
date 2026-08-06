@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState, useRef } from "react";
-import Header from "@/components/layout/Header";
 import { toast } from "react-toastify";
 import Link from "next/link";
 
@@ -157,10 +156,7 @@ export default function ComparePage() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 pb-20">
-      <Header />
-
-      <main className="mx-auto max-w-7xl px-6 py-10 space-y-8">
+    <main className="mx-auto max-w-7xl px-6 py-10 space-y-8 pb-16">
         {/* Title and Top Options */}
         <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
           <div>
@@ -435,6 +431,5 @@ export default function ComparePage() {
           </div>
         )}
       </main>
-    </div>
   );
 }

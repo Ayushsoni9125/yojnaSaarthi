@@ -16,6 +16,7 @@ import {
   Menu,
   X,
   LogOut,
+  Globe,
 } from "lucide-react";
 
 const navItems = [
@@ -69,7 +70,7 @@ function SidebarContent({ onClose }: { onClose?: () => void }) {
       {/* Logo */}
       <div className="relative px-6 pb-6 pt-8">
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
+          <Link href="/" className="flex items-center gap-3 group hover:opacity-90 transition-opacity">
             <div
               className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-xl"
               style={{
@@ -81,7 +82,7 @@ function SidebarContent({ onClose }: { onClose?: () => void }) {
             </div>
 
             <div>
-              <h2 className="text-base font-bold leading-tight tracking-tight text-white">
+              <h2 className="text-base font-bold leading-tight tracking-tight text-white group-hover:text-emerald-300 transition-colors">
                 YojanaSaarthi
               </h2>
 
@@ -92,7 +93,7 @@ function SidebarContent({ onClose }: { onClose?: () => void }) {
                 Admin Panel
               </p>
             </div>
-          </div>
+          </Link>
 
           {/* Close button on mobile */}
           {onClose && (
@@ -235,9 +236,17 @@ function SidebarContent({ onClose }: { onClose?: () => void }) {
           </div>
         </div>
 
+        <Link
+          href="/"
+          className="mt-3 flex w-full items-center gap-3 rounded-xl border border-emerald-500/20 bg-emerald-950/20 hover:bg-emerald-900/40 px-3 py-2.5 text-xs font-semibold text-emerald-300 hover:text-emerald-200 transition-colors"
+        >
+          <Globe className="h-4 w-4 text-emerald-400" />
+          <span>← Back to Website</span>
+        </Link>
+
         <button
           onClick={() => signOut({ callbackUrl: "/login" })}
-          className="mt-3 flex w-full items-center gap-3 rounded-xl border border-red-500/20 bg-red-950/10 hover:bg-red-950/30 px-3 py-2.5 text-xs font-semibold text-red-400 hover:text-red-300 transition-colors duration-150"
+          className="mt-2 flex w-full items-center gap-3 rounded-xl border border-red-500/20 bg-red-950/10 hover:bg-red-950/30 px-3 py-2.5 text-xs font-semibold text-red-400 hover:text-red-300 transition-colors duration-150"
         >
           <LogOut className="h-4 w-4" />
           <span>Log Out</span>

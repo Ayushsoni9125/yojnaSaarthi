@@ -176,73 +176,7 @@ export default function DashboardPage() {
     const greeting = hour < 12 ? "Good morning" : hour < 17 ? "Good afternoon" : "Good evening";
 
     return (
-        <div className="min-h-screen bg-slate-50">
-            {/* ── Top Nav ── */}
-            <header
-                className="sticky top-0 z-30 border-b bg-white/80 backdrop-blur-md"
-                style={{ borderColor: "#e2e8f0" }}
-            >
-                <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
-                    {/* Logo */}
-                    <Link href="/" className="flex items-center gap-2.5">
-                        <div
-                            className="w-8 h-8 rounded-lg flex items-center justify-center text-white text-sm font-bold"
-                            style={{ background: "linear-gradient(135deg, #064e3b, #059669)" }}
-                        >
-                            य
-                        </div>
-                        <span className="font-bold text-slate-800 text-lg">YojanaSaarthi</span>
-                    </Link>
-
-                    {/* Nav links */}
-                    <nav className="hidden md:flex items-center gap-6 text-sm text-slate-600">
-                        <Link href="/" className="hover:text-emerald-700 transition-colors font-medium">Schemes</Link>
-                        <Link href="/assistant" className="hover:text-emerald-700 transition-colors font-medium">AI Assistant</Link>
-                        <Link href="/compare" className="hover:text-emerald-700 transition-colors font-medium">Compare</Link>
-                    </nav>
-
-
-                    {/* User menu */}
-                    <div className="flex items-center gap-3">
-                        <Link
-                            href="/notifications"
-                            className="relative flex h-10 w-10 items-center justify-center rounded-full border border-slate-200 bg-white hover:bg-slate-50 transition-colors"
-                        >
-                            🔔
-
-                            {notificationCount > 0 && (
-                                <span className="absolute -top-1 -right-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-red-500 px-1 text-[10px] font-bold text-white">
-                                    {notificationCount}
-                                </span>
-                            )}
-                        </Link>
-                        <Link href="/profile" className="flex items-center gap-3 group cursor-pointer hover:opacity-90 transition-opacity">
-                            <div className="hidden sm:flex flex-col items-end">
-                                <p className="text-sm font-semibold text-slate-800 group-hover:text-emerald-700 transition-colors">{user?.name}</p>
-                                <p className="text-xs text-slate-400">View Profile 👤</p>
-                            </div>
-                            <div
-                                className="w-9 h-9 rounded-full flex items-center justify-center text-white text-sm font-bold flex-shrink-0 border-2 border-transparent group-hover:border-emerald-500 transition-colors"
-                                style={{ background: "linear-gradient(135deg, #064e3b, #059669)" }}
-                            >
-                                {userImage || user?.image ? (
-                                    <img src={userImage || user?.image || ""} alt={user?.name ?? ""} className="w-9 h-9 rounded-full object-cover" />
-                                ) : (
-                                    initials
-                                )}
-                            </div>
-                        </Link>
-                        <button
-                            onClick={() => signOut({ callbackUrl: "/login" })}
-                            className="text-xs text-slate-500 hover:text-red-500 transition-colors font-medium border border-slate-200 rounded-lg px-3 py-1.5 hover:border-red-200 hover:bg-red-50"
-                        >
-                            Sign out
-                        </button>
-                    </div>
-                </div>
-            </header>
-
-            <main className="mx-auto max-w-7xl px-6 py-10 space-y-10">
+        <main className="mx-auto max-w-7xl px-6 py-10 space-y-10">
                 {/* ── Hero greeting ── */}
                 <section
                     className="rounded-2xl p-8 relative overflow-hidden"
@@ -513,6 +447,5 @@ export default function DashboardPage() {
                     </section>
                 </div>
             </main>
-        </div>
     );
 }

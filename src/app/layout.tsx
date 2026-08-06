@@ -4,6 +4,8 @@ import { Geist } from "next/font/google";
 import { cn } from "@/lib/utils";
 import { SessionProvider } from "next-auth/react";
 
+import Header from "@/components/layout/Header";
+import Footer from "@/components/layout/Footer";
 import ToastProvider from "@/components/providers/ToastProvider";
 import CompareBar from "@/components/schemes/CompareBar";
 import ScrollToTop from "@/components/common/ScrollToTop";
@@ -28,9 +30,15 @@ export default function RootLayout({
       lang="en"
       className={cn("font-sans", geist.variable)}
     >
-      <body>
+      <body className="bg-slate-50 text-slate-900 antialiased min-h-screen flex flex-col">
         <SessionProvider>
-          {children}
+          <div className="flex min-h-screen flex-col bg-slate-50">
+            <Header />
+            <div className="flex-1">
+              {children}
+            </div>
+            <Footer />
+          </div>
           <ToastProvider />
           <CompareBar />
           <ScrollToTop />

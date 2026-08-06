@@ -1,3 +1,4 @@
+import Link from "next/link";
 import {
     FileText,
     Users,
@@ -60,46 +61,36 @@ export default async function AdminPage() {
     ];
 
     return (
-        <div
-            className="min-h-screen p-4 sm:p-6 lg:p-8"
-            style={{
-                background:
-                    "linear-gradient(135deg, #f8fffe 0%, #f0fdf4 50%, #ffffff 100%)",
-            }}
-        >
+        <main className="mx-auto max-w-7xl px-6 py-10">
             {/* Header */}
-            <div className="mb-10">
-                <div className="flex items-center gap-3 mb-1">
-                    <span
-                        className="inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1 rounded-full"
-                        style={{
-                            background: "#dcfce7",
-                            color: "#15803d",
-                            border: "1px solid #86efac",
-                        }}
-                    >
-                        <Activity className="w-3 h-3" />
-                        Live
-                    </span>
+            <div className="mb-10 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                <div>
+                    <div className="flex items-center gap-3 mb-1">
+                        <span
+                            className="inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200"
+                        >
+                            <Activity className="w-3 h-3 text-emerald-600" />
+                            Live Overview
+                        </span>
+                    </div>
+
+                    <h1 className="text-2xl sm:text-4xl font-extrabold tracking-tight mt-2 text-slate-900">
+                        Admin Dashboard
+                    </h1>
+
+                    <p className="mt-2 text-base text-slate-600">
+                        Welcome back! Here's a real-time overview of YojanaSaarthi.
+                    </p>
                 </div>
 
-                <h1
-                    className="text-2xl sm:text-4xl font-bold tracking-tight mt-2"
-                    style={{ color: "#052e16" }}
-                >
-                    Admin Dashboard
-                </h1>
-
-                <p className="mt-2 text-base" style={{ color: "#6b7280" }}>
-                    Welcome back! Here's a real-time overview of YojanaSaarthi.
-                </p>
-
-                <div
-                    className="mt-6 h-0.5 w-24 rounded-full"
-                    style={{
-                        background: "linear-gradient(90deg, #16a34a, #86efac)",
-                    }}
-                />
+                <div>
+                    <Link
+                        href="/"
+                        className="inline-flex items-center gap-2 rounded-xl bg-emerald-600 px-4 py-2.5 text-sm font-bold text-white shadow-md hover:bg-emerald-700 transition-colors"
+                    >
+                        🌐 ← Back to Main Website
+                    </Link>
+                </div>
             </div>
 
             {/* Stats */}
@@ -110,12 +101,7 @@ export default async function AdminPage() {
                     return (
                         <div
                             key={item.title}
-                            className="group relative rounded-2xl p-6 transition-all duration-300 hover:-translate-y-1"
-                            style={{
-                                background: "#ffffff",
-                                border: `1px solid ${item.border}`,
-                                boxShadow: `0 4px 24px ${item.glow}, 0 1px 4px rgba(0,0,0,0.04)`,
-                            }}
+                            className="group relative rounded-2xl p-6 transition-all duration-300 hover:-translate-y-1 bg-white border border-slate-200 shadow-sm hover:shadow-md"
                         >
                             <div className="flex items-start justify-between mb-4">
                                 <div
@@ -137,24 +123,15 @@ export default async function AdminPage() {
                                 />
                             </div>
 
-                            <h2
-                                className="text-3xl font-bold tracking-tight"
-                                style={{ color: "#052e16" }}
-                            >
+                            <h2 className="text-3xl font-extrabold tracking-tight text-slate-900">
                                 {item.value}
                             </h2>
 
-                            <p
-                                className="mt-1 text-sm font-medium"
-                                style={{ color: "#374151" }}
-                            >
+                            <p className="mt-1 text-sm font-semibold text-slate-700">
                                 {item.title}
                             </p>
 
-                            <p
-                                className="mt-1 text-xs"
-                                style={{ color: "#9ca3af" }}
-                            >
+                            <p className="mt-1 text-xs text-slate-400">
                                 {item.change}
                             </p>
 
@@ -170,90 +147,41 @@ export default async function AdminPage() {
             </div>
 
             {/* Recent Activity */}
-            <div
-                className="rounded-2xl p-8"
-                style={{
-                    background: "#ffffff",
-                    border: "1px solid #bbf7d0",
-                    boxShadow:
-                        "0 4px 24px rgba(22,163,74,0.08), 0 1px 4px rgba(0,0,0,0.04)",
-                }}
-            >
+            <div className="rounded-2xl p-8 bg-white border border-slate-200 shadow-sm">
                 <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between mb-6">
                     <div className="flex items-center gap-3">
-                        <div
-                            className="w-9 h-9 rounded-lg flex items-center justify-center"
-                            style={{
-                                background: "#dcfce7",
-                                border: "1px solid #86efac",
-                            }}
-                        >
-                            <TrendingUp
-                                className="w-4 h-4"
-                                style={{ color: "#15803d" }}
-                            />
+                        <div className="w-9 h-9 rounded-lg flex items-center justify-center bg-emerald-50 border border-emerald-200">
+                            <TrendingUp className="w-4 h-4 text-emerald-700" />
                         </div>
 
                         <div>
-                            <h2
-                                className="text-lg font-bold"
-                                style={{ color: "#052e16" }}
-                            >
+                            <h2 className="text-lg font-bold text-slate-900">
                                 Recent Activity
                             </h2>
 
-                            <p
-                                className="text-xs"
-                                style={{ color: "#9ca3af" }}
-                            >
+                            <p className="text-xs text-slate-500">
                                 Latest platform updates
                             </p>
                         </div>
                     </div>
 
-                    <span
-                        className="text-xs font-medium px-3 py-1.5 rounded-full"
-                        style={{
-                            background: "#f0fdf4",
-                            color: "#16a34a",
-                            border: "1px solid #bbf7d0",
-                        }}
-                    >
+                    <span className="text-xs font-semibold px-3 py-1.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200">
                         {dashboard.recentActivities.length} Recent
                     </span>
                 </div>
 
                 {dashboard.recentActivities.length === 0 ? (
-                    <div
-                        className="flex flex-col items-center justify-center py-14 rounded-xl"
-                        style={{
-                            background: "#f8fffe",
-                            border: "1px dashed #86efac",
-                        }}
-                    >
-                        <div
-                            className="w-14 h-14 rounded-2xl flex items-center justify-center mb-4"
-                            style={{ background: "#dcfce7" }}
-                        >
-                            <Activity
-                                className="w-6 h-6"
-                                style={{ color: "#16a34a" }}
-                            />
+                    <div className="flex flex-col items-center justify-center py-14 rounded-xl bg-slate-50 border border-dashed border-slate-200">
+                        <div className="w-14 h-14 rounded-2xl flex items-center justify-center mb-4 bg-emerald-100">
+                            <Activity className="w-6 h-6 text-emerald-700" />
                         </div>
 
-                        <p
-                            className="text-sm font-semibold"
-                            style={{ color: "#374151" }}
-                        >
+                        <p className="text-sm font-semibold text-slate-700">
                             No activity yet
                         </p>
 
-                        <p
-                            className="text-xs mt-1 text-center max-w-xs"
-                            style={{ color: "#9ca3af" }}
-                        >
-                            Recently added or updated schemes will appear here once data is
-                            available.
+                        <p className="text-xs mt-1 text-center max-w-xs text-slate-400">
+                            Recently added or updated schemes will appear here once data is available.
                         </p>
                     </div>
                 ) : (
@@ -261,19 +189,19 @@ export default async function AdminPage() {
                         {dashboard.recentActivities.map((activity: any) => (
                             <div
                                 key={activity._id}
-                                className="flex flex-col gap-2 rounded-xl border border-slate-200 p-4 hover:bg-slate-50 transition sm:flex-row sm:items-center sm:justify-between"
+                                className="flex flex-col gap-2 rounded-xl border border-slate-100 p-4 hover:bg-slate-50 transition sm:flex-row sm:items-center sm:justify-between"
                             >
                                 <div>
-                                    <p className="font-semibold text-slate-800">
+                                    <p className="font-semibold text-slate-800 text-sm">
                                         {activity.action}
                                     </p>
 
-                                    <p className="mt-1 text-sm text-slate-500">
+                                    <p className="mt-1 text-xs text-slate-500">
                                         {activity.description}
                                     </p>
                                 </div>
 
-                                <p className="text-xs text-slate-400">
+                                <p className="text-xs font-medium text-slate-400">
                                     {new Date(activity.createdAt).toLocaleString()}
                                 </p>
                             </div>
@@ -281,6 +209,6 @@ export default async function AdminPage() {
                     </div>
                 )}
             </div>
-        </div>
+        </main>
     );
 }
