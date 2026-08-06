@@ -10,7 +10,7 @@ const ProfileUpdateSchema = z.object({
   image: z.string().url("Profile picture must be a valid URL").or(z.string().startsWith("data:image/", { message: "Must be a valid image data URL" })).or(z.string().length(0)).optional(),
 });
 
-export async function GET(req: NextRequest) {
+export async function GET(_req: NextRequest) {
   try {
     await connectDB();
     const user = await requireUser();

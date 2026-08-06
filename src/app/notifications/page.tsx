@@ -52,7 +52,7 @@ export default function NotificationsPage() {
           <span className="text-4xl mb-3">🔕</span>
           <h3 className="text-base font-bold text-slate-700">No new notifications</h3>
           <p className="mt-1 text-xs text-slate-400">
-            You're all caught up! Updates regarding your saved schemes will appear here.
+            You&apos;re all caught up! Updates regarding your saved schemes will appear here.
           </p>
         </div>
       ) : (

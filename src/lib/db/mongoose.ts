@@ -7,7 +7,7 @@ if (!MONGODB_URI) {
 }
 
 declare global {
-  // eslint-disable-next-line no-var
+   
   var mongooseCache:
     | {
         conn: typeof mongoose | null;

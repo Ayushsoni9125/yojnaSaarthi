@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useSession, signOut } from "next-auth/react";
+import { useSession } from "next-auth/react";
 import { useState } from "react";
 import { usePathname } from "next/navigation";
 
@@ -22,10 +22,6 @@ export default function Header() {
         .toUpperCase()
         .slice(0, 2)
     : "U";
-
-  const isAdmin = (session?.user as any)?.role === "admin";
-  const dashboardLink = isAdmin ? "/admin" : "/dashboard";
-  const dashboardText = isAdmin ? "Admin Panel" : "Dashboard";
 
   return (
     <header className="sticky top-0 z-30 border-b bg-white/80 backdrop-blur-md border-slate-100">

@@ -2,8 +2,6 @@ import { NextRequest } from "next/server";
 import { AuthError, requireAdmin } from "@/lib/auth/requireAdmin";
 import { connectDB } from "@/lib/db/mongoose";
 import { logActivity } from "@/services/activity.service";
-import Notification from "@/models/Notification";
-import User from "@/models/User";
 import {
     successResponse,
     errorResponse,

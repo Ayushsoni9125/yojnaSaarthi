@@ -79,7 +79,7 @@ export default async function AdminPage() {
                     </h1>
 
                     <p className="mt-2 text-base text-slate-600">
-                        Welcome back! Here's a real-time overview of YojanaSaarthi.
+                        Welcome back! Here&apos;s a real-time overview of YojanaSaarthi.
                     </p>
                 </div>
 

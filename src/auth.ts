@@ -140,7 +140,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 
             return true;
         },
-        async jwt({ token, user, trigger, session }) {
+        async jwt({ token, user }) {
             await connectDB();
 
             const email = user?.email ?? token.email;

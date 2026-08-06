@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useSession, signOut } from "next-auth/react";
+import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
@@ -52,29 +52,10 @@ export default function DashboardPage() {
     const [removingId, setRemovingId] = useState<string | null>(null);
     const [recentSchemes, setRecentSchemes] = useState<any[]>([]);
     const [userImage, setUserImage] = useState("");
-    const [recentlyViewed, setRecentlyViewed] = useState<any[]>([]);
     const [recommendedSchemes, setRecommendedSchemes] = useState<any[]>([]);
     const [loadingRecommendations, setLoadingRecommendations] = useState(true);
     const [notificationCount, setNotificationCount] = useState(0);
 
-    // Redirect to login if not authenticated, or to admin panel if user is admin
-    useEffect(() => {
-        if (status === "unauthenticated") {
-            router.push("/login");
-        } else if (status === "authenticated" && (session?.user as any)?.role === "admin") {
-            router.push("/admin");
-        }
-    }, [status, session, router]);
-
-    // Fetch bookmarks, profile details, recently viewed & notifications
-    useEffect(() => {
-        if (status !== "authenticated") return;
-        fetchBookmarks();
-        fetchUserProfile();
-        fetchRecentSchemes();
-        fetchRecommendations();
-        fetchNotificationsCount();
-    }, [status]);
     const fetchBookmarks = async () => {
         try {
             setLoadingBookmarks(true);
@@ -124,6 +105,7 @@ export default function DashboardPage() {
             // silently fail
         }
     };
+
     const fetchRecommendations = async () => {
         try {
             setLoadingRecommendations(true);
@@ -134,12 +116,31 @@ export default function DashboardPage() {
             if (data.success) {
                 setRecommendedSchemes(data.data);
             }
-        } catch (error) {
-            console.error(error);
+        } catch {
+            // silently fail
         } finally {
             setLoadingRecommendations(false);
         }
     };
+
+    // Redirect to login if not authenticated, or to admin panel if user is admin
+    useEffect(() => {
+        if (status === "unauthenticated") {
+            router.push("/login");
+        } else if (status === "authenticated" && (session?.user as any)?.role === "admin") {
+            router.push("/admin");
+        }
+    }, [status, session, router]);
+
+    // Fetch bookmarks, profile details, recently viewed & notifications
+    useEffect(() => {
+        if (status !== "authenticated") return;
+        fetchBookmarks();
+        fetchUserProfile();
+        fetchRecentSchemes();
+        fetchRecommendations();
+        fetchNotificationsCount();
+    }, [status]);
 
     const handleRemoveBookmark = async (bookmarkId: string) => {
         setRemovingId(bookmarkId);
@@ -254,22 +255,20 @@ export default function DashboardPage() {
                             border: "#86efac",
                         },
                         {
-                            label: "Categories Saved",
-                            value: loadingBookmarks
-                                ? "—"
-                                : new Set(bookmarks.map((b) => b.schemeId?.category).filter(Boolean)).size,
-                            icon: "🗂️",
-                            color: "#0369a1",
-                            bg: "#f0f9ff",
-                            border: "#bae6fd",
+                            label: "AI Recommended",
+                            value: loadingRecommendations ? "—" : recommendedSchemes.length,
+                            icon: "🤖",
+                            color: "#7c3aed",
+                            bg: "#f5f3ff",
+                            border: "#ddd6fe",
                         },
                         {
-                            label: "Recently Viewed",
-                            value: recentSchemes.length,
-                            icon: "👀",
-                            color: "#2563eb",
-                            bg: "#eff6ff",
-                            border: "#bfdbfe",
+                            label: "Notifications",
+                            value: notificationCount,
+                            icon: "🔔",
+                            color: "#d97706",
+                            bg: "#fffbeb",
+                            border: "#fde68a",
                         },
                     ].map((stat) => (
                         <div
