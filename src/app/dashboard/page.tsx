@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { apiFetch } from "@/lib/apiClient";
 
 type BookmarkedScheme = {
     _id: string;
@@ -59,7 +60,7 @@ export default function DashboardPage() {
     const fetchBookmarks = async () => {
         try {
             setLoadingBookmarks(true);
-            const res = await fetch("/api/bookmarks");
+            const res = await apiFetch("/api/bookmarks");
             const data = await res.json();
             if (data.success) setBookmarks(data.data);
         } catch {
@@ -71,7 +72,7 @@ export default function DashboardPage() {
 
     const fetchUserProfile = async () => {
         try {
-            const res = await fetch("/api/user/profile");
+            const res = await apiFetch("/api/user/profile");
             const data = await res.json();
             if (data.success && data.data.image) {
                 setUserImage(data.data.image);
@@ -83,7 +84,7 @@ export default function DashboardPage() {
 
     const fetchRecentSchemes = async () => {
         try {
-            const res = await fetch("/api/recently-viewed");
+            const res = await apiFetch("/api/recently-viewed");
             const data = await res.json();
             if (data.success) {
                 setRecentSchemes(data.data);
@@ -95,7 +96,7 @@ export default function DashboardPage() {
 
     const fetchNotificationsCount = async () => {
         try {
-            const res = await fetch("/api/notifications");
+            const res = await apiFetch("/api/notifications");
             const data = await res.json();
             if (data.success) {
                 const unread = data.data.filter((n: any) => !n.isRead).length;
@@ -110,7 +111,7 @@ export default function DashboardPage() {
         try {
             setLoadingRecommendations(true);
 
-            const res = await fetch("/api/recommendations");
+            const res = await apiFetch("/api/recommendations");
             const data = await res.json();
 
             if (data.success) {
@@ -145,7 +146,7 @@ export default function DashboardPage() {
     const handleRemoveBookmark = async (bookmarkId: string) => {
         setRemovingId(bookmarkId);
         try {
-            const res = await fetch(`/api/bookmarks/${bookmarkId}`, { method: "DELETE" });
+            const res = await apiFetch(`/api/bookmarks/${bookmarkId}`, { method: "DELETE" });
             if (res.ok) setBookmarks((prev) => prev.filter((b) => b._id !== bookmarkId));
         } catch {
             // silently fail

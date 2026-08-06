@@ -6,6 +6,7 @@ import SchemeCard from "@/components/schemes/SchemeCard";
 import SchemeSkeleton from "@/components/schemes/SchemeSkeleton";
 import { SCHEME_CATEGORIES, SCHEME_STATUS } from "@/constants/scheme";
 import { INDIAN_STATES } from "@/constants/states";
+import { apiFetch } from "@/lib/apiClient";
 
 type Scheme = {
   _id: string;
@@ -78,7 +79,7 @@ export default function SchemesListClient({
         // Update browser URL query without full page reload
         router.replace(`/schemes?${params.toString()}`, { scroll: false });
 
-        const res = await fetch(`/api/schemes?${params.toString()}`);
+        const res = await apiFetch(`/api/schemes?${params.toString()}`);
         const data = await res.json();
 
         if (res.ok && data.success) {

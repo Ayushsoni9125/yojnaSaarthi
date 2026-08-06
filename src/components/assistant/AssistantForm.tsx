@@ -2,7 +2,9 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { toast } from "react-toastify";
 import { INDIAN_STATES } from "@/constants/state";
+import { apiFetch } from "@/lib/apiClient";
 
 type Question = {
   key: string;
@@ -102,7 +104,7 @@ export default function AssistantForm() {
     const value = answers[current.key];
 
     if (!value || value.trim() === "") {
-      alert("Please answer this question.");
+      toast.warning("Please answer this question before proceeding.");
       return;
     }
 
@@ -112,7 +114,7 @@ export default function AssistantForm() {
     }
 
     try {
-      const res = await fetch("/api/assistant/recommend", {
+      const res = await apiFetch("/api/assistant/recommend", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -122,10 +124,10 @@ export default function AssistantForm() {
 
       const data = await res.json();
 
-      
-
       if (!res.ok || !data.success) {
-        alert("Failed to fetch recommendations.");
+        if (res.status !== 429) {
+          toast.error(data.message || "Failed to fetch recommendations.");
+        }
         return;
       }
 
@@ -138,7 +140,7 @@ export default function AssistantForm() {
       router.push("/assistant/results");
     } catch (error) {
       console.error(error);
-      alert("Something went wrong.");
+      toast.error("Something went wrong. Please try again.");
     }
   };
 

@@ -5,6 +5,7 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import Link from "next/link";
+import { apiFetch } from "@/lib/apiClient";
 
 type Scheme = {
   _id: string;
@@ -98,17 +99,16 @@ export default function ComparePage() {
       try {
         setLoading(true);
         const idsParam = compareList.map((item) => item._id).join(",");
-        const res = await fetch(`/api/schemes/compare?ids=${idsParam}`);
+        const res = await apiFetch(`/api/schemes/compare?ids=${idsParam}`);
         const data = await res.json();
 
         if (data.success) {
           setSchemes(data.data);
-        } else {
+        } else if (res.status !== 429) {
           toast.error(data.message || "Failed to load scheme details.");
         }
       } catch (err) {
         console.error(err);
-        toast.error("Failed to load comparison data.");
       } finally {
         setLoading(false);
       }
@@ -127,7 +127,7 @@ export default function ComparePage() {
     const delayDebounce = setTimeout(async () => {
       try {
         setSearching(true);
-        const res = await fetch(
+        const res = await apiFetch(
           `/api/schemes?search=${encodeURIComponent(searchQuery.trim())}&limit=6`
         );
         const data = await res.json();
