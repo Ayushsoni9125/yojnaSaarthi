@@ -2,7 +2,7 @@ import { aj } from "@/lib/arcjet";
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   // Rate-limit API routes
   if (request.nextUrl.pathname.startsWith("/api/")) {
     // Allow cron API routes without rate limits
@@ -43,7 +43,7 @@ export async function middleware(request: NextRequest) {
         );
       }
     } catch (error) {
-      console.error("Arcjet middleware protection error:", error);
+      console.error("Arcjet proxy protection error:", error);
     }
   }
 
