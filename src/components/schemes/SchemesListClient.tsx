@@ -187,7 +187,7 @@ export default function SchemesListClient({
           }}
           className="rounded-xl border border-slate-200 bg-white px-3.5 py-2.5 text-xs font-semibold text-slate-700 outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 shadow-sm"
         >
-          <option value="">All Statuses</option>
+          <option value="">All Status</option>
           {SCHEME_STATUS.map((item) => (
             <option key={item} value={item}>
               {item}
