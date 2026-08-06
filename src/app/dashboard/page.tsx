@@ -208,7 +208,7 @@ export default function DashboardPage() {
                                 🤖 Try AI Assistant
                             </Link>
                             <Link
-                                href="/"
+                                href="/schemes"
                                 className="flex items-center gap-2 rounded-xl px-5 py-2.5 text-sm font-semibold bg-white text-emerald-800 transition-all hover:bg-emerald-50"
                             >
                                 🔍 Browse Schemes
@@ -285,7 +285,7 @@ export default function DashboardPage() {
                     <section id="bookmarks" className="space-y-4">
                         <div className="flex items-center justify-between">
                             <h2 className="text-xl font-bold text-slate-800">📌 Saved Schemes</h2>
-                            <Link href="/" className="text-sm text-emerald-600 hover:text-emerald-700 font-medium transition-colors">
+                            <Link href="/schemes" className="text-sm text-emerald-600 hover:text-emerald-700 font-medium transition-colors">
                                 + Add more
                             </Link>
                         </div>
@@ -311,7 +311,7 @@ export default function DashboardPage() {
                                     Browse schemes and click the ❤️ button to save them here.
                                 </p>
                                 <Link
-                                    href="/"
+                                    href="/schemes"
                                     className="mt-5 rounded-xl px-5 py-2.5 text-sm font-semibold text-white transition-all"
                                     style={{ background: "linear-gradient(135deg, #064e3b, #059669)", boxShadow: "0 4px 12px rgba(5,150,105,0.3)" }}
                                 >
