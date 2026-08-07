@@ -217,7 +217,7 @@ export default function RegisterPage() {
                 name="name"
                 value={formData.name}
                 onChange={handleChange}
-                placeholder="Ayush Soni"
+                placeholder="Enter Your Name"
                 disabled={loading}
                 className={`w-full rounded-xl border px-4 py-3 text-sm bg-white text-slate-900 placeholder-slate-400 outline-none transition-all
                   focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500

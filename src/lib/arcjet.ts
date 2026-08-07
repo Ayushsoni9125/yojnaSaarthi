@@ -19,13 +19,13 @@ export const aj = arcjet({
       allow: ["CATEGORY:SEARCH_ENGINE"], // Allow Google, Bing, etc.
     }),
 
-    // Rate Limiting: Token Bucket algorithm (20 requests per minute per IP)
+    // Rate Limiting: Token Bucket algorithm (100 requests capacity, refills 60 tokens per minute)
     tokenBucket({
       mode: "LIVE",
       characteristics: ["ip.src"],
-      refillRate: 10,
+      refillRate: 60,
       interval: 60,
-      capacity: 20,
+      capacity: 100,
     }),
   ],
 });
