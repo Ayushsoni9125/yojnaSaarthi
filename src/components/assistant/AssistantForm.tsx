@@ -151,7 +151,7 @@ export default function AssistantForm() {
   };
 
   return (
-    <div className="mx-auto max-w-2xl rounded-xl border bg-white p-8 shadow">
+    <div className="mx-auto max-w-2xl rounded-2xl border bg-white p-5 sm:p-8 shadow-sm">
       {/* Progress */}
       <div className="mb-8">
         <div className="mb-2 flex justify-between text-sm text-gray-500">
@@ -216,22 +216,20 @@ export default function AssistantForm() {
       </div>
 
       {/* Buttons */}
-      <div className="mt-10 flex justify-between">
+      <div className="mt-10 flex flex-col-reverse sm:flex-row justify-between gap-3">
         <button
           onClick={handlePrevious}
           disabled={step === 0}
-          className="rounded-lg border px-6 py-3 disabled:cursor-not-allowed disabled:opacity-50"
+          className="rounded-lg border px-6 py-3 cursor-pointer disabled:cursor-not-allowed disabled:opacity-50 text-center"
         >
           Previous
         </button>
 
         <button
           onClick={handleNext}
-          className="rounded-lg bg-blue-600 px-6 py-3 text-white hover:bg-blue-700"
+          className="rounded-lg bg-emerald-600 px-6 py-3 text-white font-semibold hover:bg-emerald-700 cursor-pointer text-center"
         >
-          {step === QUESTIONS.length - 1
-            ? "Get Recommendations"
-            : "Next"}
+          {step === QUESTIONS.length - 1 ? "Submit & Get Recommendations 🚀" : "Next →"}
         </button>
       </div>
     </div>

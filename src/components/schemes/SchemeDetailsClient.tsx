@@ -51,7 +51,7 @@ export default function SchemeDetailsClient({ scheme }: SchemeDetailsProps) {
   };
 
   return (
-    <div className="mx-auto max-w-5xl px-6 py-10 space-y-8">
+    <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 py-8 sm:py-10 space-y-8">
       {/* Dynamic Client Recently Viewed Tracker */}
       <RecentlyViewed scheme={{ _id: scheme._id }} />
 
