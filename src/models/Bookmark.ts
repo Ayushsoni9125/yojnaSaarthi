@@ -1,4 +1,6 @@
 import { Schema, model, models } from "mongoose";
+import "@/models/Scheme";
+import "@/models/User";
 
 const BookmarkSchema = new Schema(
   {

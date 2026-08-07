@@ -63,7 +63,7 @@ export async function PUT(req: NextRequest, { params }: Params) {
     let updatedScheme = await updateScheme(id, validatedData);
 
     if (!updatedScheme && mongoose.Types.ObjectId.isValid(id)) {
-      const dbScheme = await Scheme.findByIdAndUpdate(id, validatedData, { new: true }).lean();
+      const dbScheme = await Scheme.findByIdAndUpdate(id, validatedData, { returnDocument: "after" }).lean();
       if (dbScheme) updatedScheme = dbScheme as any;
     }
 

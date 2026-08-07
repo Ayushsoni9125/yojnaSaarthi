@@ -1,4 +1,6 @@
 import mongoose, { Schema, model, models } from "mongoose";
+import "@/models/Scheme";
+import "@/models/User";
 
 export interface INotification {
   userId: mongoose.Types.ObjectId;

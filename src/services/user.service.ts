@@ -71,5 +71,5 @@ export async function getUsers({
 }
 
 export async function updateUser(id: string, data: Partial<IUser>) {
-  return await User.findByIdAndUpdate(id, data, { new: true }).lean();
+  return await User.findByIdAndUpdate(id, data, { returnDocument: "after" }).lean();
 }

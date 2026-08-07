@@ -122,7 +122,7 @@ export async function updateScheme(
         { slug },
         data,
         {
-            new: true,
+            returnDocument: "after",
             runValidators: true,
         }
     ).lean();

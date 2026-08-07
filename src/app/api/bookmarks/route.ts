@@ -1,6 +1,8 @@
 import { NextRequest } from "next/server";
 import { connectDB } from "@/lib/db/mongoose";
 import Bookmark from "@/models/Bookmark";
+import "@/models/Scheme";
+import "@/models/User";
 import { requireUser } from "@/lib/auth/requireUser";
 import { AuthError } from "@/lib/auth/requireAdmin";
 

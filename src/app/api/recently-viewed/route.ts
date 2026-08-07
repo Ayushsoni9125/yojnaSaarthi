@@ -62,7 +62,7 @@ export async function POST(req: NextRequest) {
     const record = await RecentlyViewed.findOneAndUpdate(
       { userId: user._id, schemeId },
       { viewedAt: new Date() },
-      { upsert: true, new: true, setDefaultsOnInsert: true }
+      { upsert: true, returnDocument: "after", setDefaultsOnInsert: true }
     );
 
     return NextResponse.json({
