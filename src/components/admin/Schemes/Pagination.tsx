@@ -34,7 +34,7 @@ export default function Pagination({
       <button
         disabled={currentPage === 1}
         onClick={() => goToPage(currentPage - 1)}
-        className="rounded-lg border px-4 py-2 transition hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-50"
+        className="rounded-lg border px-4 py-2 transition hover:bg-slate-100 cursor-pointer disabled:cursor-not-allowed disabled:opacity-50"
       >
         Previous
       </button>
@@ -44,9 +44,9 @@ export default function Pagination({
       </p>
 
       <button
-        disabled={currentPage === totalPages}
+        disabled={currentPage <= 0 || currentPage >= totalPages}
         onClick={() => goToPage(currentPage + 1)}
-        className="rounded-lg border px-4 py-2 transition hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-50"
+        className="rounded-lg border px-4 py-2 transition hover:bg-slate-100 cursor-pointer disabled:cursor-not-allowed disabled:opacity-50"
       >
         Next
       </button>

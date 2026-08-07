@@ -22,6 +22,9 @@ export default function SchemeToolbar() {
 
     // Debounced search
     useEffect(() => {
+        const currentSearch = searchParams.get("search") ?? "";
+        if (search.trim() === currentSearch.trim()) return;
+
         const timer = setTimeout(() => {
             const params = new URLSearchParams(
                 searchParams.toString()
