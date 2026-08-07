@@ -1,13 +1,22 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { runScraper } from "@/services/scraper.service";
 
-export async function GET() {
+export async function GET(request: NextRequest) {
+    const token = request.nextUrl.searchParams.get("token");
+
+    if (token !== process.env.CRON_SECRET) {
+        return NextResponse.json(
+            { success: false, message: "Unauthorized" },
+            { status: 401 }
+        );
+    }
+
     try {
         await runScraper();
 
         return NextResponse.json({
             success: true,
-            message: "Cron scraper completed successfully.",
+            message: "Scraper completed successfully.",
         });
     } catch (error) {
         console.error(error);
@@ -15,7 +24,7 @@ export async function GET() {
         return NextResponse.json(
             {
                 success: false,
-                message: "Cron scraper failed.",
+                message: "Scraper failed.",
             },
             { status: 500 }
         );
