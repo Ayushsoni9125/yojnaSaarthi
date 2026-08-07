@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useSession } from "next-auth/react";
+import { useSession, signOut } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { apiFetch, safeJsonParse } from "@/lib/apiClient";
@@ -218,7 +218,7 @@ export default function DashboardPage() {
                             </div>
                         </Link>
 
-                        <div className="flex gap-3 flex-wrap">
+                        <div className="flex gap-3 flex-wrap items-center">
                             <Link
                                 href="/profile"
                                 className="flex items-center gap-2 rounded-xl px-5 py-2.5 text-sm font-semibold transition-all hover:bg-white/20"
@@ -239,6 +239,12 @@ export default function DashboardPage() {
                             >
                                 🔍 Browse Schemes
                             </Link>
+                            <button
+                                onClick={() => signOut({ callbackUrl: "/" })}
+                                className="flex items-center gap-2 rounded-xl px-5 py-2.5 text-sm font-semibold transition-all bg-red-500/80 hover:bg-red-600 text-white backdrop-blur-md border border-red-400/30 cursor-pointer shadow-sm"
+                            >
+                                🚪 Log Out
+                            </button>
                         </div>
                     </div>
                 </section>
