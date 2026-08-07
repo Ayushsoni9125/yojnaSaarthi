@@ -220,6 +220,13 @@ export default function DashboardPage() {
 
                         <div className="flex gap-3 flex-wrap">
                             <Link
+                                href="/profile"
+                                className="flex items-center gap-2 rounded-xl px-5 py-2.5 text-sm font-semibold transition-all hover:bg-white/20"
+                                style={{ background: "rgba(255,255,255,0.18)", color: "#fff", backdropFilter: "blur(8px)", border: "1px solid rgba(255,255,255,0.3)" }}
+                            >
+                                ✏️ Edit Profile
+                            </Link>
+                            <Link
                                 href="/assistant"
                                 className="flex items-center gap-2 rounded-xl px-5 py-2.5 text-sm font-semibold transition-all"
                                 style={{ background: "rgba(255,255,255,0.15)", color: "#fff", backdropFilter: "blur(8px)", border: "1px solid rgba(255,255,255,0.2)" }}

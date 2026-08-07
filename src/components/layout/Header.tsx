@@ -69,7 +69,7 @@ export default function Header() {
             <div className="w-8 h-8 rounded-full bg-slate-100 animate-pulse" />
           ) : session ? (
             <div className="flex items-center gap-3">
-              <Link href="/profile" className="flex items-center gap-2.5 group" title="Edit Profile">
+              <Link href="/dashboard" className="flex items-center gap-2.5 group" title="Go to Dashboard">
                 <div
                   className="w-9 h-9 rounded-full flex items-center justify-center text-white text-sm font-bold flex-shrink-0 border-2 border-slate-100 group-hover:border-emerald-500 transition-colors overflow-hidden"
                   style={{
@@ -92,7 +92,7 @@ export default function Header() {
                   <p className="text-sm font-semibold text-slate-800 group-hover:text-emerald-700 transition-colors">
                     {session.user?.name}
                   </p>
-                  <p className="text-xs text-slate-400">Edit Profile ✏️</p>
+                  <p className="text-xs text-slate-400">Dashboard 📊</p>
                 </div>
               </Link>
             </div>
@@ -187,7 +187,7 @@ export default function Header() {
             ) : session ? (
               <div className="flex items-center justify-between">
                 <Link
-                  href="/profile"
+                  href="/dashboard"
                   onClick={() => setMobileOpen(false)}
                   className="flex items-center gap-3 group cursor-pointer"
                 >
@@ -213,7 +213,7 @@ export default function Header() {
                     <p className="text-sm font-bold text-slate-800 group-hover:text-emerald-700 transition-colors">
                       {session.user?.name}
                     </p>
-                    <p className="text-xs text-slate-400">Edit Profile ✏️</p>
+                    <p className="text-xs text-slate-400">Dashboard 📊</p>
                   </div>
                 </Link>
               </div>
