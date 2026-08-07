@@ -9,16 +9,19 @@ export async function GET() {
     await connectDB();
     const user = await requireUser();
 
-    const bookmarks = await Bookmark.find({ userId: user._id })
+    const rawBookmarks = await Bookmark.find({ userId: user._id })
       .populate("schemeId", "title slug shortDescription category ministry status")
       .sort({ createdAt: -1 })
       .lean();
+
+    const bookmarks = rawBookmarks.filter((b: any) => b.schemeId != null);
 
     return Response.json({ success: true, data: bookmarks });
   } catch (error: any) {
     if (error instanceof AuthError) {
       return Response.json({ success: false, message: error.message }, { status: error.status });
     }
+    console.error("GET bookmarks error:", error);
     return Response.json({ success: false, message: "Internal Server Error" }, { status: 500 });
   }
 }

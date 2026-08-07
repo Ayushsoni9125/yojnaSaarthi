@@ -62,9 +62,11 @@ export default function DashboardPage() {
             setLoadingBookmarks(true);
             const res = await apiFetch("/api/bookmarks");
             const data = await safeJsonParse(res);
-            if (data.success && data.data) setBookmarks(data.data);
-        } catch {
-            // silently fail
+            if (data.success && Array.isArray(data.data)) {
+                setBookmarks(data.data);
+            }
+        } catch (error) {
+            console.error("Failed to fetch bookmarks:", error);
         } finally {
             setLoadingBookmarks(false);
         }
@@ -86,7 +88,7 @@ export default function DashboardPage() {
         try {
             const res = await apiFetch("/api/recently-viewed");
             const data = await safeJsonParse(res);
-            if (data.success && data.data) {
+            if (data.success && Array.isArray(data.data)) {
                 setRecentSchemes(data.data);
             }
         } catch {
@@ -98,7 +100,7 @@ export default function DashboardPage() {
         try {
             const res = await apiFetch("/api/notifications");
             const data = await safeJsonParse(res);
-            if (data.success && data.data) {
+            if (data.success && Array.isArray(data.data)) {
                 const unread = data.data.filter((n: any) => !n.isRead).length;
                 setNotificationCount(unread);
             }
@@ -114,7 +116,7 @@ export default function DashboardPage() {
             const res = await apiFetch("/api/recommendations");
             const data = await safeJsonParse(res);
 
-            if (data.success && data.data) {
+            if (data.success && Array.isArray(data.data)) {
                 setRecommendedSchemes(data.data);
             }
         } catch {
@@ -133,14 +135,16 @@ export default function DashboardPage() {
         }
     }, [status, session, router]);
 
-    // Fetch bookmarks, profile details, recently viewed & notifications
+    // Fetch bookmarks, profile details, recently viewed & notifications in parallel
     useEffect(() => {
         if (status !== "authenticated") return;
-        fetchBookmarks();
-        fetchUserProfile();
-        fetchRecentSchemes();
-        fetchRecommendations();
-        fetchNotificationsCount();
+        Promise.allSettled([
+            fetchBookmarks(),
+            fetchUserProfile(),
+            fetchRecentSchemes(),
+            fetchRecommendations(),
+            fetchNotificationsCount(),
+        ]);
     }, [status]);
 
     const handleRemoveBookmark = async (bookmarkId: string) => {
