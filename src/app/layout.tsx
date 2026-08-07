@@ -3,6 +3,7 @@ import "./globals.css";
 import { Geist } from "next/font/google";
 import { cn } from "@/lib/utils";
 import { SessionProvider } from "next-auth/react";
+import { Analytics } from "@vercel/analytics/next";
 
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
@@ -37,7 +38,11 @@ export default function RootLayout({
             </div>
             <Footer />
           </div>
+
           <LazyProviders />
+
+          {/* Vercel Analytics */}
+          <Analytics />
         </SessionProvider>
       </body>
     </html>
