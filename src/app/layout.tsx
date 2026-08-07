@@ -3,7 +3,9 @@ import "./globals.css";
 import { Geist } from "next/font/google";
 import { cn } from "@/lib/utils";
 import { SessionProvider } from "next-auth/react";
+
 import { Analytics } from "@vercel/analytics/next";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
@@ -43,6 +45,9 @@ export default function RootLayout({
 
           {/* Vercel Analytics */}
           <Analytics />
+
+          {/* Vercel Speed Insights */}
+          <SpeedInsights />
         </SessionProvider>
       </body>
     </html>
