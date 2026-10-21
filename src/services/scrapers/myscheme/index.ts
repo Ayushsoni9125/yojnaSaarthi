@@ -24,8 +24,8 @@ export async function runMySchemeLoop(jobId: string) {
         size: PAGE_SIZE,
       });
 
-      const items = response.data.hits.items;
-      const page = response.data.hits.page;
+      const items = response.hits.items;
+      const page = response.hits.page;
 
       if (total === 0) {
         total = page.total;
