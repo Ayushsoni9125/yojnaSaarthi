@@ -102,8 +102,6 @@ export async function runFlagshipScraperLoop(jobId: string) {
     await connectDB();
 
     const total = FLAGSHIP_PORTALS.length;
-    let imported = 0;
-    const schemes: ScrapedScheme[] = [];
 
     await updateScraperJob(jobId, {
       totalSchemes: total,
@@ -111,89 +109,82 @@ export async function runFlagshipScraperLoop(jobId: string) {
       currentOffset: 0,
     });
 
-    for (let i = 0; i < FLAGSHIP_PORTALS.length; i++) {
-      const portal = FLAGSHIP_PORTALS[i];
+    // Check if stopped before starting
+    const initialCheck = await ScraperJob.findById(jobId).select("status").lean();
+    if (initialCheck?.status === "Stopped") {
+      console.log(`[Scraper] Flagship scraper job ${jobId} was stopped before starting.`);
+      return;
+    }
 
-      // Check if stopped by admin
-      const statusCheck = await ScraperJob.findById(jobId).select("status").lean();
-      if (statusCheck?.status === "Stopped") {
-        console.log(`[Scraper] Flagship scraper job ${jobId} was stopped by user.`);
-        return;
-      }
+    // Process all flagship portals concurrently in parallel
+    const schemes: ScrapedScheme[] = await Promise.all(
+      FLAGSHIP_PORTALS.map(async (portal) => {
+        let liveTitle = portal.title;
+        let liveDescription = portal.shortDescription;
 
-      let liveTitle = portal.title;
-      let liveDescription = portal.shortDescription;
+        try {
+          const response = await axios.get(portal.url, {
+            httpsAgent,
+            headers: {
+              "User-Agent":
+                "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+              Accept: "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+            },
+            timeout: 4000,
+          });
 
-      // Attempt to probe and scrape live title and meta description directly from official site
-      try {
-        const response = await axios.get(portal.url, {
-          httpsAgent,
-          headers: {
-            "User-Agent":
-              "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
-            Accept: "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
-          },
-          timeout: 7000,
-        });
+          const $ = cheerio.load(response.data);
+          const pageTitle = $("title").text().trim();
+          const metaDesc =
+            $('meta[name="description"]').attr("content")?.trim() ||
+            $('meta[property="og:description"]').attr("content")?.trim();
 
-        const $ = cheerio.load(response.data);
-        const pageTitle = $("title").text().trim();
-        const metaDesc =
-          $('meta[name="description"]').attr("content")?.trim() ||
-          $('meta[property="og:description"]').attr("content")?.trim();
-
-        if (pageTitle && pageTitle.length > 5 && pageTitle.length < 120) {
-          liveTitle = pageTitle.replace(/\s+/g, " ");
+          if (pageTitle && pageTitle.length > 5 && pageTitle.length < 120) {
+            liveTitle = pageTitle.replace(/\s+/g, " ");
+          }
+          if (metaDesc && metaDesc.length > 20) {
+            liveDescription = metaDesc.slice(0, 250);
+          }
+        } catch {
+          // fallback to curated official metadata
         }
-        if (metaDesc && metaDesc.length > 20) {
-          liveDescription = metaDesc.slice(0, 250);
-        }
-      } catch (probeErr: any) {
-        console.log(`[Scraper] Live probe for ${portal.url} completed with fallback: ${probeErr.message}`);
-      }
 
-      const scheme: ScrapedScheme = {
-        title: liveTitle,
-        slug: portal.slug,
-        shortDescription: liveDescription,
-        description: `${portal.shortDescription}\n\nOfficial Website: ${portal.url}`,
-        category: portal.category,
-        ministry: portal.ministry,
-        benefits: ["Direct benefit as per official government policy guidelines."],
-        documents: ["Aadhaar Card", "Bank Account Details", "Income/Category Certificate (if applicable)"],
-        tags: portal.tags,
-        states: portal.states,
-        officialUrl: portal.url,
-        source: "NationalFlagship",
-        sourceUrl: portal.url,
-      };
+        return {
+          title: liveTitle,
+          slug: portal.slug,
+          shortDescription: liveDescription,
+          description: `${portal.shortDescription}\n\nOfficial Portal: ${portal.url}`,
+          category: portal.category,
+          ministry: portal.ministry,
+          benefits: ["Direct financial or welfare assistance as per Central Government scheme guidelines."],
+          documents: ["Aadhaar Card", "Bank Account Details", "Income/Category Certificate (if applicable)"],
+          tags: portal.tags,
+          states: portal.states,
+          officialUrl: portal.url,
+          source: "NationalFlagship",
+          sourceUrl: portal.url,
+        };
+      })
+    );
 
-      schemes.push(scheme);
-      imported++;
-
-      await updateScraperJob(jobId, {
-        importedSchemes: imported,
-        currentOffset: i + 1,
-      });
-
-      console.log(`[Scraper] Processed flagship portal ${i + 1}/${total}: ${portal.title}`);
+    // Check if stopped during processing
+    const midCheck = await ScraperJob.findById(jobId).select("status").lean();
+    if (midCheck?.status === "Stopped") {
+      return;
     }
 
     if (schemes.length > 0) {
       await bulkUpsertSchemes(schemes);
     }
 
-    const finalJob = await ScraperJob.findById(jobId).select("status").lean();
-    if (finalJob?.status === "Stopped") {
-      return;
-    }
-
     await updateScraperJob(jobId, {
+      importedSchemes: schemes.length,
+      currentOffset: schemes.length,
       status: "Completed",
       finishedAt: new Date(),
     });
 
-    console.log(`[Scraper] Completed Flagship job ${jobId}: ${imported}/${total} schemes`);
+    console.log(`[Scraper] Completed Flagship job ${jobId}: ${schemes.length}/${total} schemes`);
   } catch (err: any) {
     console.error(`[Scraper] Flagship scraper failed:`, err);
     const finalJob = await ScraperJob.findById(jobId).select("status").lean();
