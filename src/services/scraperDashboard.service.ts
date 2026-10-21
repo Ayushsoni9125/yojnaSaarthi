@@ -8,6 +8,7 @@ export async function getLatestScraperStats() {
     if (!latestJob) {
         return {
             status: "Idle",
+            source: "MyScheme",
             lastRun: null,
             importedSchemes: 0,
             failedSchemes: 0,
@@ -21,6 +22,7 @@ export async function getLatestScraperStats() {
 
     return {
         status: latestJob.status,
+        source: latestJob.source || "MyScheme",
         lastRun: lastRunDate ? new Date(lastRunDate).toISOString() : null,
         importedSchemes: latestJob.importedSchemes ?? 0,
         failedSchemes: latestJob.failedSchemes ?? 0,

@@ -4,6 +4,7 @@ import { useEffect, useState, useCallback } from "react";
 
 type ScraperStats = {
     status: string;
+    source?: string;
     lastRun: string | null;
     importedSchemes: number;
     failedSchemes: number;
@@ -32,6 +33,7 @@ function formatIndianTime(dateStr: string | null | undefined): string {
 
 export default function ScraperControls() {
     const [stats, setStats] = useState<ScraperStats | null>(null);
+    const [selectedSource, setSelectedSource] = useState<string>("MyScheme");
     const [starting, setStarting] = useState(false);
     const [stopping, setStopping] = useState(false);
 
@@ -57,7 +59,11 @@ export default function ScraperControls() {
     async function handleRunScraper() {
         try {
             setStarting(true);
-            const res = await fetch("/api/scraper/run", { method: "POST" });
+            const res = await fetch("/api/scraper/run", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ source: selectedSource }),
+            });
             const data = await res.json();
             if (!data.success) {
                 alert(data.message ?? "Failed to start scraper");
@@ -111,7 +117,14 @@ export default function ScraperControls() {
             <div className="grid gap-4 grid-cols-2 md:grid-cols-3">
                 {/* Status */}
                 <div className="rounded-xl border bg-white p-5 shadow-sm">
-                    <p className="text-sm text-slate-500">Status</p>
+                    <div className="flex items-center justify-between">
+                        <p className="text-sm text-slate-500">Status</p>
+                        {stats?.source && (
+                            <span className="text-xs bg-slate-100 text-slate-700 px-2 py-0.5 rounded-full font-medium">
+                                {stats.source}
+                            </span>
+                        )}
+                    </div>
                     <p className={`mt-1 text-2xl font-bold ${statusColor}`}>
                         {stats ? stats.status : "—"}
                         {isRunning && (
@@ -170,7 +183,7 @@ export default function ScraperControls() {
             {isRunning && stats.totalSchemes > 0 && (
                 <div className="rounded-xl border bg-white p-5 shadow-sm">
                     <div className="flex justify-between text-sm text-slate-500 mb-2">
-                        <span>Progress</span>
+                        <span>Progress ({stats.source ?? "Scraper"})</span>
                         <span>{progress}% ({stats.importedSchemes} / {stats.totalSchemes})</span>
                     </div>
                     <div className="w-full bg-slate-100 rounded-full h-3 overflow-hidden">
@@ -202,14 +215,31 @@ export default function ScraperControls() {
             <div className="rounded-xl border bg-white p-6 shadow-sm">
                 <h2 className="text-xl font-semibold">Scraper Controls</h2>
                 <p className="mt-2 text-slate-500">
-                    Manually control the government scheme scraper.
+                    Select a portal source and manually run the synchronization pipeline.
                 </p>
+
+                {/* Source Selector */}
+                <div className="mt-4 max-w-md">
+                    <label className="block text-sm font-medium text-slate-700 mb-1">
+                        Select Scheme Source:
+                    </label>
+                    <select
+                        value={selectedSource}
+                        onChange={(e) => setSelectedSource(e.target.value)}
+                        disabled={isRunning || starting}
+                        className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm shadow-sm focus:border-green-500 focus:outline-none focus:ring-1 focus:ring-green-500 disabled:opacity-50"
+                    >
+                        <option value="MyScheme">MyScheme Portal (4,770+ Central & State Schemes)</option>
+                        <option value="NationalFlagship">National Flagship Portals (Direct Ministry Sites)</option>
+                        <option value="All">All Sources (Flagship + MyScheme Comprehensive)</option>
+                    </select>
+                </div>
 
                 <div className="mt-6 flex flex-wrap gap-3">
                     <button
                         onClick={handleRunScraper}
                         disabled={starting || isRunning}
-                        className="rounded-lg bg-green-600 px-5 py-2.5 text-white disabled:opacity-50 disabled:cursor-not-allowed hover:bg-green-700 transition"
+                        className="rounded-lg bg-green-600 px-5 py-2.5 text-white font-medium disabled:opacity-50 disabled:cursor-not-allowed hover:bg-green-700 transition"
                     >
                         {starting
                             ? "Starting..."
@@ -221,14 +251,14 @@ export default function ScraperControls() {
                     <button
                         onClick={handleStopScraper}
                         disabled={stopping || !isRunning}
-                        className="rounded-lg bg-red-600 px-5 py-2.5 text-white disabled:opacity-50 disabled:cursor-not-allowed hover:bg-red-700 transition"
+                        className="rounded-lg bg-red-600 px-5 py-2.5 text-white font-medium disabled:opacity-50 disabled:cursor-not-allowed hover:bg-red-700 transition"
                     >
                         {stopping ? "Stopping..." : "Stop Scraper"}
                     </button>
 
                     <a
                         href="/admin/activity"
-                        className="inline-flex items-center rounded-lg border px-5 py-2.5 text-slate-700 hover:bg-slate-50 transition"
+                        className="inline-flex items-center rounded-lg border px-5 py-2.5 text-slate-700 font-medium hover:bg-slate-50 transition"
                     >
                         View Logs
                     </a>
