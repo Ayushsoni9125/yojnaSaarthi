@@ -12,6 +12,24 @@ type ScraperStats = {
     error?: string | null;
 };
 
+function formatIndianTime(dateStr: string | null | undefined): string {
+    if (!dateStr) return "Never";
+    const d = new Date(dateStr);
+    if (isNaN(d.getTime())) return "Never";
+    return (
+        d.toLocaleString("en-IN", {
+            timeZone: "Asia/Kolkata",
+            day: "2-digit",
+            month: "short",
+            year: "numeric",
+            hour: "2-digit",
+            minute: "2-digit",
+            second: "2-digit",
+            hour12: true,
+        }) + " IST"
+    );
+}
+
 export default function ScraperControls() {
     const [stats, setStats] = useState<ScraperStats | null>(null);
     const [starting, setStarting] = useState(false);
@@ -84,11 +102,9 @@ export default function ScraperControls() {
 
                 {/* Last Run */}
                 <div className="rounded-xl border bg-white p-5 shadow-sm">
-                    <p className="text-sm text-slate-500">Last Run</p>
+                    <p className="text-sm text-slate-500">Last Run (IST)</p>
                     <p className="mt-1 text-base font-semibold">
-                        {stats?.lastRun
-                            ? new Date(stats.lastRun).toLocaleString()
-                            : "Never"}
+                        {stats?.lastRun ? formatIndianTime(stats.lastRun) : "Never"}
                     </p>
                 </div>
 

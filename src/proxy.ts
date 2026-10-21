@@ -5,8 +5,11 @@ import type { NextRequest } from "next/server";
 export async function proxy(request: NextRequest) {
   // Rate-limit API routes
   if (request.nextUrl.pathname.startsWith("/api/")) {
-    // Allow cron API routes without rate limits
-    if (request.nextUrl.pathname.startsWith("/api/cron")) {
+    // Allow cron and admin scraper API routes without rate limits
+    if (
+      request.nextUrl.pathname.startsWith("/api/cron") ||
+      request.nextUrl.pathname.startsWith("/api/scraper")
+    ) {
       return NextResponse.next();
     }
 

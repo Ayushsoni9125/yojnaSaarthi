@@ -2,7 +2,7 @@ import slugify from "slugify";
 import { ScrapedScheme } from "@/types/scraper";
 import { mapCategory } from "@/utils/mapCategory";
 export function mapMyScheme(item: any): ScrapedScheme {
-    const fields = item.fields;
+    const fields = item?.fields ?? {};
 
     return {
         title: fields.schemeName ?? "",
