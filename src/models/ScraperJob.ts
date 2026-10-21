@@ -2,7 +2,7 @@ import { Schema, model, models, Document } from "mongoose";
 
 export interface IScraperJob extends Document {
   source: string;
-  status: "Running" | "Completed" | "Failed";
+  status: "Running" | "Completed" | "Failed" | "Stopped";
 
   startedAt: Date;
   finishedAt?: Date;
@@ -26,7 +26,7 @@ const ScraperJobSchema = new Schema<IScraperJob>(
 
     status: {
       type: String,
-      enum: ["Running", "Completed", "Failed"],
+      enum: ["Running", "Completed", "Failed", "Stopped"],
       default: "Running",
     },
 

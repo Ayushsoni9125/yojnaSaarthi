@@ -33,6 +33,7 @@ function formatIndianTime(dateStr: string | null | undefined): string {
 export default function ScraperControls() {
     const [stats, setStats] = useState<ScraperStats | null>(null);
     const [starting, setStarting] = useState(false);
+    const [stopping, setStopping] = useState(false);
 
     const fetchStatus = useCallback(async () => {
         try {
@@ -70,6 +71,23 @@ export default function ScraperControls() {
         }
     }
 
+    async function handleStopScraper() {
+        try {
+            setStopping(true);
+            const res = await fetch("/api/scraper/stop", { method: "POST" });
+            const data = await res.json();
+            if (!data.success) {
+                alert(data.message ?? "Failed to stop scraper");
+            }
+            // Immediately re-fetch status
+            await fetchStatus();
+        } catch {
+            alert("Failed to stop scraper");
+        } finally {
+            setStopping(false);
+        }
+    }
+
     const isRunning = stats?.status === "Running";
     const progress =
         stats && stats.totalSchemes > 0
@@ -83,6 +101,8 @@ export default function ScraperControls() {
             ? "text-yellow-600"
             : stats?.status === "Failed"
             ? "text-red-600"
+            : stats?.status === "Stopped"
+            ? "text-orange-600"
             : "text-slate-500";
 
     return (
@@ -162,6 +182,14 @@ export default function ScraperControls() {
                 </div>
             )}
 
+            {/* Stopped alert */}
+            {stats?.status === "Stopped" && (
+                <div className="rounded-xl border border-orange-200 bg-orange-50 p-5">
+                    <p className="text-sm font-semibold text-orange-700 mb-1">⏹ Scraper Stopped</p>
+                    <p className="text-sm text-orange-600">The scraper was stopped by an administrator.</p>
+                </div>
+            )}
+
             {/* Error box — visible when Failed */}
             {stats?.status === "Failed" && stats.error && (
                 <div className="rounded-xl border border-red-200 bg-red-50 p-5">
@@ -181,7 +209,7 @@ export default function ScraperControls() {
                     <button
                         onClick={handleRunScraper}
                         disabled={starting || isRunning}
-                        className="rounded-lg bg-green-600 px-5 py-2.5 text-white disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="rounded-lg bg-green-600 px-5 py-2.5 text-white disabled:opacity-50 disabled:cursor-not-allowed hover:bg-green-700 transition"
                     >
                         {starting
                             ? "Starting..."
@@ -190,13 +218,20 @@ export default function ScraperControls() {
                             : "Run Scraper"}
                     </button>
 
-                    <button className="rounded-lg bg-red-600 px-5 py-2.5 text-white">
-                        Stop Scraper
+                    <button
+                        onClick={handleStopScraper}
+                        disabled={stopping || !isRunning}
+                        className="rounded-lg bg-red-600 px-5 py-2.5 text-white disabled:opacity-50 disabled:cursor-not-allowed hover:bg-red-700 transition"
+                    >
+                        {stopping ? "Stopping..." : "Stop Scraper"}
                     </button>
 
-                    <button className="rounded-lg border px-5 py-2.5">
+                    <a
+                        href="/admin/activity"
+                        className="inline-flex items-center rounded-lg border px-5 py-2.5 text-slate-700 hover:bg-slate-50 transition"
+                    >
                         View Logs
-                    </button>
+                    </a>
                 </div>
             </div>
         </div>

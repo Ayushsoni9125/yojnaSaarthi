@@ -3,6 +3,7 @@ import { mapMyScheme } from "./mapper";
 import { bulkUpsertSchemes } from "@/services/scheme.service";
 import { updateScraperJob } from "@/services/scraperJob.service";
 import { connectDB } from "@/lib/db/mongoose";
+import ScraperJob from "@/models/ScraperJob";
 
 const PAGE_SIZE = 100;
 const CONCURRENCY = 4;
@@ -35,6 +36,13 @@ export async function runMySchemeLoop(jobId: string) {
       );
     }
 
+    // Check if stopped before first write
+    const initialCheck = await ScraperJob.findById(jobId).select("status").lean();
+    if (initialCheck?.status === "Stopped") {
+      console.log(`[Scraper] Job ${jobId} was stopped before processing.`);
+      return;
+    }
+
     // Upsert first page
     const firstSchemes = firstItems.map(mapMyScheme);
     await bulkUpsertSchemes(firstSchemes);
@@ -51,6 +59,13 @@ export async function runMySchemeLoop(jobId: string) {
 
     // 2. Fetch remaining pages in concurrent batches of CONCURRENCY
     while (from < total) {
+      // Check if job was stopped by admin
+      const statusCheck = await ScraperJob.findById(jobId).select("status").lean();
+      if (statusCheck?.status === "Stopped") {
+        console.log(`[Scraper] Scraper job ${jobId} was stopped by user.`);
+        return;
+      }
+
       const offsets: number[] = [];
       for (let i = 0; i < CONCURRENCY && from + i * PAGE_SIZE < total; i++) {
         offsets.push(from + i * PAGE_SIZE);
@@ -85,6 +100,11 @@ export async function runMySchemeLoop(jobId: string) {
       console.log(`[Scraper] Progress: imported ${imported}/${total}`);
     }
 
+    const finalJob = await ScraperJob.findById(jobId).select("status").lean();
+    if (finalJob?.status === "Stopped") {
+      return;
+    }
+
     await updateScraperJob(jobId, {
       status: "Completed",
       finishedAt: new Date(),
@@ -93,6 +113,10 @@ export async function runMySchemeLoop(jobId: string) {
     console.log(`[Scraper] Completed job ${jobId}: ${imported}/${total} schemes`);
   } catch (err: any) {
     console.error(`[Scraper] Job ${jobId} failed:`, err);
+    const finalJob = await ScraperJob.findById(jobId).select("status").lean();
+    if (finalJob?.status === "Stopped") {
+      return;
+    }
     await updateScraperJob(jobId, {
       status: "Failed",
       finishedAt: new Date(),

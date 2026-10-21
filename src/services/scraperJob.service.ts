@@ -34,3 +34,16 @@ export async function getLatestScraperJob(source: string) {
         createdAt: -1,
     });
 }
+
+export async function stopScraperJobs() {
+    return await ScraperJob.updateMany(
+        { status: "Running" },
+        {
+            $set: {
+                status: "Stopped",
+                finishedAt: new Date(),
+                error: "Stopped by administrator",
+            },
+        }
+    );
+}
