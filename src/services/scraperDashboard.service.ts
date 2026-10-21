@@ -18,7 +18,7 @@ export async function getLatestScraperStats() {
 
     return {
         status: latestJob.status,
-        lastRun: latestJob.finishedAt,
+        lastRun: latestJob.finishedAt ?? latestJob.startedAt,
         importedSchemes: latestJob.importedSchemes,
         failedSchemes: latestJob.failedSchemes,
         totalSchemes: latestJob.totalSchemes,

@@ -1,4 +1,4 @@
-import { fetchSchemes, fetchSchemeBySlug } from "./client";
+import { fetchSchemes } from "./client";
 import { mapMyScheme } from "./mapper";
 import { bulkUpsertSchemes } from "@/services/scheme.service";
 import {
@@ -9,11 +9,6 @@ import {
 const PAGE_SIZE = 100;
 
 export async function scrapeMyScheme() {
-  await fetchSchemeBySlug("nssfp");
-
-  return [];
-
-  // Existing code below (temporarily disabled)
   const job = await createScraperJob("MyScheme");
 
   let from = 0;
@@ -22,44 +17,53 @@ export async function scrapeMyScheme() {
 
   const savedSchemes = [];
 
-  while (true) {
-    const response = await fetchSchemes({
-      from,
-      size: PAGE_SIZE,
-    });
+  try {
+    while (true) {
+      const response = await fetchSchemes({
+        from,
+        size: PAGE_SIZE,
+      });
 
-    const items = response.data.hits.items;
-    const page = response.data.hits.page;
+      const items = response.data.hits.items;
+      const page = response.data.hits.page;
 
-    if (total === 0) {
-      total = page.total;
+      if (total === 0) {
+        total = page.total;
+      }
+
+      if (!items.length) break;
+
+      const schemes = items.map(mapMyScheme);
+
+      await bulkUpsertSchemes(schemes);
+
+      imported += schemes.length;
+
+      savedSchemes.push(...schemes);
+
+      await updateScraperJob(job._id.toString(), {
+        importedSchemes: imported,
+        totalSchemes: total,
+        currentOffset: from,
+      });
+
+      from += PAGE_SIZE;
+
+      if (from >= total) break;
     }
 
-    if (!items.length) break;
-
-    const schemes = items.map(mapMyScheme);
-
-    await bulkUpsertSchemes(schemes);
-
-    imported += schemes.length;
-
-    savedSchemes.push(...schemes);
-
     await updateScraperJob(job._id.toString(), {
-      importedSchemes: imported,
-      totalSchemes: total,
-      currentOffset: from,
+      status: "Completed",
+      finishedAt: new Date(),
     });
-
-    from += PAGE_SIZE;
-
-    if (from >= total) break;
+  } catch (err: any) {
+    await updateScraperJob(job._id.toString(), {
+      status: "Failed",
+      finishedAt: new Date(),
+      error: err?.message ?? "Unknown error",
+    });
+    throw err;
   }
-
-  await updateScraperJob(job._id.toString(), {
-    status: "Completed",
-    finishedAt: new Date(),
-  });
 
   return savedSchemes;
 }

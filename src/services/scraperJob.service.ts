@@ -22,10 +22,8 @@ export async function updateScraperJob(
 
     return await ScraperJob.findByIdAndUpdate(
         id,
-        data,
-        {
-            returnDocument: "after",
-        }
+        { $set: data },
+        { new: true }
     );
 }
 
