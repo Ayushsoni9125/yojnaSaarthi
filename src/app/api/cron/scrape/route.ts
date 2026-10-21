@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { startScraper } from "@/services/scraper.service";
+import { runMySchemeLoop } from "@/services/scrapers/myscheme";
 
+export const maxDuration = 60;
+export const dynamic = "force-dynamic";
 
 export async function GET(request: NextRequest) {
     const token = request.nextUrl.searchParams.get("token");
@@ -13,8 +16,8 @@ export async function GET(request: NextRequest) {
     }
 
     try {
-        await startScraper();
-
+        const { jobId } = await startScraper();
+        await runMySchemeLoop(jobId);
 
         return NextResponse.json({
             success: true,

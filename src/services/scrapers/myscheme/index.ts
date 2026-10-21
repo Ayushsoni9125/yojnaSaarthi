@@ -3,6 +3,8 @@ import { mapMyScheme } from "./mapper";
 import { bulkUpsertSchemes } from "@/services/scheme.service";
 import { updateScraperJob } from "@/services/scraperJob.service";
 
+import { connectDB } from "@/lib/db/mongoose";
+
 const PAGE_SIZE = 100;
 
 /**
@@ -20,16 +22,19 @@ export async function runMySchemeLoop(jobId: string) {
   console.log(`[Scraper] Starting MyScheme loop for job ${jobId}`);
 
   try {
+    await connectDB();
+
     while (true) {
       const response = await fetchSchemes({
         from,
         size: PAGE_SIZE,
       });
 
-      const items = response.hits.items;
-      const page = response.hits.page;
+      const hits = (response as any)?.data?.hits || (response as any)?.hits;
+      const items = hits?.items ?? [];
+      const page = hits?.page;
 
-      if (total === 0) {
+      if (total === 0 && page?.total) {
         total = page.total;
       }
 
@@ -49,11 +54,11 @@ export async function runMySchemeLoop(jobId: string) {
         currentOffset: from,
       });
 
-      console.log(`[Scraper] Page ${from / PAGE_SIZE + 1}: imported ${imported}/${total}`);
+      console.log(`[Scraper] Page ${Math.floor(from / PAGE_SIZE) + 1}: imported ${imported}/${total}`);
 
       from += PAGE_SIZE;
 
-      if (from >= total) break;
+      if (total > 0 && from >= total) break;
     }
 
     await updateScraperJob(jobId, {

@@ -13,15 +13,19 @@ export async function getLatestScraperStats() {
             failedSchemes: 0,
             totalSchemes: 0,
             currentOffset: 0,
+            error: null,
         };
     }
 
+    const lastRunDate = latestJob.finishedAt ?? latestJob.startedAt ?? (latestJob as any).createdAt;
+
     return {
         status: latestJob.status,
-        lastRun: latestJob.finishedAt ?? latestJob.startedAt,
-        importedSchemes: latestJob.importedSchemes,
-        failedSchemes: latestJob.failedSchemes,
-        totalSchemes: latestJob.totalSchemes,
-        currentOffset: latestJob.currentOffset,
+        lastRun: lastRunDate ? new Date(lastRunDate).toISOString() : null,
+        importedSchemes: latestJob.importedSchemes ?? 0,
+        failedSchemes: latestJob.failedSchemes ?? 0,
+        totalSchemes: latestJob.totalSchemes ?? 0,
+        currentOffset: latestJob.currentOffset ?? 0,
+        error: latestJob.error ?? null,
     };
 }

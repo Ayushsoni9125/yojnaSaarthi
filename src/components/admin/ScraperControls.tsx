@@ -9,6 +9,7 @@ type ScraperStats = {
     failedSchemes: number;
     totalSchemes: number;
     currentOffset: number;
+    error?: string | null;
 };
 
 export default function ScraperControls() {
@@ -96,7 +97,7 @@ export default function ScraperControls() {
                     <p className="text-sm text-slate-500">Imported Schemes</p>
                     <p className="mt-1 text-2xl font-bold text-green-600">
                         {stats?.importedSchemes ?? 0}
-                        {stats?.totalSchemes > 0 && (
+                        {stats && stats.totalSchemes > 0 && (
                             <span className="ml-1 text-sm font-normal text-slate-400">
                                 / {stats.totalSchemes}
                             </span>
@@ -142,6 +143,14 @@ export default function ScraperControls() {
                             style={{ width: `${progress}%` }}
                         />
                     </div>
+                </div>
+            )}
+
+            {/* Error box — visible when Failed */}
+            {stats?.status === "Failed" && stats.error && (
+                <div className="rounded-xl border border-red-200 bg-red-50 p-5">
+                    <p className="text-sm font-semibold text-red-700 mb-1">❌ Scraper Error</p>
+                    <p className="text-sm text-red-600 font-mono break-all">{stats.error}</p>
                 </div>
             )}
 
