@@ -138,27 +138,29 @@ export default function HomeClient() {
       </section>
 
       {/* 3. Explore Banner CTA */}
-      <section className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-emerald-800 to-teal-900 p-8 sm:p-10 text-white flex flex-col sm:flex-row items-center justify-between gap-6 shadow-xl">
-        <div className="space-y-2 max-w-lg text-center sm:text-left">
+      <section className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-emerald-800 to-teal-900 p-6 sm:p-8 lg:p-10 text-white flex flex-col md:flex-row md:items-center justify-between gap-6 shadow-xl">
+        <div className="space-y-2 max-w-xl text-left">
           <span className="text-xs font-bold uppercase tracking-wider text-emerald-300">
             Complete Scheme Directory
           </span>
-          <h2 className="text-2xl font-extrabold">Ready to browse all listed schemes?</h2>
-          <p className="text-xs sm:text-sm text-emerald-100/80">
-            Filter by state, category, or application status across hundreds of government schemes.
+          <h2 className="text-xl sm:text-2xl md:text-3xl font-extrabold tracking-tight">
+            Ready to browse all listed schemes?
+          </h2>
+          <p className="text-xs sm:text-sm text-emerald-100/90 leading-relaxed">
+            Filter by state, category, or application status across thousands of government schemes.
           </p>
         </div>
 
         <Link
           href="/schemes"
-          className="text-center rounded-2xl bg-white px-7 py-3.5 text-sm font-extrabold text-emerald-900 shadow-md hover:bg-emerald-50 transition-all flex-shrink-0"
+          className="inline-flex items-center justify-center rounded-2xl bg-white px-7 py-3.5 text-sm font-extrabold text-emerald-900 shadow-md hover:bg-emerald-50 active:scale-95 transition-all flex-shrink-0 text-center whitespace-nowrap w-full sm:w-auto"
         >
           🔍 Browse All Schemes →
         </Link>
       </section>
 
       {/* 4. How YojanaSaarthi Helps You */}
-      <section className="rounded-3xl border border-slate-200/80 bg-white p-8 sm:p-10 shadow-sm space-y-8">
+      <section className="rounded-3xl border border-slate-200/80 bg-white p-6 sm:p-8 lg:p-10 shadow-sm space-y-8">
         <div className="text-center max-w-xl mx-auto space-y-2">
           <h2 className="text-2xl font-bold text-slate-900">How YojanaSaarthi Works</h2>
           <p className="text-xs sm:text-sm text-slate-500">
@@ -200,24 +202,36 @@ export default function HomeClient() {
       </section>
 
       {/* 5. Call to Action Banner */}
-      <section className="relative overflow-hidden rounded-3xl bg-slate-900 p-8 sm:p-10 text-white flex flex-col sm:flex-row items-center justify-between gap-6 shadow-xl">
-        <div className="space-y-2 max-w-lg text-center sm:text-left">
-          <h2 className="text-2xl font-bold">Unsure which scheme suits you best?</h2>
-          <p className="text-xs sm:text-sm text-slate-400">
+      <section className="relative overflow-hidden rounded-3xl bg-slate-900 p-6 sm:p-8 lg:p-10 text-white flex flex-col md:flex-row md:items-center justify-between gap-6 shadow-xl border border-slate-800">
+        {/* Glow decoration */}
+        <div 
+          className="absolute -top-24 -left-24 w-72 h-72 rounded-full opacity-20 pointer-events-none blur-3xl"
+          style={{ background: "radial-gradient(circle, #10b981, transparent)" }} 
+        />
+        <div 
+          className="absolute -bottom-24 -right-24 w-72 h-72 rounded-full opacity-10 pointer-events-none blur-3xl"
+          style={{ background: "radial-gradient(circle, #3b82f6, transparent)" }} 
+        />
+
+        <div className="relative z-10 space-y-2 max-w-xl text-left">
+          <h2 className="text-xl sm:text-2xl md:text-3xl font-extrabold tracking-tight text-white">
+            Unsure which scheme suits you best?
+          </h2>
+          <p className="text-xs sm:text-sm text-slate-300/90 leading-relaxed">
             Answer a few quick questions and let our AI Assistant recommend the most relevant schemes for your background.
           </p>
         </div>
 
-        <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
+        <div className="relative z-10 flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full md:w-auto flex-shrink-0">
           <Link
             href="/assistant"
-            className="text-center rounded-xl bg-emerald-600 px-6 py-3 text-sm font-bold text-white shadow-md hover:bg-emerald-500 transition-colors"
+            className="inline-flex items-center justify-center gap-2 rounded-xl bg-emerald-600 px-6 py-3 text-sm font-bold text-white shadow-md hover:bg-emerald-500 active:scale-95 transition-all text-center whitespace-nowrap w-full sm:w-auto"
           >
             🤖 Try AI Assistant
           </Link>
           <Link
             href="/compare"
-            className="text-center rounded-xl border border-slate-700 bg-slate-800 px-6 py-3 text-sm font-bold text-slate-200 hover:bg-slate-700 transition-colors"
+            className="inline-flex items-center justify-center gap-2 rounded-xl border border-slate-700 bg-slate-800 px-6 py-3 text-sm font-bold text-slate-200 hover:bg-slate-700 active:scale-95 transition-all text-center whitespace-nowrap w-full sm:w-auto"
           >
             ⚖️ Compare Schemes
           </Link>
