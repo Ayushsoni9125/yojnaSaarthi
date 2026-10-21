@@ -81,7 +81,7 @@ const QUESTIONS: Question[] = [
     key: "maritalStatus",
     question: "What is your marital status?",
     type: "select",
-    options: ["Single", "Married", "Widowed", "Divorced"],
+    options: ["Unmarried", "Married", "Widowed", "Divorced"],
   },
 ];
 
