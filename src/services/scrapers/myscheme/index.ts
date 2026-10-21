@@ -17,6 +17,8 @@ export async function runMySchemeLoop(jobId: string) {
 
   const savedSchemes: any[] = [];
 
+  console.log(`[Scraper] Starting MyScheme loop for job ${jobId}`);
+
   try {
     while (true) {
       const response = await fetchSchemes({
@@ -46,6 +48,8 @@ export async function runMySchemeLoop(jobId: string) {
         totalSchemes: total,
         currentOffset: from,
       });
+
+      console.log(`[Scraper] Page ${from / PAGE_SIZE + 1}: imported ${imported}/${total}`);
 
       from += PAGE_SIZE;
 
