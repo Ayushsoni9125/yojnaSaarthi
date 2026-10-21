@@ -218,8 +218,8 @@ export default function DashboardPage() {
                     <div className="absolute bottom-0 left-1/3 w-64 h-64 rounded-full opacity-5 pointer-events-none"
                         style={{ background: "radial-gradient(circle, #ffffff, transparent)" }} />
 
-                    <div className="relative z-10 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
-                        <Link href="/profile" className="flex items-center gap-4 group cursor-pointer" title="Click to View Profile">
+                    <div className="relative z-10 flex flex-col md:flex-row md:items-center md:justify-between gap-6">
+                        <Link href="/profile" className="flex items-center gap-3.5 sm:gap-4 group cursor-pointer" title="Click to View Profile">
                             <div
                                 className="w-14 h-14 sm:w-16 sm:h-16 rounded-full flex items-center justify-center text-white text-xl sm:text-2xl font-bold flex-shrink-0 border-2 border-emerald-300 group-hover:border-white transition-all overflow-hidden shadow-md"
                                 style={{ background: "linear-gradient(135deg, #064e3b, #059669)" }}
@@ -230,9 +230,9 @@ export default function DashboardPage() {
                                     initials
                                 )}
                             </div>
-                            <div>
+                            <div className="min-w-0">
                                 <p className="text-emerald-300 text-xs font-semibold mb-0.5">{greeting} 👋</p>
-                                <h1 className="text-2xl sm:text-3xl font-extrabold text-white group-hover:text-emerald-200 transition-colors tracking-tight">
+                                <h1 className="text-xl sm:text-2xl md:text-3xl font-extrabold text-white group-hover:text-emerald-200 transition-colors tracking-tight truncate">
                                     {user?.name || firstName}
                                 </h1>
                                 <p className="mt-1 text-emerald-100/80 text-xs sm:text-sm max-w-md leading-relaxed">
@@ -241,30 +241,28 @@ export default function DashboardPage() {
                             </div>
                         </Link>
 
-                        <div className="w-full lg:w-auto pt-4 border-t border-white/15 lg:border-t-0 lg:pt-0 grid grid-cols-2 sm:flex sm:flex-wrap items-center gap-2.5 sm:gap-3">
+                        <div className="grid grid-cols-2 md:flex md:flex-wrap items-center gap-2.5 sm:gap-3 w-full md:w-auto flex-shrink-0">
                             <Link
                                 href="/profile"
-                                className="flex items-center justify-center gap-1.5 sm:gap-2 rounded-xl px-4 py-2.5 text-xs sm:text-sm font-semibold transition-all hover:bg-white/25 active:scale-95 shadow-sm text-center"
-                                style={{ background: "rgba(255,255,255,0.18)", color: "#fff", backdropFilter: "blur(8px)", border: "1px solid rgba(255,255,255,0.3)" }}
+                                className="h-10 px-3.5 sm:px-4 rounded-xl text-xs sm:text-sm font-semibold flex items-center justify-center gap-1.5 transition-all hover:bg-white/25 active:scale-95 shadow-sm text-center whitespace-nowrap border border-white/25 bg-white/15 text-white backdrop-blur-md"
                             >
                                 ✏️ Edit Profile
                             </Link>
                             <Link
                                 href="/assistant"
-                                className="flex items-center justify-center gap-1.5 sm:gap-2 rounded-xl px-4 py-2.5 text-xs sm:text-sm font-semibold transition-all hover:bg-white/20 active:scale-95 shadow-sm text-center"
-                                style={{ background: "rgba(255,255,255,0.15)", color: "#fff", backdropFilter: "blur(8px)", border: "1px solid rgba(255,255,255,0.2)" }}
+                                className="h-10 px-3.5 sm:px-4 rounded-xl text-xs sm:text-sm font-semibold flex items-center justify-center gap-1.5 transition-all hover:bg-white/25 active:scale-95 shadow-sm text-center whitespace-nowrap border border-white/20 bg-white/15 text-white backdrop-blur-md"
                             >
                                 🤖 AI Assistant
                             </Link>
                             <Link
                                 href="/schemes"
-                                className="flex items-center justify-center gap-1.5 sm:gap-2 rounded-xl px-4 py-2.5 text-xs sm:text-sm font-semibold bg-white text-emerald-800 transition-all hover:bg-emerald-50 active:scale-95 shadow-sm text-center"
+                                className="h-10 px-3.5 sm:px-4 rounded-xl text-xs sm:text-sm font-bold flex items-center justify-center gap-1.5 transition-all hover:bg-emerald-50 active:scale-95 shadow-sm text-center whitespace-nowrap bg-white text-emerald-900"
                             >
                                 🔍 Browse Schemes
                             </Link>
                             <button
                                 onClick={() => signOut({ callbackUrl: "/" })}
-                                className="flex items-center justify-center gap-1.5 sm:gap-2 rounded-xl px-4 py-2.5 text-xs sm:text-sm font-semibold transition-all bg-red-500/85 hover:bg-red-600 text-white backdrop-blur-md border border-red-400/40 cursor-pointer shadow-sm active:scale-95 text-center"
+                                className="h-10 px-3.5 sm:px-4 rounded-xl text-xs sm:text-sm font-semibold flex items-center justify-center gap-1.5 transition-all hover:bg-red-600 active:scale-95 shadow-sm text-center whitespace-nowrap bg-red-500/85 text-white border border-red-400/30 cursor-pointer backdrop-blur-md"
                             >
                                 🚪 Log Out
                             </button>
