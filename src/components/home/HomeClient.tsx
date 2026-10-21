@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { Search } from "lucide-react";
 
 const FEATURED_CATEGORIES = [
   { name: "Agriculture", icon: "🌾", desc: "Kisan subsidies, crop insurance & credit" },
@@ -33,7 +34,7 @@ export default function HomeClient() {
       {/* 1. Hero & Search Section */}
       <section className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-emerald-900 via-emerald-800 to-slate-900 p-8 sm:p-14 text-white shadow-xl">
         <div className="relative z-10 mx-auto max-w-3xl text-center space-y-6">
-          <div className="inline-flex items-center gap-2 rounded-full bg-emerald-500/20 px-3.5 py-1 text-xs font-semibold text-emerald-300 border border-emerald-500/30 backdrop-blur-md">
+          <div className="inline-flex items-center gap-1.5 sm:gap-2 rounded-full bg-emerald-500/20 px-3 sm:px-4 py-1 text-[11px] sm:text-xs font-semibold text-emerald-300 border border-emerald-500/30 backdrop-blur-md whitespace-nowrap max-w-full">
             <span>✨</span>
             <span>Your Personal Government Welfare Companion</span>
           </div>
@@ -48,20 +49,24 @@ export default function HomeClient() {
 
           {/* Search Form */}
           <form onSubmit={handleSearchSubmit} className="relative max-w-2xl mx-auto mt-4">
-            <div className="flex items-center rounded-2xl bg-white p-2 shadow-2xl">
-              <span className="pl-3 text-slate-400 text-lg">🔍</span>
+            <div className="flex items-center rounded-2xl bg-white p-1.5 sm:p-2 shadow-2xl">
+              <span className="pl-2.5 sm:pl-3 text-slate-400">
+                <Search className="w-4 h-4 sm:w-5 sm:h-5" />
+              </span>
               <input
                 type="text"
-                placeholder="Search by scheme name, ministry, or benefits (e.g. PM Kisan, Scholarship)..."
+                placeholder="Search schemes, ministry, or keywords (e.g. PM Kisan)..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className="w-full bg-transparent px-3 py-2 text-sm text-slate-800 placeholder-slate-400 outline-none font-medium"
+                className="w-full bg-transparent px-2.5 sm:px-3 py-2 text-xs sm:text-sm text-slate-800 placeholder-slate-400 outline-none font-medium min-w-0"
               />
               <button
                 type="submit"
-                className="rounded-xl bg-emerald-600 px-5 py-2.5 text-xs font-bold text-white shadow-md hover:bg-emerald-700 transition-colors flex-shrink-0"
+                className="rounded-xl bg-emerald-600 p-2.5 sm:px-5 sm:py-2.5 text-xs sm:text-sm font-bold text-white shadow-md hover:bg-emerald-700 active:scale-95 transition-all flex-shrink-0 flex items-center justify-center gap-1.5"
+                title="Search Schemes"
               >
-                Search Schemes
+                <Search className="w-4 h-4 sm:hidden" />
+                <span className="hidden sm:inline">Search Schemes</span>
               </button>
             </div>
 
