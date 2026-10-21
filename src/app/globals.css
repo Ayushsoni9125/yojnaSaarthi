@@ -154,3 +154,27 @@
 .animate-slide-down {
   animation: slideDown 0.2s ease-out forwards;
 }
+
+/* Hide Google Translate toolbar and banner frames */
+.goog-te-banner-frame.skiptranslate,
+.goog-te-banner-frame {
+  display: none !important;
+}
+body {
+  top: 0px !important;
+  position: static !important;
+}
+#google_translate_element {
+  display: none !important;
+}
+.goog-tooltip,
+.goog-tooltip:hover {
+  display: none !important;
+}
+.goog-text-highlight {
+  background-color: transparent !important;
+  box-shadow: none !important;
+}
+.skiptranslate iframe {
+  display: none !important;
+}

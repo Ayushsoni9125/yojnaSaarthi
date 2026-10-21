@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useSession } from "next-auth/react";
 import { useState } from "react";
 import { usePathname } from "next/navigation";
+import LanguageSelector from "./LanguageSelector";
 
 export default function Header() {
   const pathname = usePathname();
@@ -63,8 +64,10 @@ export default function Header() {
           </Link>
         </nav>
 
-        {/* Desktop Auth / Menu */}
+        {/* Desktop Auth & Language / Menu */}
         <div className="hidden md:flex items-center gap-4">
+          <LanguageSelector />
+
           {status === "loading" ? (
             <div className="w-8 h-8 rounded-full bg-slate-100 animate-pulse" />
           ) : session ? (
@@ -114,8 +117,10 @@ export default function Header() {
           )}
         </div>
 
-        {/* Mobile menu trigger */}
-        <div className="flex items-center md:hidden">
+        {/* Mobile controls (Language + menu trigger) */}
+        <div className="flex items-center gap-2 md:hidden">
+          <LanguageSelector />
+
           <button
             onClick={() => setMobileOpen(!mobileOpen)}
             className="rounded-lg p-2 text-slate-500 hover:bg-slate-100 focus:outline-none"
