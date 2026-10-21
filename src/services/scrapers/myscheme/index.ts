@@ -135,6 +135,7 @@ export async function runMySchemeLoop(jobId: string) {
     }
 
     await updateScraperJob(jobId, {
+      currentOffset: total,
       status: "Completed",
       finishedAt: new Date(),
     });

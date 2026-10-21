@@ -174,7 +174,9 @@ export default function ScraperControls() {
                 <div className="rounded-xl border bg-white p-5 shadow-sm">
                     <p className="text-sm text-slate-500">Current Offset</p>
                     <p className="mt-1 text-2xl font-bold">
-                        {stats?.currentOffset ?? 0}
+                        {stats?.status === "Completed" && stats.totalSchemes > 0
+                            ? stats.totalSchemes
+                            : stats?.currentOffset ?? 0}
                     </p>
                 </div>
             </div>
