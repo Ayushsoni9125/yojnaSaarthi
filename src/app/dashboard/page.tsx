@@ -64,6 +64,11 @@ export default function DashboardPage() {
             const data = await safeJsonParse(res);
             if (data.success && Array.isArray(data.data)) {
                 setBookmarks(data.data);
+                const ids = data.data
+                    .map((b: any) => (typeof b.schemeId === "object" ? b.schemeId?._id : b.schemeId))
+                    .filter(Boolean);
+                localStorage.setItem("userBookmarks", JSON.stringify(ids));
+                window.dispatchEvent(new Event("bookmarks-updated"));
             }
         } catch (error) {
             console.error("Failed to fetch bookmarks:", error);
@@ -150,8 +155,25 @@ export default function DashboardPage() {
     const handleRemoveBookmark = async (bookmarkId: string) => {
         setRemovingId(bookmarkId);
         try {
+            const targetBookmark = bookmarks.find((b) => b._id === bookmarkId);
             const res = await apiFetch(`/api/bookmarks/${bookmarkId}`, { method: "DELETE" });
-            if (res.ok) setBookmarks((prev) => prev.filter((b) => b._id !== bookmarkId));
+            if (res.ok) {
+                setBookmarks((prev) => prev.filter((b) => b._id !== bookmarkId));
+                const schemeId = targetBookmark?.schemeId?._id;
+                if (schemeId) {
+                    try {
+                        const raw = localStorage.getItem("userBookmarks");
+                        if (raw) {
+                            const ids = JSON.parse(raw);
+                            const next = ids.filter((id: string) => id !== schemeId);
+                            localStorage.setItem("userBookmarks", JSON.stringify(next));
+                            window.dispatchEvent(new Event("bookmarks-updated"));
+                        }
+                    } catch {
+                        // ignore
+                    }
+                }
+            }
         } catch {
             // silently fail
         } finally {

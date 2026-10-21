@@ -12,8 +12,12 @@ export async function DELETE(
     const user = await requireUser();
     const resolvedParams = await params;
 
+    const id = resolvedParams.id;
     const bookmark = await Bookmark.findOneAndDelete({
-      _id: resolvedParams.id,
+      $or: [
+        { _id: id },
+        { schemeId: id },
+      ],
       userId: user._id,
     });
 
