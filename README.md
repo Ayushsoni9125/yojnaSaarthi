@@ -1,45 +1,81 @@
 # 🇮🇳 YojanaSaarthi (योजना सारथी)
 
-> **AI-Powered Citizen Assistance & Government Welfare Scheme Aggregator**
+> **AI-Powered Citizen Assistance & Government Welfare Scheme Aggregator**  
+> *Bridging Indian Citizens with Central & State Welfare Programs in Multiple Languages.*
 
-YojanaSaarthi is a modern, full-stack web application designed to bridge the gap between Indian citizens and government welfare programs. It empowers users to discover, filter, compare, and get AI-tailored recommendations across hundreds of Central and State government schemes.
+[![Next.js](https://img.shields.io/badge/Next.js-16.2-black?style=flat&logo=next.js)](https://nextjs.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue?style=flat&logo=typescript)](https://www.typescriptlang.org/)
+[![MongoDB](https://img.shields.io/badge/MongoDB-Mongoose-green?style=flat&logo=mongodb)](https://www.mongodb.com/)
+[![TailwindCSS](https://img.shields.io/badge/TailwindCSS-v4-38bdf8?style=flat&logo=tailwindcss)](https://tailwindcss.com/)
+[![Deployment](https://img.shields.io/badge/Deployed-Vercel-black?style=flat&logo=vercel)](https://yojna-saarthi.vercel.app)
+[![License](https://img.shields.io/badge/License-MIT-emerald.svg)](LICENSE)
+
+**Live Portal:** [https://yojna-saarthi.vercel.app](https://yojna-saarthi.vercel.app)
 
 ---
 
 ## 🌟 Key Features
 
-### 🔍 Comprehensive Scheme Directory
-- **Multi-Factor Filtering**: Filter schemes by Category (Agriculture, Health, Education, Business, etc.), State/UT, Ministry, and Status (Active, Upcoming, Expired).
-- **Instant Search**: Search by scheme title, keywords, ministry, or specific benefits with crash-proof query handling.
+### 🔍 1. Massive Multi-Source Scheme Directory (4,750+ Schemes)
+* **Comprehensive Coverage:** Aggregates and continuously synchronizes **4,750+ verified government welfare programs** from **9 official government portals**:
+  * **MyScheme National Portal:** Aggregates schemes across all 28 States, 8 Union Territories, and Central Ministries.
+  * **8 Direct Central Ministry Flagship Portals:**
+    * **PM-Kisan Samman Nidhi** (`pmkisan.gov.in`) – Ministry of Agriculture & Farmers Welfare
+    * **PM Vishwakarma** (`pmvishwakarma.gov.in`) – Ministry of MSME
+    * **PM SVANidhi** (`pmsvanidhi.mohua.gov.in`) – Ministry of Housing & Urban Affairs
+    * **PM Jan-Dhan Yojana (PMJDY)** (`pmjdy.gov.in`) – Ministry of Finance
+    * **PM MUDRA Yojana (PMMY)** (`mudra.org.in`) – Ministry of Finance
+    * **Ayushman Bharat PM-JAY** (`pmjay.gov.in`) – National Health Authority / MoHFW
+    * **PM Awas Yojana - Urban (PMAY-U)** (`pmay-urban.gov.in`) – Ministry of Housing & Urban Affairs
+    * **Atal Pension Yojana (APY)** (`npscra.nsdl.co.in`) – PFRDA
+* **Multi-Factor Filtering:** Filter effortlessly by Category (Agriculture, Health, Education, Housing, Finance, etc.), State/UT, Ministry, and Status.
+* **Instant Search:** Full-text search across titles, descriptions, and eligibility criteria with search query escaping.
 
-### 🤖 AI Virtual Scheme Assistant
-- **Smart Demographic Questionnaire**: Answers 6 key questions regarding age, gender, state, occupation, income, and category.
-- **Tailored Recommendations**: Uses intelligent matching algorithms to recommend the exact schemes the citizen is eligible for.
+---
 
-### ⚖️ Side-by-Side Scheme Comparison Matrix
-- Compare up to 4 schemes simultaneously on key metrics: Benefits, Prerequisites, Target Audience, and Required Documents.
-- Interactive search popover for adding schemes directly to the comparison view.
+### 🌐 2. Multi-Language Indian Government Portal Support
+* **Native Language Switcher:** Integrated in the navbar across desktop and mobile phone views.
+* **12 Supported Official Indian Languages:**
+  * **English**, **हिन्दी** (Hindi), **मराठी** (Marathi), **বাংলা** (Bengali), **தமிழ்** (Tamil), **తెలుగు** (Telugu), **ગુજરાતી** (Gujarati), **ಕನ್ನಡ** (Kannada), **ਪੰਜਾਬੀ** (Punjabi), **മലയാളം** (Malayalam), **ଓଡ଼ିଆ** (Odia), and **اردو** (Urdu).
+* **Complete Real-Time Translation:** Translates scheme details, criteria, forms, and recommendations dynamically without layout disruption.
 
-### 📌 User Dashboard & Profile Management
-- **Bookmarking System**: Save schemes to personal bookmarks for quick access.
-- **Recently Viewed Tracker**: Automatically logs recently inspected schemes.
-- **Customizable Profile**: Update full name and avatar image (URL or Google OAuth picture).
-- **Notifications**: Stay informed about new scheme additions and deadline alerts.
+---
 
-### 👑 Comprehensive Admin Management Portal
-- **Dashboard Metrics**: View total users, active schemes, bookmarks count, and scraper stats.
-- **Scheme CRUD**: Add, edit, preview, and delete government schemes with validation.
-- **User Management**: View registered users, roles (Admin/User), and update privileges.
-- **Scraper Control Center**: Run web scrapers manually or view automated scraping logs.
-- **Activity Auditing**: Detailed activity logs tracking all admin actions.
+### 🤖 3. AI Virtual Scheme Assistant
+* **Demographic Matching Questionnaire:** Evaluates age, gender, state of residence, occupation, annual income, social category, specially-abled status, and marital status (*Unmarried*, *Married*, *Widowed*, *Divorced*).
+* **Intelligent Scoring Algorithm:** Weighs target tags, eligibility prerequisites, and benefits to provide a tailored list of schemes a citizen can directly apply for.
 
-### 🛡️ Arcjet Rate Limiter & Bot Security
-- Protected with Arcjet Token Bucket rate-limiting (100 token capacity, 60 tokens/min refill).
-- Shield defense against SQL injection, XSS attacks, and malicious bot traffic.
+---
 
-### ⚡ Automated Daily Web Scraping
-- **GitHub Actions Workflow**: Runs a daily scheduled cron at **2:00 AM IST (8:30 PM UTC)**.
-- Scrapes official government portals (such as MyScheme) to maintain accurate scheme data.
+### ⚖️ 4. Side-by-Side Scheme Comparison Matrix
+* **Multi-Scheme Evaluator:** Compare up to 3 government schemes side-by-side.
+* **Granular Attribute Breakdown:** Compare benefits, eligibility rules, target demographic tags, and required documentation side-by-side.
+
+---
+
+### 📌 5. Instagram-Style Heart Bookmarking & User Dashboard
+* **Dynamic Bookmark Toggle:** Clean outline heart icon before bookmarking; clicking instantly turns it into a vibrant filled red heart with smooth pop micro-animations.
+* **Optimistic Local Synchronization:** Real-time state updates across all cards, listings, and the dashboard without lag.
+* **Personalized Dashboard:** Track saved bookmarks, recently inspected schemes, notification alerts, and quick profile management.
+
+---
+
+### 👑 6. Real-Time Scraper & Admin Management Center
+* **Multi-Source Selector:** Admin dropdown to run synchronizations by source:
+  * *MyScheme Portal* (4,770+ Central & State Schemes)
+  * *National Flagship Portals* (Direct Ministry Sites)
+  * *All Sources* (Combined synchronization)
+* **Instant Scraper Stop Button:** Abort long-running scraper jobs safely with a single click.
+* **Automatic Scheme Reconciliation:** Automatically detects and purges obsolete or discontinued schemes from MongoDB at the end of each scrape.
+* **Indian Standard Time (IST):** Formatted timestamps in `Asia/Kolkata` across the entire administrative dashboard.
+* **Administrative Audit Logs:** Activity auditing and role-based user management.
+
+---
+
+### 🛡️ 7. Enterprise Security & Rate Limiting
+* **Arcjet Token Bucket Rate Limiting:** 100 token capacity with refill rate to shield APIs from abuse.
+* **Bot & Injection Defense:** Proactive defense against malicious scrapers, SQL/NoSQL injection, and XSS attacks.
+* **SSL Resiliency:** Custom HTTPS agents handling Indian PKI certificates for NIC/Gov servers.
 
 ---
 
@@ -47,14 +83,15 @@ YojanaSaarthi is a modern, full-stack web application designed to bridge the gap
 
 | Layer | Technology |
 | :--- | :--- |
-| **Framework** | [Next.js 16](https://nextjs.org/) (App Router, Turbopack, Proxy Middleware) |
-| **Language** | [TypeScript](https://www.typescriptlang.org/) |
-| **Frontend UI** | [React 19](https://react.dev/), [TailwindCSS v4](https://tailwindcss.com/), Lucide Icons, React Toastify |
+| **Framework** | [Next.js 16](https://nextjs.org/) (App Router, Turbopack, Dynamic Routes) |
+| **Language** | [TypeScript](https://www.typescriptlang.org/) (Strict Mode) |
+| **UI & Styling** | [React 19](https://react.dev/), [TailwindCSS v4](https://tailwindcss.com/), [Lucide Icons](https://lucide.dev/), React Toastify |
 | **Authentication** | [NextAuth.js v5](https://next-auth.js.org/) (Google OAuth & Credentials Provider) |
-| **Database** | [MongoDB](https://www.mongodb.com/) with [Mongoose ORM](https://mongoosejs.com/) |
-| **Security & Rate Limiting** | [Arcjet Security](https://arcjet.com/) |
-| **Web Scraping** | Axios, Cheerio |
-| **Automation** | GitHub Actions (`.github/workflows/scraper.yml`) |
+| **Database** | [MongoDB](https://www.mongodb.com/) with [Mongoose](https://mongoosejs.com/) |
+| **Rate Limiting & Security** | [Arcjet Security](https://arcjet.com/) |
+| **Web Scraping** | Axios, Cheerio, Custom HTTPS Agent with Indian PKI validation handling |
+| **Localization** | Google Website Translator Engine with persistent language cookies |
+| **CI/CD & Automation** | GitHub Actions (`.github/workflows/scraper.yml`), Vercel Deployment |
 
 ---
 
@@ -62,42 +99,39 @@ YojanaSaarthi is a modern, full-stack web application designed to bridge the gap
 
 ### Prerequisites
 
-Ensure you have the following installed on your local machine:
-- **Node.js** (v18.0.0 or higher)
-- **npm** or **yarn** / **pnpm** / **bun**
-- **MongoDB Database** (Local instance or MongoDB Atlas cluster URI)
+* **Node.js** (v18.17.0 or higher)
+* **npm**, **pnpm**, or **yarn**
+* **MongoDB** connection string (Local instance or MongoDB Atlas cluster)
 
 ---
 
 ### Environment Setup
 
-Create a `.env` file in the root of the project by copying `.env.example`:
+1. Copy `.env.example` into `.env`:
+   ```bash
+   cp .env.example .env
+   ```
 
-```bash
-cp .env.example .env
-```
+2. Fill in the required environment variables:
+   ```env
+   # Database Connection
+   MONGODB_URI=mongodb+srv://<username>:<password>@cluster.mongodb.net/yojanasaarthi?retryWrites=true&w=majority
 
-Configure the required environment variables inside `.env`:
+   # NextAuth Authentication
+   NEXTAUTH_SECRET=your_super_secret_nextauth_key
+   NEXTAUTH_URL=http://localhost:3000
 
-```env
-# Database Connection
-MONGODB_URI=mongodb+srv://<username>:<password>@cluster.mongodb.net/yojanasaarthi?retryWrites=true&w=majority
+   # Google OAuth (Optional - for Google One-Tap Sign In)
+   GOOGLE_CLIENT_ID=your_google_client_id
+   GOOGLE_CLIENT_SECRET=your_google_client_secret
 
-# NextAuth Configuration
-NEXTAUTH_SECRET=your_nextauth_secret_key_here
-NEXTAUTH_URL=http://localhost:3000
+   # Arcjet Security & Rate Limiting
+   ARCJET_KEY=ajkey_your_arcjet_key_here
+   ARCJET_ENV=development
 
-# Google OAuth Credentials (Optional for Google Sign-In)
-GOOGLE_CLIENT_ID=your_google_client_id
-GOOGLE_CLIENT_SECRET=your_google_client_secret
-
-# Arcjet Rate Limiter Key
-ARCJET_KEY=ajkey_your_arcjet_key_here
-ARCJET_ENV=development
-
-# Daily Cron Scraper Secret Token
-CRON_SECRET=your_cron_secret_token_here
-```
+   # Daily Automated Scraper Cron Token
+   CRON_SECRET=your_cron_secret_token_here
+   ```
 
 ---
 
@@ -119,55 +153,50 @@ CRON_SECRET=your_cron_secret_token_here
    npm run dev
    ```
 
-   *If you experience any Turbopack dev cache lock issue, run:*
-   ```bash
-   npm run dev:clean
-   ```
-
-4. **Open in Browser**:
-   Navigate to [http://localhost:3000](http://localhost:3000) to view YojanaSaarthi.
+4. **Visit the Web App**:
+   Open [http://localhost:3000](http://localhost:3000) in your browser.
 
 ---
 
-## 📂 Project Structure
+## 📂 Project Architecture
 
 ```
 yojana-saarthi/
 ├── .github/
 │   └── workflows/
-│       └── scraper.yml              # GitHub Actions Daily Scraper Cron Workflow
+│       └── scraper.yml              # Daily Automated Scraper Cron
 ├── src/
 │   ├── app/
-│   │   ├── admin/                   # Admin Portal Pages (Dashboard, Schemes, Users, Scraper, Activity)
-│   │   ├── api/                     # REST API Endpoints (Auth, Schemes, Bookmarks, Assistant, Cron)
-│   │   ├── assistant/               # AI Assistant Questionnaire & Results
-│   │   ├── compare/                 # Side-by-Side Scheme Comparison Matrix
-│   │   ├── dashboard/               # User Dashboard (Saved Bookmarks, Stats, Profile)
-│   │   ├── login/                   # Sign-in Page
-│   │   ├── profile/                 # Profile Edit Page
-│   │   ├── register/                # Registration Page
-│   │   ├── schemes/                 # Scheme Directory & Scheme Detail Views
-│   │   └── layout.tsx               # Root Layout & Session Providers
+│   │   ├── admin/                   # Admin Panel (Dashboard, Schemes, Users, Scraper, Activity)
+│   │   ├── api/                     # API Endpoints (Auth, Schemes, Bookmarks, Assistant, Scraper)
+│   │   ├── assistant/               # AI Scheme Assistant Questionnaire & Results
+│   │   ├── compare/                 # Scheme Comparison Tool
+│   │   ├── dashboard/               # Citizen Dashboard (Saved Bookmarks, Quick Actions)
+│   │   ├── profile/                 # Profile Settings & Editing
+│   │   ├── schemes/                 # Directory Catalog & Detailed Scheme View
+│   │   ├── globals.css              # TailwindCSS & Portal Styles
+│   │   └── layout.tsx               # Root Layout, Providers & Analytics
 │   ├── components/
-│   │   ├── admin/                   # Admin UI Components & Sidebars
-│   │   ├── assistant/               # AI Assistant Questionnaire Components
-│   │   ├── home/                    # Home Page Hero & Category Grids
-│   │   ├── layout/                  # Header, Footer, and Navigation Bar
-│   │   └── schemes/                 # Scheme Cards, Directory Filters, and Details View
-│   ├── constants/                   # Categories, States, and Status Enums
+│   │   ├── admin/                   # Admin Scraper Controls & Tables
+│   │   ├── assistant/               # AI Assistant Form Steps
+│   │   ├── home/                    # Hero Search, Categories, Step Guides, CTAs
+│   │   ├── layout/                  # Header, Footer, LanguageSelector
+│   │   └── schemes/                 # SchemeCard, SchemeDetailsClient, Filters
 │   ├── lib/
-│   │   ├── apiClient.ts             # Client API Fetch Wrapper with Rate-Limit Toast Interceptor
-│   │   ├── arcjet.ts                # Arcjet Security & Rate Limiter Config
-│   │   ├── auth/                    # Role-based RequireUser & RequireAdmin Guards
-│   │   └── db/                      # Mongoose Database Connection Singleton
-│   ├── models/                      # MongoDB Schemas (User, Scheme, Bookmark, Activity, Notification)
-│   ├── scrapers/                    # Web Scraping Service Modules (MyScheme, Government Portals)
-│   ├── services/                    # Business Logic Layer (Scheme, User, Activity, Scraper Services)
-│   ├── proxy.ts                     # Next.js 16 Security & Rate-Limiting Proxy Handler
-│   └── utils/                       # Regex Escaping and Query Building Utilities
+│   │   ├── bookmarks.ts             # Client-side Bookmark Sync & Cache Utility
+│   │   ├── arcjet.ts                # Arcjet Security Rules & Rate Limiter
+│   │   ├── auth/                    # Route Guards (requireUser, requireAdmin)
+│   │   └── db/                      # Mongoose Singleton Connection
+│   ├── models/                      # MongoDB Schemas (User, Scheme, Bookmark, Activity, ScraperJob)
+│   ├── services/
+│   │   ├── scrapers/
+│   │   │   ├── myscheme/            # MyScheme National Portal Scraper & Reconciliation Engine
+│   │   │   └── flagship/            # 8 Central Flagship Ministry Portals Scraper
+│   │   ├── scheme.service.ts        # Scheme CRUD & Deduplicated Bulk Upsert
+│   │   └── recommendation.service.ts# AI Demographic Eligibility Scorer
+│   └── utils/                       # Search Sanitization & Query Builders
 ├── public/                          # Static Assets & Icons
-├── .env.example                     # Environment Variables Template
-├── package.json                     # Project Manifest & NPM Scripts
+├── package.json                     # NPM Dependencies & Scripts
 └── README.md                        # Documentation
 ```
 
@@ -177,21 +206,21 @@ yojana-saarthi/
 
 | Command | Description |
 | :--- | :--- |
-| `npm run dev` | Starts the Next.js 16 development server with Turbopack |
-| `npm run dev:clean` | Clears `.next` cache and starts the dev server cleanly |
-| `npm run clean` | Removes `.next` build and cache directory |
-| `npm run build` | Compiles the production build |
-| `npm run start` | Starts the production server |
-| `npm run lint` | Runs ESLint check across all source files |
+| `npm run dev` | Starts the Next.js development server with Turbopack |
+| `npm run build` | Compiles an optimized production build |
+| `npm run start` | Boots the compiled production server |
+| `npm run dev:clean` | Purges `.next` cache and launches the dev server |
+| `npm run clean` | Deletes `.next` build artifacts |
+| `npm run lint` | Runs ESLint validation across the codebase |
 
 ---
 
 ## 📄 License
 
-This project is licensed under the **MIT License** – feel free to use, modify, and distribute for citizen welfare applications.
+This project is open-source and released under the **[MIT License](LICENSE)**.
 
 ---
 
 <p align="center">
-  <b>Built for Citizen Welfare & Empowerment 🇮🇳</b>
+  <b>🇮🇳 Built for Citizen Empowerment, Digital Inclusion & Welfare Awareness 🇮🇳</b>
 </p>
