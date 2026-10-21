@@ -204,24 +204,24 @@ export default function DashboardPage() {
     const greeting = hour < 12 ? "Good morning" : hour < 17 ? "Good afternoon" : "Good evening";
 
     return (
-        <main className="mx-auto max-w-7xl px-6 py-10 space-y-10">
+        <main className="mx-auto max-w-7xl px-4 sm:px-6 py-8 sm:py-10 space-y-8 sm:space-y-10">
                 {/* ── Hero greeting ── */}
                 <section
-                    className="rounded-2xl p-8 relative overflow-hidden"
+                    className="rounded-2xl p-6 sm:p-8 relative overflow-hidden shadow-lg"
                     style={{
                         background: "linear-gradient(135deg, #064e3b 0%, #065f46 50%, #059669 100%)",
                     }}
                 >
                     {/* Decorative blobs */}
-                    <div className="absolute -top-10 -right-10 w-48 h-48 rounded-full opacity-10"
+                    <div className="absolute -top-10 -right-10 w-48 h-48 rounded-full opacity-10 pointer-events-none"
                         style={{ background: "radial-gradient(circle, #6ee7b7, transparent)" }} />
-                    <div className="absolute bottom-0 left-1/3 w-64 h-64 rounded-full opacity-5"
+                    <div className="absolute bottom-0 left-1/3 w-64 h-64 rounded-full opacity-5 pointer-events-none"
                         style={{ background: "radial-gradient(circle, #ffffff, transparent)" }} />
 
-                    <div className="relative z-10 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6">
-                        <Link href="/profile" className="flex items-center gap-4 group cursor-pointer" title="Click to Edit Profile">
+                    <div className="relative z-10 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
+                        <Link href="/profile" className="flex items-center gap-4 group cursor-pointer" title="Click to View Profile">
                             <div
-                                className="w-14 h-14 rounded-full flex items-center justify-center text-white text-xl font-bold flex-shrink-0 border-2 border-emerald-300 group-hover:border-white transition-all overflow-hidden shadow-md"
+                                className="w-14 h-14 sm:w-16 sm:h-16 rounded-full flex items-center justify-center text-white text-xl sm:text-2xl font-bold flex-shrink-0 border-2 border-emerald-300 group-hover:border-white transition-all overflow-hidden shadow-md"
                                 style={{ background: "linear-gradient(135deg, #064e3b, #059669)" }}
                             >
                                 {userImage || user?.image ? (
@@ -231,43 +231,40 @@ export default function DashboardPage() {
                                 )}
                             </div>
                             <div>
-                                <p className="text-emerald-300 text-xs font-medium mb-0.5">{greeting} 👋</p>
-                                <h1 className="text-2xl sm:text-3xl font-bold text-white group-hover:text-emerald-200 transition-colors flex items-center gap-2">
-                                    <span>{user?.name || firstName}</span>
-                                    <span className="text-xs bg-white/20 hover:bg-white/30 backdrop-blur-md border border-white/30 text-white px-2.5 py-1 rounded-full font-semibold">
-                                        ✏️ Edit Profile
-                                    </span>
+                                <p className="text-emerald-300 text-xs font-semibold mb-0.5">{greeting} 👋</p>
+                                <h1 className="text-2xl sm:text-3xl font-extrabold text-white group-hover:text-emerald-200 transition-colors tracking-tight">
+                                    {user?.name || firstName}
                                 </h1>
-                                <p className="mt-1 text-emerald-200 text-xs sm:text-sm max-w-md">
+                                <p className="mt-1 text-emerald-100/80 text-xs sm:text-sm max-w-md leading-relaxed">
                                     Welcome to your personal scheme dashboard. Manage your profile & saved schemes.
                                 </p>
                             </div>
                         </Link>
 
-                        <div className="flex gap-3 flex-wrap items-center">
+                        <div className="grid grid-cols-2 sm:flex sm:flex-wrap items-center gap-2.5 sm:gap-3">
                             <Link
                                 href="/profile"
-                                className="flex items-center gap-2 rounded-xl px-5 py-2.5 text-sm font-semibold transition-all hover:bg-white/20"
+                                className="flex items-center justify-center gap-1.5 sm:gap-2 rounded-xl px-4 py-2.5 text-xs sm:text-sm font-semibold transition-all hover:bg-white/25 active:scale-95 shadow-sm text-center"
                                 style={{ background: "rgba(255,255,255,0.18)", color: "#fff", backdropFilter: "blur(8px)", border: "1px solid rgba(255,255,255,0.3)" }}
                             >
                                 ✏️ Edit Profile
                             </Link>
                             <Link
                                 href="/assistant"
-                                className="flex items-center gap-2 rounded-xl px-5 py-2.5 text-sm font-semibold transition-all"
+                                className="flex items-center justify-center gap-1.5 sm:gap-2 rounded-xl px-4 py-2.5 text-xs sm:text-sm font-semibold transition-all hover:bg-white/20 active:scale-95 shadow-sm text-center"
                                 style={{ background: "rgba(255,255,255,0.15)", color: "#fff", backdropFilter: "blur(8px)", border: "1px solid rgba(255,255,255,0.2)" }}
                             >
-                                🤖 Try AI Assistant
+                                🤖 AI Assistant
                             </Link>
                             <Link
                                 href="/schemes"
-                                className="flex items-center gap-2 rounded-xl px-5 py-2.5 text-sm font-semibold bg-white text-emerald-800 transition-all hover:bg-emerald-50"
+                                className="flex items-center justify-center gap-1.5 sm:gap-2 rounded-xl px-4 py-2.5 text-xs sm:text-sm font-semibold bg-white text-emerald-800 transition-all hover:bg-emerald-50 active:scale-95 shadow-sm text-center"
                             >
                                 🔍 Browse Schemes
                             </Link>
                             <button
                                 onClick={() => signOut({ callbackUrl: "/" })}
-                                className="flex items-center gap-2 rounded-xl px-5 py-2.5 text-sm font-semibold transition-all bg-red-500/80 hover:bg-red-600 text-white backdrop-blur-md border border-red-400/30 cursor-pointer shadow-sm"
+                                className="flex items-center justify-center gap-1.5 sm:gap-2 rounded-xl px-4 py-2.5 text-xs sm:text-sm font-semibold transition-all bg-red-500/85 hover:bg-red-600 text-white backdrop-blur-md border border-red-400/40 cursor-pointer shadow-sm active:scale-95 text-center"
                             >
                                 🚪 Log Out
                             </button>
