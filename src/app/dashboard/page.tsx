@@ -241,7 +241,7 @@ export default function DashboardPage() {
                             </div>
                         </Link>
 
-                        <div className="grid grid-cols-2 sm:flex sm:flex-wrap items-center gap-2.5 sm:gap-3">
+                        <div className="w-full lg:w-auto pt-4 border-t border-white/15 lg:border-t-0 lg:pt-0 grid grid-cols-2 sm:flex sm:flex-wrap items-center gap-2.5 sm:gap-3">
                             <Link
                                 href="/profile"
                                 className="flex items-center justify-center gap-1.5 sm:gap-2 rounded-xl px-4 py-2.5 text-xs sm:text-sm font-semibold transition-all hover:bg-white/25 active:scale-95 shadow-sm text-center"
