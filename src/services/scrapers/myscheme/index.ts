@@ -4,6 +4,8 @@ import { bulkUpsertSchemes } from "@/services/scheme.service";
 import { updateScraperJob } from "@/services/scraperJob.service";
 import { connectDB } from "@/lib/db/mongoose";
 import ScraperJob from "@/models/ScraperJob";
+import Scheme from "@/models/Scheme";
+import Bookmark from "@/models/Bookmark";
 
 const PAGE_SIZE = 100;
 const CONCURRENCY = 4;
@@ -17,13 +19,14 @@ export async function runMySchemeLoop(jobId: string) {
   let from = 0;
   let total = 0;
   let imported = 0;
+  const scrapedSlugs = new Set<string>();
 
   console.log(`[Scraper] Starting MyScheme scrape for job ${jobId}`);
 
   try {
     await connectDB();
 
-    // 1. Fetch first page to get total count
+    // 1. Fetch first page to get live total count from government API
     const firstPageRes = await fetchSchemes({ from: 0, size: PAGE_SIZE });
     const firstHits = (firstPageRes as any)?.data?.hits || (firstPageRes as any)?.hits;
     const firstItems = firstHits?.items ?? [];
@@ -43,8 +46,11 @@ export async function runMySchemeLoop(jobId: string) {
       return;
     }
 
-    // Upsert first page
+    // Upsert first page & track slugs
     const firstSchemes = firstItems.map(mapMyScheme);
+    for (const s of firstSchemes) {
+      if (s.slug) scrapedSlugs.add(s.slug);
+    }
     await bulkUpsertSchemes(firstSchemes);
     imported += firstSchemes.length;
     from += PAGE_SIZE;
@@ -80,7 +86,9 @@ export async function runMySchemeLoop(jobId: string) {
         const hits = (res as any)?.data?.hits || (res as any)?.hits;
         const items = hits?.items ?? [];
         for (const item of items) {
-          batchSchemes.push(mapMyScheme(item));
+          const mapped = mapMyScheme(item);
+          batchSchemes.push(mapped);
+          if (mapped.slug) scrapedSlugs.add(mapped.slug);
         }
       }
 
@@ -103,6 +111,27 @@ export async function runMySchemeLoop(jobId: string) {
     const finalJob = await ScraperJob.findById(jobId).select("status").lean();
     if (finalJob?.status === "Stopped") {
       return;
+    }
+
+    // 3. Reconcile: delete schemes that were removed from the official portal
+    if (scrapedSlugs.size > 0 && from >= total) {
+      console.log(`[Scraper] Reconciling: comparing database against ${scrapedSlugs.size} active schemes...`);
+      const obsoleteSchemes = await Scheme.find(
+        {
+          "sources.name": "MyScheme",
+          slug: { $nin: Array.from(scrapedSlugs) },
+        },
+        "_id slug"
+      ).lean();
+
+      if (obsoleteSchemes.length > 0) {
+        const obsoleteIds = obsoleteSchemes.map((s: any) => s._id);
+        await Promise.all([
+          Scheme.deleteMany({ _id: { $in: obsoleteIds } }),
+          Bookmark.deleteMany({ schemeId: { $in: obsoleteIds } }),
+        ]);
+        console.log(`[Scraper] Removed ${obsoleteIds.length} obsolete schemes no longer present on MyScheme.`);
+      }
     }
 
     await updateScraperJob(jobId, {
