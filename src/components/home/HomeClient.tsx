@@ -174,32 +174,32 @@ export default function HomeClient() {
         </div>
 
         <div className="grid gap-6 md:grid-cols-3">
-          <div className="rounded-2xl bg-slate-50 p-6 space-y-3 border border-slate-100">
-            <div className="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center text-xl font-bold">
+          <div className="rounded-2xl bg-slate-50 p-6 space-y-3 border border-slate-100 flex flex-col items-center text-center transition-all hover:bg-slate-100/60">
+            <div className="w-12 h-12 rounded-2xl bg-emerald-100 text-emerald-800 flex items-center justify-center text-xl font-extrabold shadow-sm">
               1
             </div>
             <h3 className="font-bold text-slate-800 text-base">Search & Discover</h3>
-            <p className="text-xs text-slate-600 leading-relaxed">
+            <p className="text-xs text-slate-600 leading-relaxed max-w-xs">
               Quickly find verified welfare programs from central and state ministries using intuitive filters.
             </p>
           </div>
 
-          <div className="rounded-2xl bg-slate-50 p-6 space-y-3 border border-slate-100">
-            <div className="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center text-xl font-bold">
+          <div className="rounded-2xl bg-slate-50 p-6 space-y-3 border border-slate-100 flex flex-col items-center text-center transition-all hover:bg-slate-100/60">
+            <div className="w-12 h-12 rounded-2xl bg-emerald-100 text-emerald-800 flex items-center justify-center text-xl font-extrabold shadow-sm">
               2
             </div>
             <h3 className="font-bold text-slate-800 text-base">Compare & Qualify</h3>
-            <p className="text-xs text-slate-600 leading-relaxed">
+            <p className="text-xs text-slate-600 leading-relaxed max-w-xs">
               Use our side-by-side comparison tool to evaluate benefits, rules, and document prerequisites.
             </p>
           </div>
 
-          <div className="rounded-2xl bg-slate-50 p-6 space-y-3 border border-slate-100">
-            <div className="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center text-xl font-bold">
+          <div className="rounded-2xl bg-slate-50 p-6 space-y-3 border border-slate-100 flex flex-col items-center text-center transition-all hover:bg-slate-100/60">
+            <div className="w-12 h-12 rounded-2xl bg-emerald-100 text-emerald-800 flex items-center justify-center text-xl font-extrabold shadow-sm">
               3
             </div>
             <h3 className="font-bold text-slate-800 text-base">AI Virtual Guidance</h3>
-            <p className="text-xs text-slate-600 leading-relaxed">
+            <p className="text-xs text-slate-600 leading-relaxed max-w-xs">
               Ask our AI Assistant any question to get customized recommendations based on your profile.
             </p>
           </div>
