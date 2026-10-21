@@ -1,13 +1,25 @@
-import { scrapeAllSources } from "@/scrapers";
+import { runMySchemeLoop } from "@/services/scrapers/myscheme";
 import { connectDB } from "@/lib/db/mongoose";
+import { createScraperJob } from "@/services/scraperJob.service";
 
-export async function runScraper() {
+/**
+ * Creates the ScraperJob in the DB (synchronous, awaited before this returns),
+ * then fires the actual scraping loop as fire-and-forget.
+ *
+ * This ensures the job record exists in the DB before the API route responds,
+ * so that router.refresh() on the client sees the new job immediately.
+ */
+export async function startScraper() {
   await connectDB();
-  const schemes = await scrapeAllSources();
 
-  return {
-    success: true,
-    message: "Scraper executed successfully.",
-    scraped: schemes.length,
-  };
+  // Create the job synchronously — DB record exists before we return
+  const job = await createScraperJob("MyScheme");
+  const jobId = job._id.toString();
+
+  // Fire-and-forget the loop — runs in background
+  runMySchemeLoop(jobId).catch((err) => {
+    console.error("Scraper loop failed:", err);
+  });
+
+  return { jobId };
 }

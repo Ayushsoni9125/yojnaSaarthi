@@ -1,14 +1,14 @@
 import { NextResponse } from "next/server";
-import { runScraper } from "@/services/scraper.service";
+import { startScraper } from "@/services/scraper.service";
 
 export async function POST() {
-    // Fire-and-forget
-    runScraper().catch((err) => {
-        console.error("Scraper failed:", err);
-    });
+    // Awaited — creates the ScraperJob in DB before responding.
+    // The loop runs in background after we return.
+    const { jobId } = await startScraper();
 
     return NextResponse.json({
         success: true,
         message: "Scraper started successfully.",
+        jobId,
     });
 }

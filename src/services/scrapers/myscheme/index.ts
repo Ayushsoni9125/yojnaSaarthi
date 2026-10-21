@@ -1,21 +1,21 @@
 import { fetchSchemes } from "./client";
 import { mapMyScheme } from "./mapper";
 import { bulkUpsertSchemes } from "@/services/scheme.service";
-import {
-  createScraperJob,
-  updateScraperJob,
-} from "@/services/scraperJob.service";
+import { updateScraperJob } from "@/services/scraperJob.service";
 
 const PAGE_SIZE = 100;
 
-export async function scrapeMyScheme() {
-  const job = await createScraperJob("MyScheme");
-
+/**
+ * Runs the MyScheme scrape loop for an ALREADY-CREATED job.
+ * The job must be created before calling this so the DB record
+ * exists before the API route responds.
+ */
+export async function runMySchemeLoop(jobId: string) {
   let from = 0;
   let total = 0;
   let imported = 0;
 
-  const savedSchemes = [];
+  const savedSchemes: any[] = [];
 
   try {
     while (true) {
@@ -41,7 +41,7 @@ export async function scrapeMyScheme() {
 
       savedSchemes.push(...schemes);
 
-      await updateScraperJob(job._id.toString(), {
+      await updateScraperJob(jobId, {
         importedSchemes: imported,
         totalSchemes: total,
         currentOffset: from,
@@ -52,12 +52,12 @@ export async function scrapeMyScheme() {
       if (from >= total) break;
     }
 
-    await updateScraperJob(job._id.toString(), {
+    await updateScraperJob(jobId, {
       status: "Completed",
       finishedAt: new Date(),
     });
   } catch (err: any) {
-    await updateScraperJob(job._id.toString(), {
+    await updateScraperJob(jobId, {
       status: "Failed",
       finishedAt: new Date(),
       error: err?.message ?? "Unknown error",
