@@ -2,16 +2,56 @@ name: Daily Scraper
 
 on:
   schedule:
-    # 2:00 AM IST = 8:30 PM UTC
+    # Runs daily at 2:00 AM IST (8:30 PM UTC)
     - cron: "30 20 * * *"
 
   workflow_dispatch:
+    inputs:
+      source:
+        description: "Select scraper source (All, MyScheme, NationalFlagship)"
+        required: false
+        default: "All"
+        type: choice
+        options:
+          - "All"
+          - "MyScheme"
+          - "NationalFlagship"
 
 jobs:
   scrape:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Trigger Scraper
+      - name: Trigger Government Scheme Scraper
         run: |
-          curl "${{ secrets.SCRAPER_URL }}?token=${{ secrets.CRON_SECRET }}"
+          # Use secret SCRAPER_URL or fallback to production URL
+          TARGET_URL="${{ secrets.SCRAPER_URL }}"
+          if [ -z "$TARGET_URL" ]; then
+            TARGET_URL="https://yojna-saarthi.vercel.app/api/cron/scrape"
+          fi
+
+          # Source parameter (All / MyScheme / NationalFlagship)
+          SOURCE_PARAM="${{ github.event.inputs.source || 'All' }}"
+
+          echo "🚀 Triggering scraper at: $TARGET_URL"
+          echo "📦 Source: $SOURCE_PARAM"
+
+          # Execute curl and capture HTTP status code + response body
+          RESPONSE=$(curl -sS -w "\nHTTP_STATUS:%{http_code}" \
+            "$TARGET_URL?token=${{ secrets.CRON_SECRET }}&source=$SOURCE_PARAM")
+
+          HTTP_STATUS=$(echo "$RESPONSE" | grep "HTTP_STATUS" | cut -d: -f2)
+          BODY=$(echo "$RESPONSE" | sed '/HTTP_STATUS/d')
+
+          echo "--- Response ---"
+          echo "$BODY"
+          echo "HTTP Status: $HTTP_STATUS"
+          echo "----------------"
+
+          if [ "$HTTP_STATUS" -ne 200 ]; then
+            echo "❌ Scraper trigger failed with HTTP $HTTP_STATUS!"
+            echo "💡 Tip: Make sure CRON_SECRET is set in GitHub Secrets and matches CRON_SECRET in Vercel environment variables."
+            exit 1
+          fi
+
+          echo "✅ Scraper triggered successfully!"
