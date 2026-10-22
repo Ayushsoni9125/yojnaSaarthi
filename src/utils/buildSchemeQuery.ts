@@ -19,6 +19,19 @@ export function buildSchemeQuery(query: SchemeQuery) {
     filter.states = query.state;
   }
 
+  // Added Today Filter
+  if (query.timeFrame === "today" || query.addedToday === "true" || query.addedToday === true) {
+    const now = new Date();
+    const istFormatter = new Intl.DateTimeFormat("en-CA", {
+      timeZone: "Asia/Kolkata",
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+    });
+    const istDateString = istFormatter.format(now);
+    filter.createdAt = { $gte: new Date(`${istDateString}T00:00:00+05:30`) };
+  }
+
   // Search
   if (query.search) {
     const escaped = escapeRegex(query.search);

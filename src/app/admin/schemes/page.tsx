@@ -12,6 +12,7 @@ type Props = {
     category?: string;
     status?: string;
     state?: string;
+    timeFrame?: string;
     sort?: string;
   }>;
 };
@@ -30,6 +31,7 @@ export default async function SchemesPage({
     category: params.category as any,
     status: params.status as any,
     state: params.state,
+    timeFrame: params.timeFrame,
     sort: (params.sort as any) ?? "latest",
   });
 

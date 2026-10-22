@@ -143,10 +143,22 @@ export async function updateScheme(
     };
 }
 
-export async function deleteScheme(slug: string) {
-    const scheme = await Scheme.findOneAndDelete({ slug }).lean();
-
+export async function deleteScheme(
+  slug: string,
+  deletedBy = "Admin",
+  reason = "Manual deletion by admin"
+) {
+    const scheme = await Scheme.findOne({ slug }).lean();
     if (!scheme) return null;
+
+    try {
+        const { archiveDeletedScheme } = await import("@/services/deletedScheme.service");
+        await archiveDeletedScheme(scheme, reason, deletedBy);
+    } catch (archiveErr) {
+        console.error("Failed to archive deleted scheme in deleteScheme:", archiveErr);
+    }
+
+    await Scheme.findOneAndDelete({ slug });
 
     return {
         ...scheme,
@@ -275,6 +287,19 @@ export async function bulkUpsertSchemes(
         }
         if (notifications.length > 0) {
           await Notification.insertMany(notifications);
+        }
+
+        try {
+          const { logActivity } = await import("@/services/activity.service");
+          await logActivity({
+            action: "IMPORT",
+            resource: "Scheme",
+            resourceId: `${inserted.length} schemes`,
+            description: `Added ${inserted.length} new schemes into the database via government scraper.`,
+            performedBy: "Government Scraper",
+          });
+        } catch (logErr) {
+          console.error("Failed to log activity for bulkUpsertSchemes:", logErr);
         }
       }
     } catch (err) {

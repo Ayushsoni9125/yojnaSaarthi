@@ -2,7 +2,7 @@ import Activity from "@/models/Activity";
 import { escapeRegex } from "@/utils/escapeRegex";
 
 type LogActivityParams = {
-  action: "CREATE" | "UPDATE" | "DELETE";
+  action: "CREATE" | "UPDATE" | "DELETE" | "IMPORT" | "RECONCILE_DELETE";
   resource: string;
   resourceId: string;
   description: string;
@@ -13,7 +13,7 @@ type GetActivitiesParams = {
   page?: number;
   limit?: number;
   search?: string;
-  action?: "CREATE" | "UPDATE" | "DELETE";
+  action?: "CREATE" | "UPDATE" | "DELETE" | "IMPORT" | "RECONCILE_DELETE";
 };
 
 export async function logActivity({

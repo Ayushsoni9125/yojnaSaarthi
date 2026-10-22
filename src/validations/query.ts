@@ -16,6 +16,8 @@ export const SchemeQuerySchema = z.object({
     status: z.enum(SCHEME_STATUS).optional(),
 
     state: z.string().trim().optional(),
+    timeFrame: z.string().optional(),
+    addedToday: z.union([z.string(), z.boolean()]).optional(),
     sort: z
         .enum(["latest", "oldest", "az", "za"])
         .optional()

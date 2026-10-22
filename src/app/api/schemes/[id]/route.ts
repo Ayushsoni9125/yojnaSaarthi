@@ -110,11 +110,17 @@ export async function DELETE(_req: NextRequest, { params }: Params) {
     const adminSession = await requireAdmin();
     const { id } = await params;
 
-    let deleted = await deleteScheme(id);
+    const adminEmail = (adminSession.user as any)?.email || "admin";
+    let deleted = await deleteScheme(id, adminEmail, "Manual deletion by admin");
 
     if (!deleted && mongoose.Types.ObjectId.isValid(id)) {
-      const dbScheme = await Scheme.findByIdAndDelete(id).lean();
-      if (dbScheme) deleted = dbScheme as any;
+      const dbScheme = await Scheme.findById(id).lean();
+      if (dbScheme) {
+        const { archiveDeletedScheme } = await import("@/services/deletedScheme.service");
+        await archiveDeletedScheme(dbScheme, "Manual deletion by admin", adminEmail);
+        await Scheme.findByIdAndDelete(id);
+        deleted = dbScheme as any;
+      }
     }
 
     if (!deleted) {
@@ -124,7 +130,6 @@ export async function DELETE(_req: NextRequest, { params }: Params) {
       );
     }
 
-    const adminEmail = (adminSession.user as any)?.email || "admin";
     await logActivity({
       action: "DELETE",
       resource: "Scheme",

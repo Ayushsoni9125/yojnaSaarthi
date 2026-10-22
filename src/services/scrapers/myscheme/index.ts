@@ -120,17 +120,34 @@ export async function runMySchemeLoop(jobId: string) {
         {
           "sources.name": "MyScheme",
           slug: { $nin: Array.from(scrapedSlugs) },
-        },
-        "_id slug"
+        }
       ).lean();
 
       if (obsoleteSchemes.length > 0) {
+        const { archiveBulkDeletedSchemes } = await import("@/services/deletedScheme.service");
+        const { logActivity } = await import("@/services/activity.service");
+
+        await archiveBulkDeletedSchemes(
+          obsoleteSchemes,
+          "Removed from official government portal during MyScheme automated reconciliation",
+          "MyScheme Scraper Reconciler"
+        );
+
         const obsoleteIds = obsoleteSchemes.map((s: any) => s._id);
         await Promise.all([
           Scheme.deleteMany({ _id: { $in: obsoleteIds } }),
           Bookmark.deleteMany({ schemeId: { $in: obsoleteIds } }),
         ]);
-        console.log(`[Scraper] Removed ${obsoleteIds.length} obsolete schemes no longer present on MyScheme.`);
+
+        await logActivity({
+          action: "RECONCILE_DELETE",
+          resource: "Scheme",
+          resourceId: `${obsoleteIds.length} schemes`,
+          description: `Delisted and archived ${obsoleteIds.length} obsolete schemes removed from MyScheme portal.`,
+          performedBy: "Government Scraper",
+        });
+
+        console.log(`[Scraper] Archived and removed ${obsoleteIds.length} obsolete schemes no longer present on MyScheme.`);
       }
     }
 
