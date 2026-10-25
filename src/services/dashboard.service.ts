@@ -18,6 +18,12 @@ export function getStartOfTodayIST(): Date {
 
 export async function getDashboardStats() {
   const startOfDay = getStartOfTodayIST();
+  const tenDaysAgo = new Date(Date.now() - 10 * 24 * 60 * 60 * 1000);
+
+  // Trigger background cleanup of deleted schemes older than 10 days
+  import("@/services/deletedScheme.service")
+    .then(({ cleanupExpiredDeletedSchemes }) => cleanupExpiredDeletedSchemes())
+    .catch(() => {});
 
   const [
     totalSchemes,
@@ -40,7 +46,7 @@ export async function getDashboardStats() {
     Scheme.countDocuments({ createdAt: { $gte: startOfDay } }),
     User.countDocuments(),
     Scheme.countDocuments({ status: "Upcoming" }),
-    DeletedScheme.countDocuments(),
+    DeletedScheme.countDocuments({ deletedAt: { $gte: tenDaysAgo } }),
     DeletedScheme.countDocuments({ deletedAt: { $gte: startOfDay } }),
     Activity.find().sort({ createdAt: -1 }).limit(6).lean(),
     Scheme.find({ createdAt: { $gte: startOfDay } })
@@ -51,7 +57,7 @@ export async function getDashboardStats() {
       .sort({ updatedAt: -1 })
       .limit(20)
       .lean(),
-    DeletedScheme.find()
+    DeletedScheme.find({ deletedAt: { $gte: tenDaysAgo } })
       .sort({ deletedAt: -1 })
       .limit(20)
       .lean(),

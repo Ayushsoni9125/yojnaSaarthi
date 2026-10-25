@@ -69,7 +69,7 @@ const DeletedSchemeSchema = new Schema<IDeletedScheme>(
     deletedAt: {
       type: Date,
       default: Date.now,
-      index: true,
+      expires: 10 * 24 * 60 * 60, // Automatically deletes document from MongoDB after 10 days (864,000 seconds)
     },
     originalCreatedAt: {
       type: Date,

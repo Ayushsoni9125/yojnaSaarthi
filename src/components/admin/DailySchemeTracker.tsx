@@ -493,7 +493,7 @@ export default function DailySchemeTracker({
             <div className="flex items-center gap-2">
               <span className="w-2 h-2 rounded-full bg-rose-500" />
               <p className="text-xs sm:text-sm text-slate-600 font-medium">
-                Archived Delisted & Deleted Schemes ({filteredDeleted.length} tracked records)
+                Archived Delisted & Deleted Schemes ({filteredDeleted.length} records • 10-day auto-purge retention)
               </p>
             </div>
 

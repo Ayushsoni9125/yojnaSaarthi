@@ -56,8 +56,24 @@ export async function archiveBulkDeletedSchemes(
   }
 }
 
+const TEN_DAYS_MS = 10 * 24 * 60 * 60 * 1000;
+
+export async function cleanupExpiredDeletedSchemes() {
+  try {
+    const cutoff = new Date(Date.now() - TEN_DAYS_MS);
+    const result = await DeletedScheme.deleteMany({ deletedAt: { $lt: cutoff } });
+    if (result.deletedCount > 0) {
+      console.log(`[DeletedScheme] Purged ${result.deletedCount} archived schemes older than 10 days.`);
+    }
+    return result;
+  } catch (err) {
+    console.error("Failed to cleanup deleted schemes older than 10 days:", err);
+  }
+}
+
 export async function getRecentDeletedSchemes(limit = 20) {
-  return await DeletedScheme.find()
+  const cutoff = new Date(Date.now() - TEN_DAYS_MS);
+  return await DeletedScheme.find({ deletedAt: { $gte: cutoff } })
     .sort({ deletedAt: -1 })
     .limit(limit)
     .lean();
